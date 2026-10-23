@@ -28,6 +28,7 @@ LEAVES = (
     "model_ms",
     "accessibility_lookup_ms",
     "risk_approval_ms",
+    "freshness_check_ms",
     "aim_wait_ms",
     "android_action_ms",
     "settle_wait_ms",

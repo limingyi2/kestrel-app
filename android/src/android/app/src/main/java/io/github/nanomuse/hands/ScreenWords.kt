@@ -75,6 +75,7 @@ object ScreenWords {
                 matches.forEach { it.recycle() }; null
             } else matches.single()
         } catch (_: Throwable) {
+            matches.forEach { it.recycle() }
             null
         }
     }

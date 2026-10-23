@@ -9462,6 +9462,8 @@ class ChatViewModel(
                     io.github.nanomuse.hands.HandsTimeline.bind(activeSessionId, it)
                 }
                 val result = executeTool(name, argsStr, id, allToolBlocks, assistantId, accumulatedText)
+                // nanoMuse: a denied or failed shell must not leave a correlation for a later run.
+                nmHandsTimeline?.let { io.github.nanomuse.hands.HandsTimeline.forget(activeSessionId, it) }
                 android.util.Log.d("ToolChain[VM]", "[turn=$turn] executeTool END name=$name success=${result.success} title=${result.toolTitle} outputLen=${result.output.length} output=${result.output.take(200)}")
 
                 // Record post-execution. WARNING text is appended to the tool

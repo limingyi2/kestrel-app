@@ -39,7 +39,8 @@ active transition. The following model decision always sees a fresh screenshot.
 
 Changed observations are discarded after inference. Taps recheck changes and unique
 target bounds after approval and aiming. A unique visible enabled exact node uses
-`ACTION_CLICK`, after the same risk gate. Ambiguous labels retain visual coordinates.
+`ACTION_CLICK`, after the same risk gate. Ambiguous labels retain visual coordinates. A dangerous coordinate tap requires a fresh
+image identical to the approved observation after approval; otherwise it reobserves.
 There is no fallback coordinate tap if a direct node click fails. Long/double gestures
 retain their existing Android gestures. Enter rechecks page changes after approval.
 Already-foreground apps are not relaunched. Stop, risk approval and PR #3's confirmed

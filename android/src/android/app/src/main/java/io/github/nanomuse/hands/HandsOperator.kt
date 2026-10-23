@@ -359,6 +359,23 @@ class HandsOperator(private val context: Context) {
                         // sees it in the log and tells the user where it lives.
                         gate.notice?.let { log += it }
                         if (stop.get()) return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
+                        // An event-less app can change while approval is pending. Dangerous
+                        // coordinate taps require a fresh identical image; live nodes are
+                        // reacquired below. A failed check never falls through to a tap.
+                        if (nodePoint == null && TapWords.classify(target, ScreenWords.at(svc, px, py)) != null) {
+                            val freshStarted = SystemClock.elapsedRealtime()
+                            val fresh = screenshot(svc)?.bitmap
+                            val unchanged = fresh?.let {
+                                try { it.width == screenW && it.height == screenH && encode(it).bytes.contentEquals(jpeg.bytes) }
+                                finally { it.recycle() }
+                            } == true
+                            timings["freshness_check_ms"] = SystemClock.elapsedRealtime() - freshStarted
+                            if (!unchanged) {
+                                lastResult = "the current screen could not confirm the approved coordinate; observe again."
+                                trace(traceDir, steps, parsed.thought, reply, "coordinate_reconfirmation_failed", lastScreen, timings)
+                                continue
+                            }
+                        }
                         // The ring first, where the finger is about to land; the capsule steps
                         // aside when it is in the way and lets the touch through while it lands.
                         capsule.dodge(px, py)
@@ -710,6 +727,7 @@ class HandsOperator(private val context: Context) {
         capsule.dodge(x1, y1)
         capsule.stage.sweep(x1, y1, x2, y2, AIM_MS, durationMs, label)
         Thread.sleep(AIM_MS)
+        if (stop.get() || observationObserver?.changed() == true) return false
         return capsule.passThrough { swipe(svc, x1, y1, x2, y2, durationMs) }
     }
 

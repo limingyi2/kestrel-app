@@ -4,8 +4,7 @@ import android.os.SystemClock
 import java.util.concurrent.ConcurrentHashMap
 
 /** Monotonic milestones shared by the chat turn and its native Hands call. No screen text. */
-class HandsTimeline(instructionReceived: Boolean = false) {
-    private val origin = SystemClock.elapsedRealtime()
+class HandsTimeline(instructionReceived: Boolean = false, private val origin: Long = SystemClock.elapsedRealtime()) {
     private val milestones = linkedMapOf<String, Long>()
 
     init { if (instructionReceived) mark("instruction_received") }
@@ -16,6 +15,10 @@ class HandsTimeline(instructionReceived: Boolean = false) {
 
     @Synchronized fun snapshot(): Map<String, Long> = milestones.toMap()
 
+    @Synchronized private fun forRun(): HandsTimeline = HandsTimeline(origin = origin).also {
+        it.milestones.putAll(milestones)
+    }
+
     companion object {
         private val sessions = ConcurrentHashMap<String, HandsTimeline>()
         fun bind(sessionId: String, timeline: HandsTimeline) {
@@ -23,6 +26,7 @@ class HandsTimeline(instructionReceived: Boolean = false) {
             if (sessions.size >= 128) sessions.clear()
             sessions[sessionId] = timeline
         }
-        fun take(sessionId: String?): HandsTimeline? = sessionId?.let { sessions.remove(it) }
+        fun take(sessionId: String?): HandsTimeline? = sessionId?.let { sessions.remove(it)?.forRun() }
+        fun forget(sessionId: String, timeline: HandsTimeline) { sessions.remove(sessionId, timeline) }
     }
 }
