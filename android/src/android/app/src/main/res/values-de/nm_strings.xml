@@ -1053,7 +1053,7 @@
     <string name="nm_devices_ask_hint">Tippe auf ein Gerät, das online ist, um es aus dem Chat anzuschreiben: Die Nachricht beginnt mit @ und seinem Namen, und dieses Gerät erledigt die Arbeit.</string>
     <string name="nm_reach_the_provider">der Anbieter</string>
     <string name="nm_reach_unreachable_title">%1$s ist aus diesem Netz nicht erreichbar</string>
-    <string name="nm_reach_unreachable_body">Von %1$s kam keine Antwort. Es geht um den Weg von diesem Telefon zum Anbieter; nanoMuses eigene Server sind nicht beteiligt.</string>
+    <string name="nm_reach_unreachable_body">Von %1$s kam keine Antwort. Es geht um den Weg von diesem Telefon zum Anbieter; Kestrels eigene Server sind nicht beteiligt.</string>
     <string name="nm_reach_region_title">OpenAI bedient diese Region nicht</string>
     <string name="nm_reach_region_body">Die Anfrage hat OpenAI erreicht; die Antwort war, dass der Dienst dort, woher diese Verbindung kommt, nicht angeboten wird.</string>
     <string name="nm_reach_signed_out_title">Die ChatGPT-Anmeldung gilt nicht mehr</string>

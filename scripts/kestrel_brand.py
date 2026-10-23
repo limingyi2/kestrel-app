@@ -21,7 +21,7 @@ NM = JAVA / "io/github/nanomuse"
 REPO = "https://github.com/limingyi2/kestrel-app"
 APP_ID = "io.github.limingyi2.kestrel"
 # These denote other products/services or attribution, not this app's name.
-PRODUCT = re.compile(r"\bnanoMuse\b(?! Cloud| Desktop)")
+PRODUCT = re.compile(r"(?<![A-Za-z0-9_])nanoMuse(?! Cloud| Desktop)(?=s\b|[^A-Za-z0-9_]|$)")
 LITERAL = re.compile(r'"""[\s\S]*?"""|"(?:[^"\\\n]|\\.)*"')
 
 
