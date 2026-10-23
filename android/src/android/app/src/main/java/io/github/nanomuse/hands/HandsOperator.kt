@@ -83,7 +83,9 @@ class HandsOperator(private val context: Context) {
         /** One line per step, for the tool result. */
         val log: List<String>,
         val model: String?,
-    )
+    ) {
+        @Volatile var returnAttempt: HandsCapsule.ReturnAttempt? = null
+    }
 
     private class Turn(val userText: String, val image: ByteArray?, var assistant: String)
     private data class Screenshot(val bitmap: Bitmap?, val captureMs: Long, val retryWaitMs: Long)
@@ -94,6 +96,7 @@ class HandsOperator(private val context: Context) {
     private val userSignal = AtomicReference<CountDownLatch?>(null)
     private val capsule = HandsCapsule(context)
     @Volatile private var terminalOutcome: Outcome? = null
+    @Volatile private var terminalResult: Result? = null
     @Volatile private var runStartedElapsedMs: Long = 0L
 
     /** The session this run's approval cards are filed under; see [ownPendingRequest]. */
@@ -458,18 +461,46 @@ class HandsOperator(private val context: Context) {
             return finish(Outcome.Failed("${t.javaClass.simpleName}: ${t.message}"), steps, runId, lastScreen, traceDir, log, model?.label)
         } finally {
             val outcome = terminalOutcome
-            val shouldReturn = HandsCompletionPolicy.shouldReturnToChat(outcome?.code.orEmpty(), Hands.returnToChat(context))
+            val returnEnabled = Hands.returnToChat(context)
+            val shouldReturn = HandsCompletionPolicy.shouldReturnToChat(outcome?.code.orEmpty(), returnEnabled)
+            AppLogger.info(TAG, "return return_requested=$shouldReturn outcome=${outcome?.code ?: "unknown"} preference_enabled=$returnEnabled")
             // Keep the user-granted overlay visible until the launch request is made. If Android
             // blocks it, do not retry through a background-start workaround; the launcher and
             // foreground notification remain available to the user.
-            val returned = if (shouldReturn) capsule.bringAppToFront(opts.sessionId) else false
+            val returnAttempt = if (shouldReturn) {
+                runCatching { capsule.requestAppReturn(opts.sessionId) }.getOrElse { error ->
+                    AppLogger.warning(TAG, "return launch_attempted=false foreground_confirmed=false reason=${error.javaClass.simpleName}: ${error.message}")
+                    HandsCapsule.ReturnAttempt(
+                        returnRequested = true,
+                        launchAttempted = false,
+                        launchAccepted = false,
+                        foregroundConfirmed = false,
+                        elapsedMs = 0L,
+                        failureReason = "${error.javaClass.simpleName}: ${error.message ?: "return confirmation failed"}",
+                    )
+                }
+            } else {
+                val reason = when {
+                    !returnEnabled -> "stay_in_target_app_preference"
+                    outcome == null -> "terminal_outcome_unknown"
+                    else -> "terminal_outcome_${outcome.code}_keeps_target_app"
+                }
+                AppLogger.info(TAG, "return launch_attempted=false foreground_confirmed=false reason=$reason")
+                HandsCapsule.ReturnAttempt(false, false, false, false, 0L, reason)
+            }
+            terminalResult?.returnAttempt = returnAttempt
             capsule.hide()
             runCatching {
                 traceDir?.let { dir ->
                     File(dir, "run-summary.json").writeText(
                         JSONObject().put("outcome", outcome?.code ?: "unknown").put("steps", steps)
                             .put("elapsed_ms", SystemClock.elapsedRealtime() - startedElapsed)
-                            .put("return_requested", shouldReturn).put("return_request_accepted", returned)
+                            .put("return_requested", shouldReturn)
+                            .put("launch_attempted", returnAttempt.launchAttempted)
+                            .put("launch_accepted", returnAttempt.launchAccepted)
+                            .put("foreground_confirmed", returnAttempt.foregroundConfirmed)
+                            .put("return_elapsed_ms", returnAttempt.elapsedMs)
+                            .put("return_failure_reason", returnAttempt.failureReason ?: JSONObject.NULL)
                             .put("finished_at", System.currentTimeMillis()).toString(),
                     )
                 }
@@ -499,11 +530,13 @@ class HandsOperator(private val context: Context) {
             }
         }
         val elapsedMs = (SystemClock.elapsedRealtime() - runStartedElapsedMs).coerceAtLeast(0L)
-        return Result(
+        val result = Result(
             outcome, steps, runId, lastScreen,
             traceDir?.let { "/var/minis/attachments/hands/$runId/trace.jsonl" },
             log + "run timing: elapsed_ms=$elapsedMs outcome=${outcome.code}", model,
         )
+        terminalResult = result
+        return result
     }
 
     // ── the user's turn ────────────────────────────────────────────────────

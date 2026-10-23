@@ -9,7 +9,7 @@ configured provider when it handles a request.
 
 The app keeps the upstream `com.openminis.app` Kotlin package and its Linux sandbox contracts.
 Kestrel code lives under `io.github.nanomuse.*`; changes inside upstream files carry a
-`// nanoMuse:` comment. The app id is `io.github.nanomuse.app`. The scheme the system receives is
+`// nanoMuse:` comment. The app id is `io.github.limingyi2.kestrel`. The scheme the system receives is
 `nanomuse://`; in-app links retain upstream's `minis://` names.
 
 ## Install and first run
@@ -58,6 +58,12 @@ interrupts model-directed waits. A risk denial stops the run without bypassing a
 blocks the foreground launch, Kestrel does not override the system; return from its foreground
 notification or the launcher.
 
+Each run records `return_requested`, `launch_attempted`, `launch_accepted`,
+`foreground_confirmed`, and a failure reason in `run-summary.json` and the Hands tool result.
+`launch_accepted` means only that `startActivity()` returned; success is reported only after
+`MainActivity` resumes. Android may block a background launch without throwing, so the foreground
+notification remains the user-controlled way back.
+
 No physical-device timing baseline is available in CI. Validate the Settings → About phone flow on
 an arm64 device, including each trace duration, the total duration, successful return, stay mode,
 cancellation, denied approval, model timeout and screenshot failure before treating timings as a
@@ -76,6 +82,17 @@ cd android/src/android
 ./gradlew :app:testDebugUnitTest --console=plain --no-daemon
 ./gradlew :app:assembleDebug --console=plain --no-daemon
 ```
+
+CI Debug APKs keep the existing application id. Their `versionCode` is `50 +` the Android
+workflow run number, so later workflow runs can update earlier CI APKs. A hosted runner's default
+Android Debug key is generated on that runner; its certificate changes when the runner is replaced.
+For a stable CI test signature, configure the repository Actions secrets
+`KESTREL_DEBUG_KEYSTORE_BASE64`, `KESTREL_DEBUG_KEYSTORE_PASSWORD`, `KESTREL_DEBUG_KEY_ALIAS`, and
+`KESTREL_DEBUG_KEY_PASSWORD` with a dedicated test-only PKCS12 keystore. The private key must not
+be committed or reused as a release key. Until all four secrets are configured, CI reports that it
+is using the runner Debug key. An APK signed with a different certificate cannot update an
+existing install in place; Android requires uninstalling that install first, which removes its
+local data. Check the certificate SHA-256 in the CI Badging step before installing an update.
 
 The debug APK is `android/src/android/app/build/outputs/apk/debug/app-debug.apk`; the build
 configuration selects arm64-v8a by default. The emulator is x86_64; test the arm64 APK on an
