@@ -9,16 +9,16 @@ import org.junit.Test
 
 class FirstRunSetupTest {
     @Test
-    fun `a fresh install is guided to configure a provider before chat`() {
-        assertTrue(FirstRunSetup.needed(hasProviders = false, hasSessions = false, done = false))
-        assertTrue(FirstRunSetup.needed(hasProviders = true, hasSessions = false, done = false))
-        assertFalse(FirstRunSetup.needed(hasProviders = true, hasSessions = false, done = true))
+    fun `a fresh install can enter the app with or without a provider`() {
+        assertTrue(FirstRunSetup.needed(hasSessions = false, done = false))
+        assertFalse(FirstRunSetup.needed(hasSessions = false, done = true))
     }
 
     @Test
-    fun `no provider always opens configuration even on an older install`() {
-        assertTrue(FirstRunSetup.needed(hasProviders = false, hasSessions = true, done = true))
-        assertFalse(FirstRunSetup.needed(hasProviders = true, hasSessions = true, done = false))
+    fun `completed onboarding and existing sessions never require a provider`() {
+        assertFalse(FirstRunSetup.needed(hasSessions = false, done = true))
+        assertFalse(FirstRunSetup.needed(hasSessions = true, done = false))
+        assertFalse(FirstRunSetup.needed(hasSessions = true, done = true))
     }
 
     @Test

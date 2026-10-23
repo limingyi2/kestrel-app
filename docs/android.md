@@ -15,10 +15,11 @@ Kestrel code lives under `io.github.nanomuse.*`; changes inside upstream files c
 ## Install and first run
 
 Install the arm64 APK on Android 8.0 or newer. On first launch, Kestrel shows **Welcome to Kestrel**,
-then **Configure model**, **Choose models**, and **Start using Kestrel**. Add a provider and its API
-key in the provider form. When no key is configured, the app keeps the setup guide open rather than
-showing an account sign-in page. The optional model and Hands pages can be skipped. The chat and
-configuration remain on the device after restart.
+then offers **Configure model** or **Skip for now**. Skipping completes the walkthrough and opens
+the app without a provider, API key or model; the completion state is saved across restarts. The
+optional model and Hands pages can also be skipped. Add a provider later from **Settings → Models**.
+Sending a message without a chat model shows that configuration path instead of starting a request.
+Chat and configuration remain on the device after restart.
 
 Settings → Models keeps separate choices for chat, screen operation, pictures, clips and Hands.
 The built-in provider catalogue supplies endpoint presets and capability information. Existing

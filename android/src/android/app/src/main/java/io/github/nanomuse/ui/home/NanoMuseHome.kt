@@ -173,10 +173,8 @@ fun NanoMuseHome(
         }
     }
 
-    // First run. Until the app has a model to talk to, the home is Muse's welcome screen with
-    // the three steps (provider → its models → the first conversation), not a chat that cannot
-    // answer. Gated on the provider config and the session list having loaded, so a returning
-    // user never sees the setup flash past before their providers are read.
+    // First run is a one-time walkthrough, not a gate on local app access. Provider and session
+    // state still load before choosing a phase so returning users never see an onboarding flash.
     val providerConfig by providerRepository.config.collectAsState()
     val configLoaded by providerRepository.configLoaded.collectAsState()
     val sessions by chatRepository.observeSessions().collectAsState(initial = null)
@@ -202,7 +200,7 @@ fun NanoMuseHome(
     val hasGroups = providerConfig.modelGroups.isNotEmpty()
     val phase = when {
         !configLoaded || sessions == null -> HomePhase.LOADING
-        FirstRunSetup.needed(hasProviders, sessions!!.isNotEmpty(), setupDone) -> HomePhase.SETUP
+        FirstRunSetup.needed(sessions!!.isNotEmpty(), setupDone) -> HomePhase.SETUP
         else -> HomePhase.HOME
     }
     // Once the chat has been shown the setup is over for good: an empty main chat is a draft
@@ -528,6 +526,7 @@ fun NanoMuseHome(
                 onAddProvider = { navController.safeNavigate(Routes.ADD_PROVIDER) },
                 onSelectModels = { navController.safeNavigate(Routes.ONBOARDING_MODELS) },
                 onStart = { FirstRunSetup.markDone(context); setupDone = true },
+                onSkip = { FirstRunSetup.markDone(context); setupDone = true },
                 onSettings = { navController.safeNavigate(Routes.SETTINGS) },
             )
             HomePhase.HOME -> homeShell()

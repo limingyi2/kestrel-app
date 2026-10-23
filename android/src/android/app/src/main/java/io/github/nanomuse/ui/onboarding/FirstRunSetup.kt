@@ -81,10 +81,10 @@ import io.github.nanomuse.ui.avatar.AgentMood
 import io.github.nanomuse.ui.home.MuseTones
 
 /**
- * Kestrel's first run: configure a local provider, choose models, review optional Hands access,
- * then open the first conversation.
+ * Kestrel's first run: optionally configure a local provider and models, review optional Hands
+ * access, then open the first conversation. Provider setup can always be completed later.
  *
- * 1. **Welcome** — configure a provider and API key. Provider credentials stay on this device.
+ * 1. **Welcome** — configure a provider and API key, or skip setup. Credentials stay on-device.
  * 2. **Models** — choose models for chat and tools; skippable.
  * 3. **Hands** — the two permissions the phone needs before the agent can use its apps
  *    (accessibility, drawing over other apps). Asked once, up front, and skippable: everything
@@ -109,10 +109,10 @@ object FirstRunSetup {
     private fun prefs(context: Context) = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     /**
-     * Show setup until a local provider is configured, and finish the walkthrough on a new install.
+     * Show the walkthrough only for a new, empty install until it is completed. Provider setup is
+     * optional, and an existing session remains reachable even if its provider was removed.
      */
-    fun needed(hasProviders: Boolean, hasSessions: Boolean, done: Boolean): Boolean =
-        !hasProviders || (!hasSessions && !done)
+    fun needed(hasSessions: Boolean, done: Boolean): Boolean = !hasSessions && !done
 
     enum class Stage { WELCOME, MODELS, HANDS, MEET }
 
@@ -147,6 +147,7 @@ fun FirstRunSetupScreen(
     onAddProvider: () -> Unit,
     onSelectModels: () -> Unit,
     onStart: () -> Unit,
+    onSkip: () -> Unit,
     onSettings: () -> Unit,
     hasProviders: Boolean,
 ) {
@@ -185,6 +186,7 @@ fun FirstRunSetupScreen(
                 when (current) {
                     FirstRunSetup.Stage.WELCOME -> WelcomePage(
                         onConfigure = onAddProvider,
+                        onSkip = onSkip,
                     )
                     FirstRunSetup.Stage.MODELS -> ModelsPage(onSelectModels = onSelectModels, onSkip = { modelsSkipped = true })
                     FirstRunSetup.Stage.HANDS -> HandsPage(
@@ -199,16 +201,17 @@ fun FirstRunSetupScreen(
 
 // ── the pages ──────────────────────────────────────────────────────────────
 
-/** The first page leads directly to the local provider configuration. */
+/** The first page offers optional local provider setup and a direct skip into the app. */
 @Composable
-private fun WelcomePage(onConfigure: () -> Unit) {
+private fun WelcomePage(onConfigure: () -> Unit, onSkip: () -> Unit) {
     Page(
         hero = { io.github.nanomuse.ui.muse.NmBrandMark(size = 104.dp) },
         title = stringResource(R.string.nm_setup_title),
         subtitle = stringResource(R.string.nm_welcome_tagline),
         primaryLabel = stringResource(R.string.nm_welcome_own_key),
         onPrimary = onConfigure,
-        secondaryLabel = null,
+        secondaryLabel = stringResource(R.string.nm_setup_skip_models),
+        onSecondary = onSkip,
         finePrint = stringResource(R.string.nm_welcome_fine_print),
     ) {
         FeatureRow(Icons.Outlined.ChatBubbleOutline, stringResource(R.string.nm_welcome_feat_chat), stringResource(R.string.nm_welcome_feat_chat_sub))
