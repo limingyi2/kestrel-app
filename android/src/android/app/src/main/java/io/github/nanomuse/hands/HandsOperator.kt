@@ -214,6 +214,7 @@ class HandsOperator(private val context: Context) {
                     timings["screenshot_retry_wait_ms"] = capture?.retryWaitMs ?: 0L
                     val shot = capture?.bitmap ?: run {
                         log += "step $steps timing: screenshot_capture_ms=${timings["screenshot_capture_ms"]}ms (failed)"
+                        trace(traceDir, steps, "", "", "screenshot_failed", lastScreen, timings)
                         return finish(Outcome.Failed("could not take a screenshot"), steps, runId, lastScreen, traceDir, log, model.label)
                     }
                     screenW = shot.width
@@ -254,7 +255,10 @@ class HandsOperator(private val context: Context) {
                     }
                 } catch (t: Throwable) {
                     timings["model_ms"] = SystemClock.elapsedRealtime() - modelStarted
-                    if (stop.get()) return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
+                    if (stop.get()) {
+                        trace(traceDir, steps, "", "", "model_cancelled", lastScreen, timings)
+                        return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
+                    }
                     log += "step $steps timing: model=${timings["model_ms"]}ms (failed)"
                     modelErrors++
                     AppLogger.warning(TAG, "model call failed: ${t.message}")
@@ -271,14 +275,20 @@ class HandsOperator(private val context: Context) {
                 }
                 timings["model_ms"] = SystemClock.elapsedRealtime() - modelStarted
                 timeline.mark("first_visual_response")
-                if (stop.get()) return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
+                if (stop.get()) {
+                    trace(traceDir, steps, "", "", "stopped_after_model", lastScreen, timings)
+                    return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
+                }
                 val turn = Turn(HandsPrompt.turnText(steps, lastResult), jpeg.bytes, reply)
                 turns += turn
                 val parsed = try {
                     HandsAction.parse(reply)
                 } catch (e: HandsAction.Companion.FormatError) {
                     formatErrors++
-                    if (formatErrors >= 3) return finish(Outcome.Failed("the screen model did not answer in the action format (${e.message})"), steps, runId, lastScreen, traceDir, log, model.label)
+                    if (formatErrors >= 3) {
+                        trace(traceDir, steps, "", reply, "model_format_failed", lastScreen, timings)
+                        return finish(Outcome.Failed("the screen model did not answer in the action format (${e.message})"), steps, runId, lastScreen, traceDir, log, model.label)
+                    }
                     lastResult = "your reply could not be read (${e.message}); answer with `Thought:` and one JSON `Action:` only."
                     log += "step $steps: unreadable reply"
                     trace(traceDir, steps, "", reply, lastResult, lastScreen, timings)
@@ -300,7 +310,7 @@ class HandsOperator(private val context: Context) {
                     HandsLoopWatch.Verdict.STOP -> {
                         val why = HandsLoopWatch.stopReason(action)
                         log += "step $steps: $why"
-                        trace(traceDir, steps, parsed.thought, reply, why, lastScreen)
+                        trace(traceDir, steps, parsed.thought, reply, why, lastScreen, timings)
                         return finish(Outcome.Infeasible(why), steps, runId, lastScreen, traceDir, log, model.label)
                     }
                     HandsLoopWatch.Verdict.NOTE -> {
