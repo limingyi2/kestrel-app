@@ -19,6 +19,7 @@ class HandsPageObserver(private val svc: MinisAccessibilityService, private val 
     init { svc.addEventListener(listener) }
 
     fun changed(): Boolean = synchronized(monitor) { state.lastChangeMs != null }
+    fun windowChanged(): Boolean = synchronized(monitor) { state.windowChanged }
 
     fun await(fallbackMs: Long, stopped: () -> Boolean, timings: MutableMap<String, Long>) {
         val waitStarted = SystemClock.elapsedRealtime()

@@ -37,7 +37,8 @@ load is finished. A continuous animation remains bounded. Without usable events 
 nodes, the old action-specific fallback remains, with at most 1,000 ms extra for an
 active transition. The following model decision always sees a fresh screenshot.
 
-Changed observations are discarded after inference. Taps recheck changes and unique
+Window changes invalidate observations after inference. Content-only changes permit
+a simple click to reacquire a live unique node; other actions reobserve. Taps recheck changes and unique
 target bounds after approval and aiming. A unique visible enabled exact node uses
 `ACTION_CLICK`, after the same risk gate. Ambiguous labels retain visual coordinates. A dangerous coordinate tap requires a fresh
 image identical to the approved observation after approval; otherwise it reobserves.

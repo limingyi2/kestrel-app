@@ -296,8 +296,12 @@ class HandsOperator(private val context: Context) {
                 }
                 formatErrors = 0
                 val action = parsed.action
+                // Content events can be animations or counters. A simple click can be
+                // grounded again on a live unique node, but a window switch invalidates it.
+                val canReground = action is HandsAction.Click && observationObserver?.windowChanged() != true &&
+                    ScreenWords.uniqueClickableCenter(svc, action.target) != null
                 if (observationObserver?.changed() == true && action !is HandsAction.Wait &&
-                    action !is HandsAction.TakeOver && action !is HandsAction.AskUser) {
+                    action !is HandsAction.TakeOver && action !is HandsAction.AskUser && !canReground) {
                     lastResult = "the page changed during observation; inspect the current screen before acting or reporting completion."
                     trace(traceDir, steps, parsed.thought, reply, "stale_observation_skipped", lastScreen, timings)
                     continue
@@ -392,7 +396,8 @@ class HandsOperator(private val context: Context) {
                         val aimStarted = SystemClock.elapsedRealtime()
                         Thread.sleep(AIM_MS)
                         timings["aim_wait_ms"] = SystemClock.elapsedRealtime() - aimStarted
-                        if (stop.get() || observationObserver?.changed() == true ||
+                        if (stop.get() || observationObserver?.windowChanged() == true ||
+                            (observationObserver?.changed() == true && (nodePoint == null || action !is HandsAction.Click)) ||
                             (nodePoint != null && ScreenWords.uniqueClickableCenter(svc, target) != nodePoint)) {
                             lastResult = "the page or target changed during approval; observe again before tapping."
                             trace(traceDir, steps, parsed.thought, reply, "target_reconfirmation_failed", lastScreen, timings)
