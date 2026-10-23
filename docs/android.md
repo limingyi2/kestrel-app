@@ -41,6 +41,28 @@ legacy account and data-control links show a local Relay/Bridge pause notice.
 | Files and sessions | Chat sessions, attachments, memory, goals, routines, feed data, avatar and provider settings remain in app storage across restarts. |
 | Cross-device Reach | The Reach and Hub code and wire protocol remain in the Android source. Their account-authenticated UI entry points are paused until Kestrel Relay/Bridge is available. No Hub socket is started from the legacy nanoMuse account token. |
 
+### Hands timing and task completion
+
+Hands writes per-step timings to its existing JSONL trace: screenshot capture, image encoding and
+save, screen-model request, accessibility lookup, risk approval, Android action, and settle or
+model-directed wait. `run-summary.json` records the terminal outcome and end-to-end duration. The
+settle floor remains the existing 900 ms for taps and 1,100 ms for swipes. After that floor,
+accessibility events can extend the wait by up to one second while the screen is still changing.
+This avoids guessing a shorter delay before collecting device measurements. The existing model
+request timeout is 90 seconds and screenshot capture is retried once.
+
+When the task succeeds or fails, Kestrel returns to chat by default. Turn off **Return to Kestrel
+after a task** in Hands settings to remain in the target app. A cancellation or a result requiring
+the user's attention remains in the target app. Stop cancels an in-flight model request and
+interrupts model-directed waits. A risk denial stops the run without bypassing approval. If Android
+blocks the foreground launch, Kestrel does not override the system; use the existing Hands capsule
+or foreground notification to return.
+
+No physical-device timing baseline is available in CI. Validate the Settings → About phone flow on
+an arm64 device, including each trace duration, the total duration, successful return, stay mode,
+cancellation, denied approval, model timeout and screenshot failure before treating timings as a
+device benchmark.
+
 Shell, file, Hands, browser, MCP and remote action approvals continue to use their existing local
 permission and sandbox paths. Removing the account system does not grant tools additional access.
 

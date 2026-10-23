@@ -471,15 +471,17 @@ class HandsCapsule(private val context: Context) {
     }
 
     /** Brings nanoMuse's chat back to the front. */
-    fun bringAppToFront(sessionId: String?) {
+    fun bringAppToFront(sessionId: String?): Boolean {
         try {
             val intent = Intent(context, Class.forName("com.openminis.app.MainActivity")).apply {
                 if (!sessionId.isNullOrBlank()) data = android.net.Uri.parse("minis://session/$sessionId")
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
             context.startActivity(intent)
+            return true
         } catch (t: Throwable) {
             AppLogger.warning(TAG, "bring to front failed: ${t.message}")
+            return false
         }
     }
 

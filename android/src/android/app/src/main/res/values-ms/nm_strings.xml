@@ -2,6 +2,9 @@
 <!-- nanoMuse: strings added on top of upstream; kept in their own file so an
      upstream pull never touches them. Anything missing here falls back to English. -->
 <resources>
+    <string name="nm_hands_return_title">Kembali ke Kestrel selepas tugas</string>
+    <string name="nm_hands_return_subtitle">Kembali selepas berjaya atau berlaku ralat. Kekal dalam aplikasi sasaran jika dibatalkan atau tindakan anda diperlukan.</string>
+    <string name="nm_hands_return_footer">Matikan pilihan ini untuk kekal dalam aplikasi sasaran selepas tugas. Android mungkin menyekat pertukaran aplikasi automatik apabila Kestrel di latar belakang. Gunakan kapsul Hands atau pemberitahuan untuk kembali.</string>
     <string name="nm_about_build">Binaan ini</string>
     <string name="nm_about_license">Lesen</string>
     <string name="nm_about_upstream">Berasaskan OpenMinis 1.13</string>

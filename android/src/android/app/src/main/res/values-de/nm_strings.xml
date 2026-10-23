@@ -2,6 +2,9 @@
 <!-- nanoMuse: strings added on top of upstream; kept in their own file so an
      upstream pull never touches them. Anything missing here falls back to English. -->
 <resources>
+    <string name="nm_hands_return_title">Nach einer Aufgabe zu Kestrel zurückkehren</string>
+    <string name="nm_hands_return_subtitle">Nach Erfolg oder Fehler zurückkehren. Bei Abbruch oder nötiger Nutzereingabe in der Ziel-App bleiben.</string>
+    <string name="nm_hands_return_footer">Deaktivieren, um nach einer Aufgabe in der Ziel-App zu bleiben. Android kann den automatischen App-Wechsel im Hintergrund verhindern. Kehren Sie über die Hands-Leiste oder die Benachrichtigung zurück.</string>
     <string name="nm_about_build">Dieser Build</string>
     <string name="nm_about_license">Lizenz</string>
     <string name="nm_about_upstream">Basiert auf OpenMinis 1.13</string>

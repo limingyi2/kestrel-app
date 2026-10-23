@@ -2,6 +2,9 @@
 <!-- nanoMuse: strings added on top of upstream; kept in their own file so an
      upstream pull never touches them. Anything missing here falls back to English. -->
 <resources>
+    <string name="nm_hands_return_title">Volver a Kestrel al terminar una tarea</string>
+    <string name="nm_hands_return_subtitle">Volver tras completar la tarea o si ocurre un error. Si se cancela o hace falta tu intervención, permanece en la aplicación objetivo.</string>
+    <string name="nm_hands_return_footer">Desactiva esta opción para permanecer en la aplicación objetivo. Android puede impedir el cambio automático cuando Kestrel está en segundo plano. Usa la cápsula de Hands o la notificación para volver.</string>
     <string name="nm_about_build">Esta compilación</string>
     <string name="nm_about_license">Licencia</string>
     <string name="nm_about_upstream">Basado en OpenMinis 1.13</string>
