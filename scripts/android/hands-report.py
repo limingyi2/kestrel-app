@@ -13,6 +13,9 @@ STAGES = (
     ("agent_to_hands_call", "agent_first_response", "hands_tool_call"),
     ("tool_scheduling", "hands_tool_call", "hands_native_received"),
     ("native_startup", "hands_native_received", "hands_started"),
+    ("operator_to_first_screenshot", "hands_started", "first_screenshot_complete"),
+    ("screenshot_to_visual_response", "first_screenshot_complete", "first_visual_response"),
+    ("first_to_next_action", "first_android_action", "next_android_action"),
     ("instruction_to_first_action", "instruction_received", "first_android_action"),
     ("task_total", "instruction_received", "task_finished"),
 )
@@ -45,6 +48,7 @@ def percentiles(values: list[float]) -> dict[str, Any]:
 
 def report(root: Path) -> dict[str, Any]:
     distributions: dict[str, list[float]] = {name: [] for name, _, _ in STAGES}
+    distributions.update({"model_call": [], "page_wait": []})
     totals = dict.fromkeys(LEAVES, 0.0)
     runs = []
     elapsed = 0.0
@@ -63,6 +67,9 @@ def report(root: Path) -> dict[str, Any]:
             times = row.get("timings_ms", {})
             for key in LEAVES:
                 totals[key] += times.get(key, 0)
+            for name, field in (("model_call", "model_ms"), ("page_wait", "settle_wait_ms")):
+                if field in times:
+                    distributions[name].append(times[field])
             rows.append({"step": row.get("step"), "timings_ms": times})
         runs.append(
             {

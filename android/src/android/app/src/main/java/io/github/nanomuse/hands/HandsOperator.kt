@@ -366,6 +366,12 @@ class HandsOperator(private val context: Context) {
                         val aimStarted = SystemClock.elapsedRealtime()
                         Thread.sleep(AIM_MS)
                         timings["aim_wait_ms"] = SystemClock.elapsedRealtime() - aimStarted
+                        if (stop.get() || observationObserver?.changed() == true ||
+                            (nodePoint != null && ScreenWords.uniqueClickableCenter(svc, target) != nodePoint)) {
+                            lastResult = "the page or target changed during approval; observe again before tapping."
+                            trace(traceDir, steps, parsed.thought, reply, "target_reconfirmation_failed", lastScreen, timings)
+                            continue
+                        }
                         val gestureStarted = SystemClock.elapsedRealtime()
                         recordAction()
                         val ok = capsule.passThrough {
@@ -436,8 +442,12 @@ class HandsOperator(private val context: Context) {
                         if (stop.get()) return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
                         capsule.stage.say(fxLabel(action))
                         val actionTime = SystemClock.elapsedRealtime()
-                        recordAction()
-                        lastResult = if (observationObserver?.changed() == true) "page changed during approval; observe again before Enter." else pressEnter(svc)
+                        if (observationObserver?.changed() == true) {
+                            lastResult = "page changed during approval; observe again before Enter."
+                        } else {
+                            recordAction()
+                            lastResult = pressEnter(svc)
+                        }
                         timings["android_action_ms"] = SystemClock.elapsedRealtime() - actionTime
                         settleAfterAction(svc, timings, TAP_SETTLE_MS)
                     }
