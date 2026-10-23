@@ -24,11 +24,11 @@ class FirstRunSetupTest {
     @Test
     fun `setup stages are welcome models hands and first conversation`() {
         assertEquals(Stage.WELCOME, FirstRunSetup.stage(hasGroups = true, modelsSkipped = false, handsSeen = false, hasProviders = false))
-        assertEquals(Stage.MODELS, FirstRunSetup.stage(hasGroups = false, modelsSkipped = false, handsSeen = false, hasProviders = true))
-        assertEquals(Stage.HANDS, FirstRunSetup.stage(hasGroups = true, modelsSkipped = false, handsSeen = false, hasProviders = true))
+        assertEquals(Stage.MODELS, FirstRunSetup.stage(hasGroups = false, modelsSkipped = false, handsSeen = false, handsPossible = false, hasProviders = true))
+        assertEquals(Stage.HANDS, FirstRunSetup.stage(hasGroups = true, modelsSkipped = false, handsSeen = false, handsPossible = true, hasProviders = true))
         assertEquals(Stage.MEET, FirstRunSetup.stage(hasGroups = true, modelsSkipped = false, handsSeen = true, hasProviders = true))
         assertEquals(Stage.MEET, FirstRunSetup.stage(hasGroups = true, modelsSkipped = false, handsSeen = false, handsPossible = false, hasProviders = true))
-        assertEquals(Stage.HANDS, FirstRunSetup.stage(hasGroups = false, modelsSkipped = true, handsSeen = false, hasProviders = true))
+        assertEquals(Stage.HANDS, FirstRunSetup.stage(hasGroups = false, modelsSkipped = true, handsSeen = false, handsPossible = true, hasProviders = true))
     }
 
     @Test
