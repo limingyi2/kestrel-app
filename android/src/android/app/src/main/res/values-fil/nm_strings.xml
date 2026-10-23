@@ -24,14 +24,14 @@
     <string name="nm_star_done">Nabigyan ko na ng star</string>
     <string name="nm_star_signed_in">Maligayang pagdating. Libre, open source at non-profit ang Kestrel: isang personal na agent para sa sinumang magpapatakbo nito. Kung may halaga ito sa iyo, ang star sa GitHub ang paraan para mahanap ito ng susunod na tao.</string>
     <plurals name="nm_star_tasks">
-        <item quantity="one">Isang gawain ang tapos na. Kung nakatulong ang nanoMuse, sinasabi ng star sa GitHub sa mga gumagawa nito na nakatulong nga ito.</item>
-        <item quantity="other">%1$d gawain ang tapos na. Kung kapaki-pakinabang ang nanoMuse, nakakatulong ang star sa GitHub para mahanap ito ng susunod na tao.</item>
+        <item quantity="one">Isang gawain ang tapos na. Kung nakatulong ang Kestrel, sinasabi ng star sa GitHub sa mga gumagawa nito na nakatulong nga ito.</item>
+        <item quantity="other">%1$d gawain ang tapos na. Kung kapaki-pakinabang ang Kestrel, nakakatulong ang star sa GitHub para mahanap ito ng susunod na tao.</item>
     </plurals>
     <string name="nm_star_days_used_week">Isang linggo na kasama ang Kestrel. Kung may lugar na ito sa araw mo, nakakatulong ang star sa GitHub para mahanap ito ng susunod na tao.</string>
     <string name="nm_star_days_used_month">Isang buwan na kasama ang Kestrel. Kung bahagi na ito ng routine mo, sinasabi ng star sa GitHub sa iba na sulit itong subukan.</string>
     <plurals name="nm_star_days_used">
-        <item quantity="one">Isang araw kasama ang nanoMuse. Kung nakatulong ito, nakakatulong ang star sa GitHub para mahanap ito ng susunod na tao.</item>
-        <item quantity="other">%1$d araw na kasama ang nanoMuse. Kung may lugar na ito sa araw mo, nakakatulong ang star sa GitHub para mahanap ito ng susunod na tao.</item>
+        <item quantity="one">Isang araw kasama ang Kestrel. Kung nakatulong ito, nakakatulong ang star sa GitHub para mahanap ito ng susunod na tao.</item>
+        <item quantity="other">%1$d araw na kasama ang Kestrel. Kung may lugar na ito sa araw mo, nakakatulong ang star sa GitHub para mahanap ito ng susunod na tao.</item>
     </plurals>
     <string name="nm_star_goal_done">Naabot ang layunin. Kung nakatulong ang Kestrel para marating mo ito, sinasabi iyon ng star sa GitHub sa mga gumagawa nito.</string>
     <string name="nm_star_new_look">Isang bagong mukha, iginuhit para sa iyo. Kung gusto mo ang tinatahak ng Kestrel, nakakatulong ang star sa GitHub para mas marami ang makahanap nito.</string>

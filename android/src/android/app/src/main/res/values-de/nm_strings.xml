@@ -24,14 +24,14 @@
     <string name="nm_star_done">Stern schon gegeben</string>
     <string name="nm_star_signed_in">Willkommen. Kestrel ist kostenlos, quelloffen und gemeinnützig: ein persönlicher Agent für alle, die ihn ausführen. Wenn dir das etwas wert ist, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</string>
     <plurals name="nm_star_tasks">
-        <item quantity="one">Eine Aufgabe erledigt. Wenn nanoMuse geholfen hat, zeigt ein Stern auf GitHub den Leuten, die daran bauen, dass es das getan hat.</item>
-        <item quantity="other">%1$d Aufgaben erledigt. Wenn nanoMuse nützlich ist, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</item>
+        <item quantity="one">Eine Aufgabe erledigt. Wenn Kestrel geholfen hat, zeigt ein Stern auf GitHub den Leuten, die daran bauen, dass es das getan hat.</item>
+        <item quantity="other">%1$d Aufgaben erledigt. Wenn Kestrel nützlich ist, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</item>
     </plurals>
     <string name="nm_star_days_used_week">Eine Woche mit Kestrel. Wenn es sich einen Platz in deinem Tag verdient hat, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</string>
     <string name="nm_star_days_used_month">Ein Monat mit Kestrel. Wenn es Teil deiner Routine geworden ist, sagt ein Stern auf GitHub anderen, dass sich ein Versuch lohnt.</string>
     <plurals name="nm_star_days_used">
-        <item quantity="one">Ein Tag mit nanoMuse. Wenn es geholfen hat, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</item>
-        <item quantity="other">%1$d Tage mit nanoMuse. Wenn es sich einen Platz in deinem Tag verdient hat, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</item>
+        <item quantity="one">Ein Tag mit Kestrel. Wenn es geholfen hat, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</item>
+        <item quantity="other">%1$d Tage mit Kestrel. Wenn es sich einen Platz in deinem Tag verdient hat, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</item>
     </plurals>
     <string name="nm_star_goal_done">Ziel erreicht. Wenn Kestrel dir dabei geholfen hat, sagt ein Stern auf GitHub das den Leuten, die daran bauen.</string>
     <string name="nm_star_new_look">Ein neues Gesicht, für dich gezeichnet. Wenn dir gefällt, wohin Kestrel geht, hilft ein Stern auf GitHub, dass mehr Leute es finden.</string>

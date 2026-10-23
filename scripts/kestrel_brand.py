@@ -77,6 +77,12 @@ def overlay() -> dict[Path, str]:
             return f"{m.group(0)[: m.start(2) - m.start()]}{PRODUCT.sub('Kestrel', value)}</string>"
 
         text = re.sub(r'<string name="([^"]+)"[^>]*>(.*?)</string>', resource, text)
+        # Plural entries are also UI copy; their quantity attributes stay intact.
+        text = re.sub(
+            r"(<item\b[^>]*>)([^<]*)(</item>)",
+            lambda m: m.group(1) + PRODUCT.sub("Kestrel", m.group(2)) + m.group(3),
+            text,
+        )
         ET.fromstring(text)
         edits[path] = text
 

@@ -24,14 +24,14 @@
     <string name="nm_star_done">I already starred</string>
     <string name="nm_star_signed_in">Welcome. Kestrel is free, open source and non-profit: a personal agent for anyone who runs it. If that is worth something to you, a star on GitHub is how the next person finds it.</string>
     <plurals name="nm_star_tasks">
-        <item quantity="one">One task done. If nanoMuse helped, a star on GitHub tells the people building it that it did.</item>
-        <item quantity="other">%1$d tasks done. If nanoMuse is useful, a star on GitHub helps the next person find it.</item>
+        <item quantity="one">One task done. If Kestrel helped, a star on GitHub tells the people building it that it did.</item>
+        <item quantity="other">%1$d tasks done. If Kestrel is useful, a star on GitHub helps the next person find it.</item>
     </plurals>
     <string name="nm_star_days_used_week">A week with Kestrel. If it has earned a place in your day, a star on GitHub helps the next person find it.</string>
     <string name="nm_star_days_used_month">A month with Kestrel. If it has become part of your routine, a star on GitHub tells others it is worth a try.</string>
     <plurals name="nm_star_days_used">
-        <item quantity="one">A day with nanoMuse. If it helped, a star on GitHub helps the next person find it.</item>
-        <item quantity="other">%1$d days with nanoMuse. If it has earned a place in your day, a star on GitHub helps the next person find it.</item>
+        <item quantity="one">A day with Kestrel. If it helped, a star on GitHub helps the next person find it.</item>
+        <item quantity="other">%1$d days with Kestrel. If it has earned a place in your day, a star on GitHub helps the next person find it.</item>
     </plurals>
     <string name="nm_star_goal_done">Goal reached. If Kestrel helped you get there, a star on GitHub tells the people building it.</string>
     <string name="nm_star_new_look">A new face, drawn for you. If you like where Kestrel is going, a star on GitHub helps more people find it.</string>

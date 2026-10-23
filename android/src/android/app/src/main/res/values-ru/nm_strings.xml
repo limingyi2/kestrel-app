@@ -24,18 +24,18 @@
     <string name="nm_star_done">Звезда уже стоит</string>
     <string name="nm_star_signed_in">Добро пожаловать. Kestrel бесплатен, открыт и некоммерческий: личный агент для каждого, кто его запустит. Если для вас это что-то значит, звезда на GitHub поможет следующему человеку его найти.</string>
     <plurals name="nm_star_tasks">
-        <item quantity="one">%1$d задача выполнена. Если nanoMuse помог, звезда на GitHub скажет об этом тем, кто его делает.</item>
-        <item quantity="few">%1$d задачи выполнены. Если nanoMuse полезен, звезда на GitHub поможет следующему человеку его найти.</item>
-        <item quantity="many">%1$d задач выполнено. Если nanoMuse полезен, звезда на GitHub поможет следующему человеку его найти.</item>
-        <item quantity="other">%1$d задачи выполнено. Если nanoMuse полезен, звезда на GitHub поможет следующему человеку его найти.</item>
+        <item quantity="one">%1$d задача выполнена. Если Kestrel помог, звезда на GitHub скажет об этом тем, кто его делает.</item>
+        <item quantity="few">%1$d задачи выполнены. Если Kestrel полезен, звезда на GitHub поможет следующему человеку его найти.</item>
+        <item quantity="many">%1$d задач выполнено. Если Kestrel полезен, звезда на GitHub поможет следующему человеку его найти.</item>
+        <item quantity="other">%1$d задачи выполнено. Если Kestrel полезен, звезда на GitHub поможет следующему человеку его найти.</item>
     </plurals>
     <string name="nm_star_days_used_week">Неделя с Kestrel. Если он нашёл место в вашем дне, звезда на GitHub поможет следующему человеку его найти.</string>
     <string name="nm_star_days_used_month">Месяц с Kestrel. Если он стал частью вашего распорядка, звезда на GitHub подскажет другим, что его стоит попробовать.</string>
     <plurals name="nm_star_days_used">
-        <item quantity="one">%1$d день с nanoMuse. Если он помог, звезда на GitHub поможет следующему человеку его найти.</item>
-        <item quantity="few">%1$d дня с nanoMuse. Если он нашёл место в вашем дне, звезда на GitHub поможет следующему человеку его найти.</item>
-        <item quantity="many">%1$d дней с nanoMuse. Если он нашёл место в вашем дне, звезда на GitHub поможет следующему человеку его найти.</item>
-        <item quantity="other">%1$d дня с nanoMuse. Если он нашёл место в вашем дне, звезда на GitHub поможет следующему человеку его найти.</item>
+        <item quantity="one">%1$d день с Kestrel. Если он помог, звезда на GitHub поможет следующему человеку его найти.</item>
+        <item quantity="few">%1$d дня с Kestrel. Если он нашёл место в вашем дне, звезда на GitHub поможет следующему человеку его найти.</item>
+        <item quantity="many">%1$d дней с Kestrel. Если он нашёл место в вашем дне, звезда на GitHub поможет следующему человеку его найти.</item>
+        <item quantity="other">%1$d дня с Kestrel. Если он нашёл место в вашем дне, звезда на GitHub поможет следующему человеку его найти.</item>
     </plurals>
     <string name="nm_star_goal_done">Цель достигнута. Если Kestrel помог вам дойти до неё, звезда на GitHub скажет об этом тем, кто его делает.</string>
     <string name="nm_star_new_look">Новый образ, нарисованный для вас. Если вам нравится, куда идёт Kestrel, звезда на GitHub поможет большему числу людей его найти.</string>

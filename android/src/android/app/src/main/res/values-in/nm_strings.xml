@@ -24,12 +24,12 @@
     <string name="nm_star_done">Sudah saya beri bintang</string>
     <string name="nm_star_signed_in">Selamat datang. Kestrel gratis, open source dan nirlaba: agen pribadi untuk siapa saja yang menjalankannya. Jika itu berarti bagimu, bintang di GitHub adalah cara orang berikutnya menemukannya.</string>
     <plurals name="nm_star_tasks">
-        <item quantity="other">%1$d tugas selesai. Jika nanoMuse berguna, bintang di GitHub membantu orang berikutnya menemukannya.</item>
+        <item quantity="other">%1$d tugas selesai. Jika Kestrel berguna, bintang di GitHub membantu orang berikutnya menemukannya.</item>
     </plurals>
     <string name="nm_star_days_used_week">Seminggu bersama Kestrel. Jika ia sudah punya tempat dalam harimu, bintang di GitHub membantu orang berikutnya menemukannya.</string>
     <string name="nm_star_days_used_month">Sebulan bersama Kestrel. Jika ia sudah jadi bagian dari rutinitasmu, bintang di GitHub memberi tahu orang lain bahwa ia layak dicoba.</string>
     <plurals name="nm_star_days_used">
-        <item quantity="other">%1$d hari bersama nanoMuse. Jika ia sudah punya tempat dalam harimu, bintang di GitHub membantu orang berikutnya menemukannya.</item>
+        <item quantity="other">%1$d hari bersama Kestrel. Jika ia sudah punya tempat dalam harimu, bintang di GitHub membantu orang berikutnya menemukannya.</item>
     </plurals>
     <string name="nm_star_goal_done">Tujuan tercapai. Jika Kestrel membantumu sampai di sini, bintang di GitHub memberi tahu orang-orang yang membangunnya.</string>
     <string name="nm_star_new_look">Wajah baru, digambar untukmu. Jika kamu suka arah Kestrel, bintang di GitHub membantu lebih banyak orang menemukannya.</string>

@@ -23,12 +23,12 @@
     <string name="nm_star_done">已经点过了</string>
     <string name="nm_star_signed_in">欢迎加入。Kestrel 免费、开源、非营利，做的是一个属于每个人的个人智能体。如果你认同，GitHub 上的一颗 Star 能让下一个人也找到这里。</string>
     <plurals name="nm_star_tasks">
-        <item quantity="other">已经一起完成 %1$d 个任务。如果 nanoMuse 帮上了忙，到 GitHub 点一颗 Star，下一个人也能找到它。</item>
+        <item quantity="other">已经一起完成 %1$d 个任务。如果 Kestrel 帮上了忙，到 GitHub 点一颗 Star，下一个人也能找到它。</item>
     </plurals>
     <string name="nm_star_days_used_week">和 Kestrel 一起过了一周。如果它在你的日常里有了位置，到 GitHub 点一颗 Star，下一个人也能找到它。</string>
     <string name="nm_star_days_used_month">和 Kestrel 一起过了一个月。如果它成了你习惯的一部分，一颗 Star 会让更多人愿意试一试。</string>
     <plurals name="nm_star_days_used">
-        <item quantity="other">和 nanoMuse 一起过了 %1$d 天。如果它在你的日常里有了位置，到 GitHub 点一颗 Star，下一个人也能找到它。</item>
+        <item quantity="other">和 Kestrel 一起过了 %1$d 天。如果它在你的日常里有了位置，到 GitHub 点一颗 Star，下一个人也能找到它。</item>
     </plurals>
     <string name="nm_star_goal_done">目标达成了。如果 Kestrel 帮你走到了这一步，到 GitHub 点一颗 Star，做它的人就知道了。</string>
     <string name="nm_star_new_look">一张为你画的新面孔。如果你喜欢 Kestrel 现在的样子，到 GitHub 点一颗 Star，更多人就能遇见它。</string>

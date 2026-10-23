@@ -24,18 +24,18 @@
     <string name="nm_star_done">Gwiazdka już jest</string>
     <string name="nm_star_signed_in">Witaj. Kestrel jest darmowe, otwarte i niekomercyjne: osobisty agent dla każdego, kto je uruchomi. Jeśli to coś dla ciebie znaczy, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</string>
     <plurals name="nm_star_tasks">
-        <item quantity="one">Jedno zadanie wykonane. Jeśli nanoMuse pomogło, gwiazdka na GitHub mówi o tym osobom, które je tworzą.</item>
-        <item quantity="few">%1$d zadania wykonane. Jeśli nanoMuse się przydaje, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
-        <item quantity="many">%1$d zadań wykonanych. Jeśli nanoMuse się przydaje, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
-        <item quantity="other">%1$d zadania wykonanego. Jeśli nanoMuse się przydaje, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
+        <item quantity="one">Jedno zadanie wykonane. Jeśli Kestrel pomogło, gwiazdka na GitHub mówi o tym osobom, które je tworzą.</item>
+        <item quantity="few">%1$d zadania wykonane. Jeśli Kestrel się przydaje, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
+        <item quantity="many">%1$d zadań wykonanych. Jeśli Kestrel się przydaje, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
+        <item quantity="other">%1$d zadania wykonanego. Jeśli Kestrel się przydaje, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
     </plurals>
     <string name="nm_star_days_used_week">Tydzień z Kestrel. Jeśli znalazło miejsce w twoim dniu, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</string>
     <string name="nm_star_days_used_month">Miesiąc z Kestrel. Jeśli stało się częścią twojej rutyny, gwiazdka na GitHub mówi innym, że warto spróbować.</string>
     <plurals name="nm_star_days_used">
-        <item quantity="one">Dzień z nanoMuse. Jeśli pomogło, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
-        <item quantity="few">%1$d dni z nanoMuse. Jeśli znalazło miejsce w twoim dniu, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
-        <item quantity="many">%1$d dni z nanoMuse. Jeśli znalazło miejsce w twoim dniu, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
-        <item quantity="other">%1$d dnia z nanoMuse. Jeśli znalazło miejsce w twoim dniu, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
+        <item quantity="one">Dzień z Kestrel. Jeśli pomogło, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
+        <item quantity="few">%1$d dni z Kestrel. Jeśli znalazło miejsce w twoim dniu, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
+        <item quantity="many">%1$d dni z Kestrel. Jeśli znalazło miejsce w twoim dniu, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
+        <item quantity="other">%1$d dnia z Kestrel. Jeśli znalazło miejsce w twoim dniu, gwiazdka na GitHub pomoże następnej osobie je znaleźć.</item>
     </plurals>
     <string name="nm_star_goal_done">Cel osiągnięty. Jeśli Kestrel pomogło ci do niego dojść, gwiazdka na GitHub mówi o tym osobom, które je tworzą.</string>
     <string name="nm_star_new_look">Nowa twarz, narysowana dla ciebie. Jeśli podoba ci się kierunek Kestrel, gwiazdka na GitHub pomoże większej liczbie osób je znaleźć.</string>

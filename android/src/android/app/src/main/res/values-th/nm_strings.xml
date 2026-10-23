@@ -24,12 +24,12 @@
     <string name="nm_star_done">ให้ดาวแล้ว</string>
     <string name="nm_star_signed_in">ยินดีต้อนรับ Kestrel เป็นซอฟต์แวร์ฟรี โอเพนซอร์ส และไม่แสวงหากำไร เอเจนต์ส่วนตัวสำหรับทุกคนที่ใช้งาน ถ้าสิ่งนี้มีค่าสำหรับคุณ ดาวบน GitHub คือวิธีที่ทำให้คนถัดไปพบมัน</string>
     <plurals name="nm_star_tasks">
-        <item quantity="other">ทำงานเสร็จไปแล้ว %1$d งาน ถ้า nanoMuse มีประโยชน์ ดาวบน GitHub ช่วยให้คนถัดไปพบมันได้</item>
+        <item quantity="other">ทำงานเสร็จไปแล้ว %1$d งาน ถ้า Kestrel มีประโยชน์ ดาวบน GitHub ช่วยให้คนถัดไปพบมันได้</item>
     </plurals>
     <string name="nm_star_days_used_week">หนึ่งสัปดาห์กับ Kestrel ถ้ามันมีที่ทางในแต่ละวันของคุณแล้ว ดาวบน GitHub ช่วยให้คนถัดไปพบมันได้</string>
     <string name="nm_star_days_used_month">หนึ่งเดือนกับ Kestrel ถ้ามันกลายเป็นส่วนหนึ่งของกิจวัตรของคุณแล้ว ดาวบน GitHub บอกคนอื่นว่ามันคุ้มค่าที่จะลอง</string>
     <plurals name="nm_star_days_used">
-        <item quantity="other">%1$d วันกับ nanoMuse ถ้ามันมีที่ทางในแต่ละวันของคุณแล้ว ดาวบน GitHub ช่วยให้คนถัดไปพบมันได้</item>
+        <item quantity="other">%1$d วันกับ Kestrel ถ้ามันมีที่ทางในแต่ละวันของคุณแล้ว ดาวบน GitHub ช่วยให้คนถัดไปพบมันได้</item>
     </plurals>
     <string name="nm_star_goal_done">ถึงเป้าหมายแล้ว ถ้า Kestrel ช่วยพาคุณมาถึงตรงนี้ ดาวบน GitHub บอกคนที่สร้างมันให้รู้</string>
     <string name="nm_star_new_look">ใบหน้าใหม่ วาดขึ้นเพื่อคุณ ถ้าคุณชอบทิศทางที่ Kestrel กำลังไป ดาวบน GitHub ช่วยให้คนพบมันมากขึ้น</string>

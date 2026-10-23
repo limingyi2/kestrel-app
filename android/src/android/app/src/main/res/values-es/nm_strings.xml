@@ -24,14 +24,14 @@
     <string name="nm_star_done">Ya le di la estrella</string>
     <string name="nm_star_signed_in">Te damos la bienvenida. Kestrel es gratuito, de código abierto y sin ánimo de lucro: un agente personal para cualquiera que lo use. Si eso vale algo para ti, una estrella en GitHub es la forma en que la siguiente persona lo encuentra.</string>
     <plurals name="nm_star_tasks">
-        <item quantity="one">Una tarea hecha. Si nanoMuse te ayudó, una estrella en GitHub se lo dice a quienes lo construyen.</item>
-        <item quantity="other">%1$d tareas hechas. Si nanoMuse te resulta útil, una estrella en GitHub ayuda a que la siguiente persona lo encuentre.</item>
+        <item quantity="one">Una tarea hecha. Si Kestrel te ayudó, una estrella en GitHub se lo dice a quienes lo construyen.</item>
+        <item quantity="other">%1$d tareas hechas. Si Kestrel te resulta útil, una estrella en GitHub ayuda a que la siguiente persona lo encuentre.</item>
     </plurals>
     <string name="nm_star_days_used_week">Una semana con Kestrel. Si se ha ganado un sitio en tu día, una estrella en GitHub ayuda a que la siguiente persona lo encuentre.</string>
     <string name="nm_star_days_used_month">Un mes con Kestrel. Si ya forma parte de tu rutina, una estrella en GitHub le dice a otros que vale la pena probarlo.</string>
     <plurals name="nm_star_days_used">
-        <item quantity="one">Un día con nanoMuse. Si te ayudó, una estrella en GitHub ayuda a que la siguiente persona lo encuentre.</item>
-        <item quantity="other">%1$d días con nanoMuse. Si se ha ganado un sitio en tu día, una estrella en GitHub ayuda a que la siguiente persona lo encuentre.</item>
+        <item quantity="one">Un día con Kestrel. Si te ayudó, una estrella en GitHub ayuda a que la siguiente persona lo encuentre.</item>
+        <item quantity="other">%1$d días con Kestrel. Si se ha ganado un sitio en tu día, una estrella en GitHub ayuda a que la siguiente persona lo encuentre.</item>
     </plurals>
     <string name="nm_star_goal_done">Meta cumplida. Si Kestrel te ayudó a llegar, una estrella en GitHub se lo dice a quienes lo construyen.</string>
     <string name="nm_star_new_look">Una cara nueva, dibujada para ti. Si te gusta hacia dónde va Kestrel, una estrella en GitHub ayuda a que más gente lo encuentre.</string>

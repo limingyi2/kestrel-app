@@ -24,16 +24,16 @@
     <string name="nm_star_done">Am dat deja steaua</string>
     <string name="nm_star_signed_in">Bine ai venit. Kestrel este gratuit, open source și nonprofit: un agent personal pentru oricine îl rulează. Dacă asta înseamnă ceva pentru tine, o stea pe GitHub este felul în care următoarea persoană îl găsește.</string>
     <plurals name="nm_star_tasks">
-        <item quantity="one">O sarcină încheiată. Dacă nanoMuse a ajutat, o stea pe GitHub le spune celor care îl construiesc că a făcut-o.</item>
-        <item quantity="few">%1$d sarcini încheiate. Dacă nanoMuse e util, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
-        <item quantity="other">%1$d de sarcini încheiate. Dacă nanoMuse e util, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
+        <item quantity="one">O sarcină încheiată. Dacă Kestrel a ajutat, o stea pe GitHub le spune celor care îl construiesc că a făcut-o.</item>
+        <item quantity="few">%1$d sarcini încheiate. Dacă Kestrel e util, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
+        <item quantity="other">%1$d de sarcini încheiate. Dacă Kestrel e util, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
     </plurals>
     <string name="nm_star_days_used_week">O săptămână cu Kestrel. Dacă și-a câștigat un loc în ziua ta, o stea pe GitHub ajută următoarea persoană să-l găsească.</string>
     <string name="nm_star_days_used_month">O lună cu Kestrel. Dacă a devenit parte din rutina ta, o stea pe GitHub le spune altora că merită încercat.</string>
     <plurals name="nm_star_days_used">
-        <item quantity="one">O zi cu nanoMuse. Dacă a ajutat, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
-        <item quantity="few">%1$d zile cu nanoMuse. Dacă și-a câștigat un loc în ziua ta, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
-        <item quantity="other">%1$d de zile cu nanoMuse. Dacă și-a câștigat un loc în ziua ta, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
+        <item quantity="one">O zi cu Kestrel. Dacă a ajutat, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
+        <item quantity="few">%1$d zile cu Kestrel. Dacă și-a câștigat un loc în ziua ta, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
+        <item quantity="other">%1$d de zile cu Kestrel. Dacă și-a câștigat un loc în ziua ta, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
     </plurals>
     <string name="nm_star_goal_done">Obiectiv atins. Dacă Kestrel te-a ajutat să ajungi aici, o stea pe GitHub le spune celor care îl construiesc.</string>
     <string name="nm_star_new_look">O față nouă, desenată pentru tine. Dacă îți place direcția în care merge Kestrel, o stea pe GitHub ajută mai mulți oameni să-l găsească.</string>
