@@ -17,7 +17,9 @@ STAGES = (
     ("screenshot_to_visual_response", "first_screenshot_complete", "first_visual_response"),
     ("first_to_next_action", "first_android_action", "next_android_action"),
     ("instruction_to_first_action", "instruction_received", "first_android_action"),
-    ("task_total", "instruction_received", "task_finished"),
+    ("hands_task_total", "instruction_received", "task_finished"),
+    ("main_agent_tail", "task_finished", "agent_task_finished"),
+    ("task_total", "instruction_received", "agent_task_finished"),
 )
 # Exclusive leaf durations only. action_and_wait_ms contains several of these, never sum it.
 LEAVES = (
@@ -56,6 +58,7 @@ def report(root: Path) -> dict[str, Any]:
     end_to_end_elapsed = 0.0
     end_to_end_totals = dict.fromkeys(LEAVES, 0.0)
     pre_operator = 0.0
+    main_agent_tail = 0.0
     for path in sorted(root.rglob("run-summary.json")):
         summary = json.loads(path.read_text(encoding="utf-8"))
         milestones = summary.get("milestones_ms", {})
@@ -78,10 +81,19 @@ def report(root: Path) -> dict[str, Any]:
                     distributions[name].append(times[field])
             rows.append({"step": row.get("step"), "timings_ms": times})
         if all(
-            key in milestones for key in ("instruction_received", "hands_started", "task_finished")
+            key in milestones
+            for key in (
+                "instruction_received",
+                "hands_started",
+                "task_finished",
+                "agent_task_finished",
+            )
         ):
-            end_to_end_elapsed += milestones["task_finished"] - milestones["instruction_received"]
+            end_to_end_elapsed += (
+                milestones["agent_task_finished"] - milestones["instruction_received"]
+            )
             pre_operator += milestones["hands_started"] - milestones["instruction_received"]
+            main_agent_tail += milestones["agent_task_finished"] - milestones["task_finished"]
             for key, value in run_totals.items():
                 end_to_end_totals[key] += value
         runs.append(
@@ -112,9 +124,14 @@ def report(root: Path) -> dict[str, Any]:
             }
             for key, value in {
                 "pre_operator_ms": pre_operator,
+                "main_agent_tail_ms": main_agent_tail,
                 **end_to_end_totals,
                 "unattributed_ms": max(
-                    0, end_to_end_elapsed - pre_operator - sum(end_to_end_totals.values())
+                    0,
+                    end_to_end_elapsed
+                    - pre_operator
+                    - main_agent_tail
+                    - sum(end_to_end_totals.values()),
                 ),
             }.items()
         },

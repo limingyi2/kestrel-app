@@ -268,7 +268,6 @@ class HandsOperator(private val context: Context) {
                         return finish(Outcome.Failed(message), steps, runId, lastScreen, traceDir, log, model.label)
                     }
                     trace(traceDir, steps, "", "", "model_retry", lastScreen, timings)
-                    retryObservation = null
                     steps--
                     Thread.sleep(1500)
                     continue
@@ -298,7 +297,7 @@ class HandsOperator(private val context: Context) {
                 val action = parsed.action
                 // Content events can be animations or counters. A simple click can be
                 // grounded again on a live unique node, but a window switch invalidates it.
-                val canReground = action is HandsAction.Click && observationObserver?.windowChanged() != true &&
+                val canReground = observationObserver?.changed() == true && action is HandsAction.Click && observationObserver?.windowChanged() != true &&
                     ScreenWords.uniqueClickableCenter(svc, action.target) != null
                 if (observationObserver?.changed() == true && action !is HandsAction.Wait &&
                     action !is HandsAction.TakeOver && action !is HandsAction.AskUser && !canReground) {
@@ -588,6 +587,7 @@ class HandsOperator(private val context: Context) {
                             .put("return_failure_reason", returnAttempt.failureReason ?: JSONObject.NULL)
                             .put("finished_at", System.currentTimeMillis()).toString(),
                     )
+                    timeline.registerSummary(File(dir, "run-summary.json"))
                 }
             }
             Hands.current = null

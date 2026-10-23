@@ -74,12 +74,13 @@ class HandsReportTest(unittest.TestCase):
             (root / "run-summary.json").write_text(
                 json.dumps(
                     {
-                        "elapsed_ms": 600,
+                        "elapsed_ms": 500,
                         "outcome": "done",
                         "milestones_ms": {
                             "instruction_received": 0,
                             "hands_started": 400,
-                            "task_finished": 1000,
+                            "task_finished": 900,
+                            "agent_task_finished": 1000,
                         },
                     }
                 ),
@@ -92,7 +93,8 @@ class HandsReportTest(unittest.TestCase):
         shares = result["end_to_end_stage_share"]
         self.assertEqual(shares["pre_operator_ms"]["percent"], 40)
         self.assertEqual(shares["model_ms"]["percent"], 50)
-        self.assertEqual(shares["unattributed_ms"]["percent"], 10)
+        self.assertEqual(shares["main_agent_tail_ms"]["percent"], 10)
+        self.assertEqual(shares["unattributed_ms"]["percent"], 0)
 
 
 if __name__ == "__main__":

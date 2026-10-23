@@ -59,7 +59,9 @@ tool dispatch, native receive, operator start, first screenshot, first visual re
 first action dispatch, page change, next action dispatch and task finish (after return
 confirmation). `android_action_N` records every attempted dispatch. Direct shell or
 background calls have no instruction milestone; missing measurements remain missing.
-The task finish is the Hands task finish, not the main agent's subsequent final prose.
+`task_finished` ends the Hands task after return confirmation. When the main agent stops
+streaming, an IO worker adds `agent_task_finished` to the registered summary for the full
+turn duration and main-agent tail share. An unobserved completion remains missing.
 Provider first-byte diagnostics and PR #3 step timing fields are not duplicated.
 
 Run `python scripts/android/hands-report.py <exported-hands-directory>`. The report

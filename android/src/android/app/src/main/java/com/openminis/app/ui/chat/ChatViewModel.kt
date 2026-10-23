@@ -3644,6 +3644,8 @@ class ChatViewModel(
         // arrives during a turn is shown the moment the turn ends (C8: no reload by hand).
         viewModelScope.launch {
             var nmPulledWhileStreaming = false
+            // nanoMuse: retain the identity of the streaming turn, not a later user send.
+            var nmStreamingHandsTimeline: io.github.nanomuse.hands.HandsTimeline? = null
             launch {
                 io.github.nanomuse.sync.ConversationSync.pulled.collect { ids ->
                     if (realSessionId.ifEmpty { sessionId } !in ids) return@collect
@@ -3651,6 +3653,13 @@ class ChatViewModel(
                 }
             }
             _isStreaming.collect { streaming ->
+                // nanoMuse: distinguish Hands completion from the final main-agent response.
+                if (streaming) nmStreamingHandsTimeline = nmHandsTimeline else {
+                    val completed = nmStreamingHandsTimeline
+                    nmStreamingHandsTimeline = null
+                    val endedAt = android.os.SystemClock.elapsedRealtime()
+                    if (completed != null) launch(Dispatchers.IO) { completed.agentFinishedAt(endedAt) }
+                }
                 // the turn is over: the reply goes up and the other devices hear "done" (C9)
                 if (!streaming) io.github.nanomuse.sync.ConversationSync.turnEnded(realSessionId.ifEmpty { sessionId })
                 if (!streaming && nmPulledWhileStreaming) {
