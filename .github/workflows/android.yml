@@ -50,6 +50,12 @@ jobs:
     if: needs.changes.outputs.android == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 75
+    env:
+      # Repository Actions secrets; keep the test signing private key out of source control.
+      KESTREL_DEBUG_KEYSTORE_BASE64: ${{ secrets.KESTREL_DEBUG_KEYSTORE_BASE64 }}
+      KESTREL_DEBUG_KEYSTORE_PASSWORD: ${{ secrets.KESTREL_DEBUG_KEYSTORE_PASSWORD }}
+      KESTREL_DEBUG_KEY_ALIAS: ${{ secrets.KESTREL_DEBUG_KEY_ALIAS }}
+      KESTREL_DEBUG_KEY_PASSWORD: ${{ secrets.KESTREL_DEBUG_KEY_PASSWORD }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -73,6 +79,21 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
 
+      - name: Prepare stable CI test signing
+        id: ci-signing
+        shell: bash
+        run: |
+          if [[ -n "$KESTREL_DEBUG_KEYSTORE_BASE64" && -n "$KESTREL_DEBUG_KEYSTORE_PASSWORD" && -n "$KESTREL_DEBUG_KEY_ALIAS" && -n "$KESTREL_DEBUG_KEY_PASSWORD" ]]; then
+            key_path="$RUNNER_TEMP/kestrel-debug.keystore"
+            printf '%s' "$KESTREL_DEBUG_KEYSTORE_BASE64" | base64 --decode > "$key_path"
+            echo "KESTREL_DEBUG_KEYSTORE_PATH=$key_path" >> "$GITHUB_ENV"
+            echo "stable_signing_configured=true" >> "$GITHUB_OUTPUT"
+            echo "Stable repository test signing configured."
+          else
+            echo "stable_signing_configured=false" >> "$GITHUB_OUTPUT"
+            echo "Stable repository test signing secrets are missing; using the runner debug key."
+          fi
+
       - name: Native artifacts (proot, Alpine rootfs, rclone.aar)
         env:
           GOTOOLCHAIN: auto
@@ -84,9 +105,14 @@ jobs:
 
       - name: assembleDebug
         working-directory: android/src/android
+        env:
+          KESTREL_DEBUG_KEYSTORE_PASSWORD: ${{ secrets.KESTREL_DEBUG_KEYSTORE_PASSWORD }}
+          KESTREL_DEBUG_KEY_ALIAS: ${{ secrets.KESTREL_DEBUG_KEY_ALIAS }}
+          KESTREL_DEBUG_KEY_PASSWORD: ${{ secrets.KESTREL_DEBUG_KEY_PASSWORD }}
         run: |
           export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/$NDK_VERSION"
-          ./gradlew :app:assembleDebug --console=plain --no-daemon
+          ./gradlew :app:assembleDebug -Pkestrel.ciVersionCode="$((50 + GITHUB_RUN_NUMBER))" \
+            -Pkestrel.ciVersionName="1.0.6-ci.${GITHUB_RUN_NUMBER}" --console=plain --no-daemon
 
       # Our unit tests (io.github.nanomuse.*: the guards, the hub client, the sandbox paths, the
       # strings' parity), plus the upstream provider and sandbox tests, the two OpenMinis packages
@@ -112,6 +138,7 @@ jobs:
         run: |
           bt="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
           "$bt/aapt" dump badging android/src/android/app/build/outputs/apk/debug/app-debug.apk | grep -E "^package:|application-label:|native-code"
+          "$bt/apksigner" verify --print-certs android/src/android/app/build/outputs/apk/debug/app-debug.apk
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
