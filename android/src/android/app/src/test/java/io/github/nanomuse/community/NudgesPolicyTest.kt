@@ -31,8 +31,12 @@ class NudgesPolicyTest {
     """.trimIndent()
 
     @Test
-    fun `the built-in default is the contract's default`() {
-        assertEquals(Nudges.Policy.parse(contractDefault), Nudges.Policy.DEFAULT)
+    fun `the built-in default keeps the contract with the fork repository`() {
+        val relayDefault = Nudges.Policy.parse(contractDefault)!!
+        // Kestrel: keep accepting the upstream relay policy verbatim. Only the
+        // app's offline default repository follows this fork's identity.
+        assertEquals("https://github.com/nano-muse/nanoMuse", relayDefault.url)
+        assertEquals(relayDefault.copy(url = StarPrompt.REPO_URL), Nudges.Policy.DEFAULT)
     }
 
     @Test
