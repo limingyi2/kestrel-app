@@ -4,7 +4,7 @@
 <resources>
     <string name="nm_hands_return_title">Revino la Kestrel după o sarcină</string>
     <string name="nm_hands_return_subtitle">Revino după succes sau eroare. La anulare sau când este necesară intervenția ta, rămâi în aplicația țintă.</string>
-    <string name="nm_hands_return_footer">Dezactivează pentru a rămâne în aplicația țintă după sarcină. Android poate bloca schimbarea automată când Kestrel rulează în fundal. Revino folosind capsula Hands sau notificarea.</string>
+    <string name="nm_hands_return_footer">Dezactivează pentru a rămâne în aplicația țintă după sarcină. Android poate bloca schimbarea automată când Kestrel rulează în fundal. Deschide Kestrel din notificare sau din lansator.</string>
     <string name="nm_about_build">Această versiune</string>
     <string name="nm_about_license">Licență</string>
     <string name="nm_about_upstream">Bazat pe OpenMinis 1.13</string>

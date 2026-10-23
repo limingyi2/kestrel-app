@@ -55,8 +55,8 @@ When the task succeeds or fails, Kestrel returns to chat by default. Turn off **
 after a task** in Hands settings to remain in the target app. A cancellation or a result requiring
 the user's attention remains in the target app. Stop cancels an in-flight model request and
 interrupts model-directed waits. A risk denial stops the run without bypassing approval. If Android
-blocks the foreground launch, Kestrel does not override the system; use the existing Hands capsule
-or foreground notification to return.
+blocks the foreground launch, Kestrel does not override the system; return from its foreground
+notification or the launcher.
 
 No physical-device timing baseline is available in CI. Validate the Settings → About phone flow on
 an arm64 device, including each trace duration, the total duration, successful return, stay mode,

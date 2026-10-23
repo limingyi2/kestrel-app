@@ -4,7 +4,7 @@
 <resources>
     <string name="nm_hands_return_title">Вернуться в Kestrel после задачи</string>
     <string name="nm_hands_return_subtitle">Вернуться после успеха или ошибки. При отмене или необходимости вашего действия остаться в целевом приложении.</string>
-    <string name="nm_hands_return_footer">Отключите, чтобы остаться в целевом приложении после задачи. Android может запретить автоматическое переключение, если Kestrel работает в фоне. Вернитесь через капсулу Hands или уведомление.</string>
+    <string name="nm_hands_return_footer">Отключите, чтобы остаться в целевом приложении после задачи. Android может запретить автоматическое переключение, если Kestrel работает в фоне. Откройте Kestrel из уведомления или панели приложений.</string>
     <string name="nm_about_build">Эта сборка</string>
     <string name="nm_about_license">Лицензия</string>
     <string name="nm_about_upstream">На основе OpenMinis 1.13</string>

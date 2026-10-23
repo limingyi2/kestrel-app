@@ -94,6 +94,7 @@ class HandsOperator(private val context: Context) {
     private val userSignal = AtomicReference<CountDownLatch?>(null)
     private val capsule = HandsCapsule(context)
     @Volatile private var terminalOutcome: Outcome? = null
+    @Volatile private var runStartedElapsedMs: Long = 0L
 
     /** The session this run's approval cards are filed under; see [ownPendingRequest]. */
     @Volatile private var gateSession: String? = null
@@ -137,6 +138,7 @@ class HandsOperator(private val context: Context) {
         capsule.onDeny = { ownPendingRequest()?.let { RiskGate.decide(it.id, RiskDecision.DENY) } }
         val started = System.currentTimeMillis()
         val startedElapsed = SystemClock.elapsedRealtime()
+        runStartedElapsedMs = startedElapsed
         try {
             val svc = MinisAccessibilityService.getInstance()
                 ?: return finish(Outcome.Failed("the accessibility service is not running"), steps, runId, lastScreen, traceDir, log, model?.label)
@@ -286,6 +288,7 @@ class HandsOperator(private val context: Context) {
                 val actionStarted = SystemClock.elapsedRealtime()
                 try { when (action) {
                     is HandsAction.Status -> {
+                        log += "step $steps timing: " + timings.entries.joinToString { "${it.key}=${it.value}ms" }
                         trace(traceDir, steps, parsed.thought, reply, "finished", lastScreen, timings)
                         return finish(
                             if (action.complete) Outcome.Done(action.answer.ifBlank { parsed.thought }) else Outcome.Infeasible(action.answer.ifBlank { parsed.thought }),
@@ -293,6 +296,7 @@ class HandsOperator(private val context: Context) {
                         )
                     }
                     is HandsAction.AskUser -> {
+                        log += "step $steps timing: " + timings.entries.joinToString { "${it.key}=${it.value}ms" }
                         trace(traceDir, steps, parsed.thought, reply, "asked the user", lastScreen, timings)
                         return finish(Outcome.NeedsUser(action.question.ifBlank { parsed.thought }), steps, runId, lastScreen, traceDir, log, model.label)
                     }
@@ -319,7 +323,8 @@ class HandsOperator(private val context: Context) {
                         val gate = approveTap(svc, opts.sessionId, target, ScreenWords.at(svc, px, py))
                         timings["risk_approval_ms"] = SystemClock.elapsedRealtime() - approvalStarted
                         if (gate.denied != null) {
-                            trace(traceDir, steps, parsed.thought, reply, "refused: ${gate.denied}", lastScreen)
+                            log += "step $steps timing: " + timings.entries.joinToString { "${it.key}=${it.value}ms" }
+                            trace(traceDir, steps, parsed.thought, reply, "refused: ${gate.denied}", lastScreen, timings)
                             return finish(Outcome.Infeasible("the user did not allow the tap “${gate.shown.take(40)}” — ${gate.denied}"), steps, runId, lastScreen, traceDir, log, model.label)
                         }
                         // A remembered approval, or a payment that ran on one: the chat model
@@ -391,7 +396,8 @@ class HandsOperator(private val context: Context) {
                         val gate = approveEnter(svc, opts.sessionId)
                         timings["risk_approval_ms"] = SystemClock.elapsedRealtime() - approvalStarted
                         if (gate.denied != null) {
-                            trace(traceDir, steps, parsed.thought, reply, "refused: ${gate.denied}", lastScreen)
+                            log += "step $steps timing: " + timings.entries.joinToString { "${it.key}=${it.value}ms" }
+                            trace(traceDir, steps, parsed.thought, reply, "refused: ${gate.denied}", lastScreen, timings)
                             return finish(Outcome.Infeasible("the user did not allow sending with Enter — ${gate.denied}"), steps, runId, lastScreen, traceDir, log, model.label)
                         }
                         gate.notice?.let { log += it }
@@ -454,8 +460,8 @@ class HandsOperator(private val context: Context) {
             val outcome = terminalOutcome
             val shouldReturn = HandsCompletionPolicy.shouldReturnToChat(outcome?.code.orEmpty(), Hands.returnToChat(context))
             // Keep the user-granted overlay visible until the launch request is made. If Android
-            // blocks it, do not retry through a background-start workaround; the existing
-            // capsule/foreground notification remains the user's path back.
+            // blocks it, do not retry through a background-start workaround; the launcher and
+            // foreground notification remain available to the user.
             val returned = if (shouldReturn) capsule.bringAppToFront(opts.sessionId) else false
             capsule.hide()
             runCatching {
@@ -463,7 +469,7 @@ class HandsOperator(private val context: Context) {
                     File(dir, "run-summary.json").writeText(
                         JSONObject().put("outcome", outcome?.code ?: "unknown").put("steps", steps)
                             .put("elapsed_ms", SystemClock.elapsedRealtime() - startedElapsed)
-                            .put("return_requested", shouldReturn).put("return_started", returned)
+                            .put("return_requested", shouldReturn).put("return_request_accepted", returned)
                             .put("finished_at", System.currentTimeMillis()).toString(),
                     )
                 }
@@ -492,7 +498,12 @@ class HandsOperator(private val context: Context) {
                 )
             }
         }
-        return Result(outcome, steps, runId, lastScreen, traceDir?.let { "/var/minis/attachments/hands/$runId/trace.jsonl" }, log, model)
+        val elapsedMs = (SystemClock.elapsedRealtime() - runStartedElapsedMs).coerceAtLeast(0L)
+        return Result(
+            outcome, steps, runId, lastScreen,
+            traceDir?.let { "/var/minis/attachments/hands/$runId/trace.jsonl" },
+            log + "run timing: elapsed_ms=$elapsedMs outcome=${outcome.code}", model,
+        )
     }
 
     // ── the user's turn ────────────────────────────────────────────────────

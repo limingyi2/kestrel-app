@@ -4,7 +4,7 @@
 <resources>
     <string name="nm_hands_return_title">Görevden sonra Kestrel'e dön</string>
     <string name="nm_hands_return_subtitle">Başarı veya hata sonrasında dön. İptal edilirse ya da kullanıcı müdahalesi gerekirse hedef uygulamada kal.</string>
-    <string name="nm_hands_return_footer">Görevden sonra hedef uygulamada kalmak için kapatın. Kestrel arka plandayken Android otomatik uygulama geçişini engelleyebilir. Dönmek için Hands kapsülünü veya bildirimi kullanın.</string>
+    <string name="nm_hands_return_footer">Görevden sonra hedef uygulamada kalmak için kapatın. Kestrel arka plandayken Android otomatik uygulama geçişini engelleyebilir. Bildirimden veya uygulama başlatıcısından Kestrel'i açın.</string>
     <string name="nm_about_build">Bu derleme</string>
     <string name="nm_about_license">Lisans</string>
     <string name="nm_about_upstream">OpenMinis 1.13 tabanlı</string>

@@ -4,7 +4,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="nm_hands_return_title">Revenir à Kestrel après une tâche</string>
     <string name="nm_hands_return_subtitle">Revenir après une réussite ou une erreur. En cas d’annulation ou si votre intervention est nécessaire, rester dans l’application cible.</string>
-    <string name="nm_hands_return_footer">Désactivez cette option pour rester dans l’application cible. Android peut bloquer le changement automatique lorsque Kestrel est en arrière-plan. Utilisez la capsule Hands ou la notification pour revenir.</string>
+    <string name="nm_hands_return_footer">Désactivez cette option pour rester dans l’application cible. Android peut bloquer le changement automatique lorsque Kestrel est en arrière-plan. Ouvrez Kestrel depuis la notification ou le lanceur.</string>
     <string name="nm_about_build">Cette version</string>
     <string name="nm_about_license">Licence</string>
     <string name="nm_about_upstream">Basé sur OpenMinis 1.13</string>
