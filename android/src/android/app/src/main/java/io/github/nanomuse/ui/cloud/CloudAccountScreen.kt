@@ -1146,12 +1146,12 @@ fun CommunityNoticeCard(inset: Dp = 16.dp) {
             )
             Spacer(Modifier.height(6.dp))
             Row {
-                TextButton(onClick = { openExternalUrl(context, "https://github.com/nano-muse/nanoMuse") }, contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp)) {
+                TextButton(onClick = { openExternalUrl(context, "https://github.com/limingyi2/kestrel-app") }, contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp)) {
                     Icon(Icons.Outlined.Code, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(6.dp))
                     Text(stringResource(R.string.nm_notice_github))
                 }
-                TextButton(onClick = { openExternalUrl(context, "https://github.com/nano-muse/nanoMuse/issues/new/choose") }, contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp)) {
+                TextButton(onClick = { openExternalUrl(context, "https://github.com/limingyi2/kestrel-app/issues/new/choose") }, contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp)) {
                     Icon(Icons.Outlined.BugReport, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(6.dp))
                     Text(stringResource(R.string.nm_notice_issue))

@@ -597,7 +597,7 @@ def check() -> int:
     return problems
 
 
-def main(argv: list[str] | None = None) -> int:
+def upstream_main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
     if args in (["-h"], ["--help"]):
         print(__doc__.strip())
@@ -631,4 +631,8 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
+    # Kestrel: keep the upstream implementation for merge review, but apply only
+    # the Android overlay. Do not rewrite iOS, sandbox paths or release versions.
+    from kestrel_brand import main
+
     raise SystemExit(main())

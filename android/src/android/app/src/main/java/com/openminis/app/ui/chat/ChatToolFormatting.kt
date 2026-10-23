@@ -1,3 +1,4 @@
+// nanoMuse: Kestrel display-name overlay; runtime identifiers are preserved.
 package com.openminis.app.ui.chat
 
 import androidx.compose.material.icons.Icons
@@ -75,7 +76,7 @@ internal fun toolIconFor(toolName: String) = when (toolName) {
     else -> Icons.Default.Build
 }
 
-// Helper: tool display name for "nanoMuse is using X"
+// Helper: tool display name for "Kestrel is using X"
 internal fun toolDisplayName(toolName: String): String = when (toolName) {
     "shell_execute" -> "terminal"
     "file_read" -> "file reader"
@@ -90,19 +91,19 @@ internal fun toolDisplayName(toolName: String): String = when (toolName) {
 }
 
 /**
- * Full "nanoMuse is …" label shown in the tool detail sheet's bottom bar.
+ * Full "Kestrel is …" label shown in the tool detail sheet's bottom bar.
  * Mirrors iOS ToolLiveSheet.toolTitle so the wording matches per tool.
  */
 internal fun toolTitleLabel(toolName: String): String = when (toolName) {
-    "shell_execute" -> "nanoMuse is using Shell"
-    "file_read" -> "nanoMuse is reading File"
-    "file_write" -> "nanoMuse is using Editor"
-    "file_edit" -> "nanoMuse is editing File"
-    "browser_use" -> "nanoMuse is using Browser"
-    "read_image" -> "nanoMuse is reading Image"
-    "memory_write", "memory_get" -> "nanoMuse is using Memory"
-    "web_search" -> "nanoMuse is using Search"
-    else -> "nanoMuse is using ${toolDisplayName(toolName)}"
+    "shell_execute" -> "Kestrel is using Shell"
+    "file_read" -> "Kestrel is reading File"
+    "file_write" -> "Kestrel is using Editor"
+    "file_edit" -> "Kestrel is editing File"
+    "browser_use" -> "Kestrel is using Browser"
+    "read_image" -> "Kestrel is reading Image"
+    "memory_write", "memory_get" -> "Kestrel is using Memory"
+    "web_search" -> "Kestrel is using Search"
+    else -> "Kestrel is using ${toolDisplayName(toolName)}"
 }
 
 // nanoMuse: the same label once the step is over (issue #67 — the sheet's bottom bar
@@ -111,15 +112,15 @@ internal fun toolTitleLabel(toolName: String): String = when (toolName) {
 internal fun toolTitleLabel(toolName: String, status: ToolBlockStatus?): String = when (status) {
     null, ToolBlockStatus.RUNNING, ToolBlockStatus.STREAMING, ToolBlockStatus.PENDING -> toolTitleLabel(toolName)
     ToolBlockStatus.SUCCESS -> when (toolName) {
-        "shell_execute" -> "nanoMuse used Shell"
-        "file_read" -> "nanoMuse read File"
-        "file_write" -> "nanoMuse used Editor"
-        "file_edit" -> "nanoMuse edited File"
-        "browser_use" -> "nanoMuse used Browser"
-        "read_image" -> "nanoMuse read Image"
-        "memory_write", "memory_get" -> "nanoMuse used Memory"
-        "web_search" -> "nanoMuse used Search"
-        else -> "nanoMuse used ${toolDisplayName(toolName)}"
+        "shell_execute" -> "Kestrel used Shell"
+        "file_read" -> "Kestrel read File"
+        "file_write" -> "Kestrel used Editor"
+        "file_edit" -> "Kestrel edited File"
+        "browser_use" -> "Kestrel used Browser"
+        "read_image" -> "Kestrel read Image"
+        "memory_write", "memory_get" -> "Kestrel used Memory"
+        "web_search" -> "Kestrel used Search"
+        else -> "Kestrel used ${toolDisplayName(toolName)}"
     }
     ToolBlockStatus.FAILED -> "${toolDisplayName(toolName).replaceFirstChar { it.uppercase() }} failed"
     ToolBlockStatus.CANCELLED -> "${toolDisplayName(toolName).replaceFirstChar { it.uppercase() }} stopped"

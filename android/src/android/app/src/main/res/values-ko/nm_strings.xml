@@ -397,7 +397,7 @@
     <string name="nm_settings_no_model">아직 모델이 없습니다</string>
     <string name="nm_settings_no_model_sub">제공자를 추가하고 모델을 고르세요</string>
     <string name="nm_settings_change_model">변경</string>
-    <string name="nm_settings_version">nanoMuse %1$s (%2$d)</string>
+    <string name="nm_settings_version">Kestrel %1$s (%2$d)</string>
     <string name="nm_version_title">버전</string>
     <string name="nm_version_checking">최신 릴리스 확인 중…</string>
     <string name="nm_version_have">최신 %1$s, 사용 중입니다</string>
@@ -478,7 +478,7 @@
     <string name="nm_avatar_share_subtitle">카드를 고르세요. 시스템 공유 시트로 내보냅니다.</string>
     <string name="nm_avatar_share_system">공유</string>
     <string name="nm_avatar_share_bubble">안녕하세요, 저는 개인 AI 에이전트 %1$s예요. nanoMuse를 만나 보세요: 오픈 소스이고, 휴대전화에서 실행돼요.</string>
-    <string name="nm_avatar_share_tagline">나만의 AI 에이전트, 오픈 소스 · github.com/nano-muse/nanoMuse</string>
+    <string name="nm_avatar_share_tagline">나만의 AI 에이전트, 오픈 소스 · github.com/nano-muse/Kestrel</string>
 
     <!-- 0.1.10 · Motion -->
     <string name="nm_media_title">이미지 및 동영상 모델</string>
@@ -927,7 +927,7 @@
     <!-- nanoMuse: devices on the hub -->
     <string name="nm_hub_channel">내 기기에서 온 메시지</string>
     <string name="nm_hub_service_channel">내 기기와 연결됨</string>
-    <string name="nm_hub_service_title">nanoMuse · 내 기기에서 접근 가능</string>
+    <string name="nm_hub_service_title">Kestrel · 내 기기에서 접근 가능</string>
     <string name="nm_hub_service_connecting">nanoMuse Cloud에 연결 중…</string>
     <string name="nm_hub_service_alone">지금 온라인인 다른 기기가 없습니다</string>
     <plurals name="nm_hub_service_devices">
@@ -1049,7 +1049,7 @@
     <string name="nm_devices_ask_hint">온라인인 기기를 탭하면 채팅에서 그 기기에 쓸 수 있습니다. 메시지가 @와 기기 이름으로 시작하고, 그 기기가 일을 합니다.</string>
     <string name="nm_reach_the_provider">제공자</string>
     <string name="nm_reach_unreachable_title">이 네트워크에서 %1$s에 연결할 수 없습니다</string>
-    <string name="nm_reach_unreachable_body">%1$s에서 아무 응답이 없었습니다. 이 휴대전화에서 제공자까지의 경로 문제이며 nanoMuse 서버와는 관계가 없습니다.</string>
+    <string name="nm_reach_unreachable_body">%1$s에서 아무 응답이 없었습니다. 이 휴대전화에서 제공자까지의 경로 문제이며 Kestrel 서버와는 관계가 없습니다.</string>
     <string name="nm_reach_region_title">OpenAI는 이 지역에 서비스를 제공하지 않습니다</string>
     <string name="nm_reach_region_body">요청은 OpenAI에 도달했지만, 이 연결이 시작된 곳에서는 서비스를 제공하지 않는다는 응답이 왔습니다.</string>
     <string name="nm_reach_signed_out_title">ChatGPT 로그인이 더 이상 유효하지 않습니다</string>

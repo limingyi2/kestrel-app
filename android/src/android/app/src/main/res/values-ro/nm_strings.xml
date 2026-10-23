@@ -7,7 +7,7 @@
     <string name="nm_about_upstream">Bazat pe OpenMinis 1.13</string>
     <string name="nm_about_upstream_detail">GPL-3.0 · modificat de la 2026-09-24 · sursa pe GitHub</string>
     <string name="nm_about_trademark">Fără legătură cu Meta</string>
-    <string name="nm_about_trademark_detail">Muse este o marcă înregistrată a Meta Platforms, Inc. nanoMuse este un proiect independent de software liber.</string>
+    <string name="nm_about_trademark_detail">Muse este o marcă înregistrată a Meta Platforms, Inc. Kestrel este un proiect independent de software liber.</string>
 
     <!-- Chat header -->
     <string name="nm_avatar_content_description">Agentul tău. Atinge pentru a-i schimba numele, pictograma sau stilul.</string>
@@ -22,29 +22,29 @@
     <string name="nm_star_action">Dă o stea pe GitHub</string>
     <string name="nm_star_later">Nu acum</string>
     <string name="nm_star_done">Am dat deja steaua</string>
-    <string name="nm_star_signed_in">Bine ai venit. nanoMuse este gratuit, open source și nonprofit: un agent personal pentru oricine îl rulează. Dacă asta înseamnă ceva pentru tine, o stea pe GitHub este felul în care următoarea persoană îl găsește.</string>
+    <string name="nm_star_signed_in">Bine ai venit. Kestrel este gratuit, open source și nonprofit: un agent personal pentru oricine îl rulează. Dacă asta înseamnă ceva pentru tine, o stea pe GitHub este felul în care următoarea persoană îl găsește.</string>
     <plurals name="nm_star_tasks">
         <item quantity="one">O sarcină încheiată. Dacă nanoMuse a ajutat, o stea pe GitHub le spune celor care îl construiesc că a făcut-o.</item>
         <item quantity="few">%1$d sarcini încheiate. Dacă nanoMuse e util, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
         <item quantity="other">%1$d de sarcini încheiate. Dacă nanoMuse e util, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
     </plurals>
-    <string name="nm_star_days_used_week">O săptămână cu nanoMuse. Dacă și-a câștigat un loc în ziua ta, o stea pe GitHub ajută următoarea persoană să-l găsească.</string>
-    <string name="nm_star_days_used_month">O lună cu nanoMuse. Dacă a devenit parte din rutina ta, o stea pe GitHub le spune altora că merită încercat.</string>
+    <string name="nm_star_days_used_week">O săptămână cu Kestrel. Dacă și-a câștigat un loc în ziua ta, o stea pe GitHub ajută următoarea persoană să-l găsească.</string>
+    <string name="nm_star_days_used_month">O lună cu Kestrel. Dacă a devenit parte din rutina ta, o stea pe GitHub le spune altora că merită încercat.</string>
     <plurals name="nm_star_days_used">
         <item quantity="one">O zi cu nanoMuse. Dacă a ajutat, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
         <item quantity="few">%1$d zile cu nanoMuse. Dacă și-a câștigat un loc în ziua ta, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
         <item quantity="other">%1$d de zile cu nanoMuse. Dacă și-a câștigat un loc în ziua ta, o stea pe GitHub ajută următoarea persoană să-l găsească.</item>
     </plurals>
-    <string name="nm_star_goal_done">Obiectiv atins. Dacă nanoMuse te-a ajutat să ajungi aici, o stea pe GitHub le spune celor care îl construiesc.</string>
-    <string name="nm_star_new_look">O față nouă, desenată pentru tine. Dacă îți place direcția în care merge nanoMuse, o stea pe GitHub ajută mai mulți oameni să-l găsească.</string>
-    <string name="nm_star_exhausted">Creditul gratuit s-a epuizat. Mulțumim că ai ajuns până aici. Dacă nanoMuse a meritat-o, o stea pe GitHub ține proiectul la vedere pentru următoarea persoană.</string>
+    <string name="nm_star_goal_done">Obiectiv atins. Dacă Kestrel te-a ajutat să ajungi aici, o stea pe GitHub le spune celor care îl construiesc.</string>
+    <string name="nm_star_new_look">O față nouă, desenată pentru tine. Dacă îți place direcția în care merge Kestrel, o stea pe GitHub ajută mai mulți oameni să-l găsească.</string>
+    <string name="nm_star_exhausted">Creditul gratuit s-a epuizat. Mulțumim că ai ajuns până aici. Dacă Kestrel a meritat-o, o stea pe GitHub ține proiectul la vedere pentru următoarea persoană.</string>
     <string name="nm_chat_menu_rename">Redenumește chatul</string>
 
     <!-- Foreground-service notification title while no tool is running -->
     <string name="nm_notif_working">%1$s lucrează</string>
 
     <!-- First conversation: the scripted opening (see io.github.nanomuse.onboarding) -->
-    <string name="nm_intro_hello">Bună, sunt nanoMuse, asistentul care trăiește pe telefonul tău. Lasă-mă să-ți iau câteva lucruri de pe cap.</string>
+    <string name="nm_intro_hello">Bună, sunt Kestrel, asistentul care trăiește pe telefonul tău. Lasă-mă să-ți iau câteva lucruri de pe cap.</string>
     <string name="nm_intro_how_i_work">Câteva lucruri despre cum lucrez:\n\n- Am propriul computer (un sandbox Linux și un browser), așa că pot rula comenzi, deschide site-uri și completa formulare.\n- Pot citi și organiza fișierele și fotografiile pe care mi le pui la dispoziție și pot avea grijă de mementouri și de sarcinile programate.\n- Înainte de orice pas care contează, te întreb mai întâi.\n- Totul rulează pe acest telefon. Mesajele tale ajung la modelul pe care l-ai configurat; cu nanoMuse Cloud, această conversație te urmează și pe celelalte dispozitive; se poate opri din Controlul datelor.</string>
     <string name="nm_intro_ask_name">Înainte să începem, cum să-ți spun?</string>
 
@@ -199,7 +199,7 @@
     <string name="nm_risk_class_outbound">Trimitere</string>
     <string name="nm_risk_class_money">Plată</string>
     <string name="nm_risk_class_install">Instalare</string>
-    <string name="nm_grants_header">Aprobări memorate de nanoMuse</string>
+    <string name="nm_grants_header">Aprobări memorate de Kestrel</string>
     <string name="nm_grants_empty">Nimic memorat încă</string>
     <string name="nm_grants_revoke">Revocă</string>
     <string name="nm_grants_revoke_confirm">Revoci această aprobare? Data viitoare când apare, vei fi întrebat din nou.</string>
@@ -207,7 +207,7 @@
     <string name="nm_risk_remember_money_note">Confirmat cu blocarea ecranului. Plățile din această aplicație sau de pe acest site vor rula apoi fără card de aprobare; apar primele sub Setări → Permisiuni, de unde le poți revoca oricând.</string>
     <string name="nm_risk_remember_money_needs_lock">Ca să memorezi plăți, setează mai întâi o blocare a ecranului (Setări → Securitate): memorarea uneia se confirmă cu ea.</string>
     <string name="nm_risk_lock_title">Confirmă că ești tu</string>
-    <string name="nm_risk_lock_subtitle">nanoMuse va memora aprobările de plată pentru %1$s și le va rula fără să întrebe.</string>
+    <string name="nm_risk_lock_subtitle">Kestrel va memora aprobările de plată pentru %1$s și le va rula fără să întrebe.</string>
     <string name="nm_risk_remembered_toast">Memorat · vezi Setări → Permisiuni pentru a revoca</string>
     <string name="nm_risk_tier_highest">Rulează fără să întrebe · plăți</string>
     <string name="nm_risk_tier_confirm">Memorate de pe card · ștergere și trimitere</string>
@@ -278,7 +278,7 @@
     <string name="nm_sysfiles_open_memory">Deschide memoria</string>
     <string name="nm_sysfiles_footer">Aceste fișiere sunt ale agentului: cine este, ce știe despre tine, ce își amintește, ce scrie pentru tine și când se trezește. Stau în memoria telefonului; agentul le citește și le editează din shell-ul lui sub /var/minis/memory, iar tu poți edita orice aici.</string>
     <string name="nm_sysfile_about_lead">Despre acest fișier.</string>
-    <string name="nm_sysfile_about_soul">Aceasta este persona agentului: valorile și obiceiurile pe care încearcă să le respecte în fiecare conversație, numele lui și stilul în care răspunde. Pornește de la un șablon livrat cu nanoMuse; agentul îl poate rafina în timp și îți spune când o face. Îl poți edita oricând. Această notă nu face parte din fișier.</string>
+    <string name="nm_sysfile_about_soul">Aceasta este persona agentului: valorile și obiceiurile pe care încearcă să le respecte în fiecare conversație, numele lui și stilul în care răspunde. Pornește de la un șablon livrat cu Kestrel; agentul îl poate rafina în timp și îți spune când o face. Îl poți edita oricând. Această notă nu face parte din fișier.</string>
     <string name="nm_sysfile_about_user">Agentul ține acest fișier ca notițe de lucru despre tine: numele tău, cum vrei să ți se adreseze, fusul tău orar și contextul de care are nevoie ca să fie util, de exemplu la ce lucrezi. Îl completează în timp din conversațiile voastre și îl citește la începutul fiecăreia. Reflectă înțelegerea actuală a agentului, așa că poate fi incomplet sau depășit. Poți edita orice aici, iar agentul va urma ce scrii. Această notă nu face parte din fișier.</string>
     <string name="nm_sysfile_about_memory">Notițe durabile pe care agentul le păstrează de la o conversație la alta: lucrurile care merită reținute, cu cuvintele lui, plus tot ce ai importat de la alt asistent. Jurnalul zi cu zi stă alături, în dosarul de memorie. Citit la începutul fiecărei conversații când memoria e pornită. Această notă nu face parte din fișier.</string>
     <string name="nm_sysfile_about_feed">Un paragraf care ghidează fluxul: ce vrei mai mult, ce să sară, cât de lungi să fie postările. Rutina zilnică a fluxului îl citește înainte de a scrie. Această notă nu face parte din fișier.</string>
@@ -387,7 +387,7 @@
     <string name="nm_a11y_own_clip_preview">Previzualizarea clipului tău</string>
 
     <!-- First run (Muse-style welcome; the steps are OpenMinis' provider and model screens) -->
-    <string name="nm_setup_title">Bine ai venit la nanoMuse</string>
+    <string name="nm_setup_title">Bine ai venit la Kestrel</string>
     <string name="nm_setup_step_models">Alege modelele</string>
     <string name="nm_setup_step_models_sub">Modelele oferite de furnizorul tău sunt listate pentru tine; alege până la trei</string>
     <string name="nm_setup_step_start">Fă cunoștință cu %1$s</string>
@@ -403,7 +403,7 @@
     <string name="nm_settings_no_model">Niciun model încă</string>
     <string name="nm_settings_no_model_sub">Adaugă un furnizor și alege-i modelele</string>
     <string name="nm_settings_change_model">Schimbă</string>
-    <string name="nm_settings_version">nanoMuse %1$s (%2$d)</string>
+    <string name="nm_settings_version">Kestrel %1$s (%2$d)</string>
     <string name="nm_version_title">Versiune</string>
     <string name="nm_version_checking">Se caută cea mai nouă versiune…</string>
     <string name="nm_version_have">Cea mai nouă e %1$s, o ai deja</string>
@@ -483,8 +483,8 @@
     <string name="nm_avatar_share_title">Partajează avatarul meu</string>
     <string name="nm_avatar_share_subtitle">Alege un card. Pleacă prin fereastra de partajare a sistemului.</string>
     <string name="nm_avatar_share_system">Partajează</string>
-    <string name="nm_avatar_share_bubble">Bună, sunt %1$s, un agent AI personal. Fă cunoștință cu nanoMuse: open source, rulează pe telefonul tău.</string>
-    <string name="nm_avatar_share_tagline">Agentul tău AI personal, open source · github.com/nano-muse/nanoMuse</string>
+    <string name="nm_avatar_share_bubble">Bună, sunt %1$s, un agent AI personal. Fă cunoștință cu Kestrel: open source, rulează pe telefonul tău.</string>
+    <string name="nm_avatar_share_tagline">Agentul tău AI personal, open source · github.com/nano-muse/Kestrel</string>
 
     <!-- 0.1.10 · Motion -->
     <string name="nm_media_title">Modele de imagine și video</string>
@@ -535,7 +535,7 @@
     <string name="nm_hands_section_needs">De ce are nevoie</string>
     <string name="nm_hands_needs_footer">Serviciul de accesibilitate face captura de ecran și execută gesturile; nu citește conținutul ecranului. Afișarea peste alte aplicații e pentru capsulă.</string>
     <string name="nm_hands_need_a11y">Serviciu de accesibilitate</string>
-    <string name="nm_hands_need_a11y_fix">Pornește nanoMuse sub Aplicații instalate în setările de accesibilitate</string>
+    <string name="nm_hands_need_a11y_fix">Pornește Kestrel sub Aplicații instalate în setările de accesibilitate</string>
     <string name="nm_hands_need_overlay">Afișare peste alte aplicații</string>
     <string name="nm_hands_need_overlay_fix">Permite-o, ca să poată fi afișată capsula cu Stop</string>
     <string name="nm_hands_need_model">Un model care vede imagini</string>
@@ -573,7 +573,7 @@
     <string name="nm_hands_protected_screen">Acest ecran e protejat și nu poate fi citit. Termină tu această parte, apoi atinge Continuă.</string>
     <string name="nm_hands_secret_field">Un câmp de parolă sau de cod: te rog completează-l tu, apoi atinge Continuă.</string>
     <string name="nm_hands_approval_title">Așteaptă aprobarea ta</string>
-    <string name="nm_hands_approval_detail">Atinge „%1$s”: confirmă în nanoMuse (cere blocarea ecranului).</string>
+    <string name="nm_hands_approval_detail">Atinge „%1$s”: confirmă în Kestrel (cere blocarea ecranului).</string>
     <string name="nm_hands_approval_here">Atingi „%1$s”?</string>
     <string name="nm_hands_allow_once">Permite</string>
     <string name="nm_hands_deny">Refuză</string>
@@ -604,7 +604,7 @@
     <!-- Reach (0.1.13): the phone drives your computer -->
     <string name="nm_pc_title">Computere</string>
     <string name="nm_pc_none_short">Niciunul</string>
-    <string name="nm_pc_intro">Spui aici, se face pe computerul tău: o comandă, un fișier, o pagină în browserul lui, o privire pe ecranul lui sau o sarcină întreagă pentru nanoMuse de acolo. Telefonul conduce computerul, niciodată invers; fiecare aprobare se decide mai întâi aici.</string>
+    <string name="nm_pc_intro">Spui aici, se face pe computerul tău: o comandă, un fișier, o pagină în browserul lui, o privire pe ecranul lui sau o sarcină întreagă pentru Kestrel de acolo. Telefonul conduce computerul, niciodată invers; fiecare aprobare se decide mai întâi aici.</string>
     <string name="nm_pc_hub_title">Calea simplă: nanoMuse Desktop, același cont</string>
     <string name="nm_pc_hub_body">Instalează nanoMuse Desktop pe computer și conectează-te cu contul acestui telefon; apare sub Cont → Dispozitive în câteva secunde.</string>
     <string name="nm_pc_hub_download">Descarcă nanoMuse Desktop</string>
@@ -656,7 +656,7 @@
     <string name="nm_welcome_feat_hands_sub">Rezervă trenul, comandă masa, caută ceva într-o aplicație; tu privești și îl poți opri oricând</string>
     <string name="nm_welcome_feat_reach">Acces: computerele tale, de aici</string>
     <string name="nm_welcome_feat_reach_sub">Instalează nanoMuse Desktop pe un Mac, un Windows sau un Linux, conectează-te cu același cont și dă-i de lucru de pe telefon</string>
-    <string name="nm_welcome_notice">nanoMuse este un proiect comunitar open source, nonprofit: gratuit, pentru totdeauna. Modelul vine cu un credit gratuit plătit de dezvoltator; după aceea, propria ta cheie. Nimic nu se vinde; ce păstrează relay-ul e în politica de confidențialitate, iar Setări → Controlul datelor e al tău.</string>
+    <string name="nm_welcome_notice">Kestrel este un proiect comunitar open source, nonprofit: gratuit, pentru totdeauna. Modelul vine cu un credit gratuit plătit de dezvoltator; după aceea, propria ta cheie. Nimic nu se vinde; ce păstrează relay-ul e în politica de confidențialitate, iar Setări → Controlul datelor e al tău.</string>
     <string name="nm_welcome_hands_title">Lasă-l să-ți folosească telefonul</string>
     <string name="nm_welcome_hands_sub">Cu două permisiuni poate deschide aplicații, atinge și tasta pentru tine. O capsulă cu fiecare pas și un buton Stop rămâne pe ecran; autentificările, parolele și codurile sunt întotdeauna ale tale.</string>
     <string name="nm_welcome_hands_turn_on">Pornește</string>
@@ -794,7 +794,7 @@
     <string name="nm_cloud_invite_share">Partajează linkul</string>
     <string name="nm_cloud_invite_copy">Copiază</string>
     <string name="nm_cloud_invite_copied">Copiat</string>
-    <string name="nm_cloud_invite_share_text">Încearcă nanoMuse împreună cu mine: un agent personal complet open source, gratuit. Înscrie-te cu codul meu %1$s: %2$s</string>
+    <string name="nm_cloud_invite_share_text">Încearcă Kestrel împreună cu mine: un agent personal complet open source, gratuit. Înscrie-te cu codul meu %1$s: %2$s</string>
     <string name="nm_cloud_invite_count">%1$d prieteni s-au alăturat</string>
     <string name="nm_cloud_invite_earned">¥%1$s adăugați prin invitații</string>
     <string name="nm_cloud_invite_have">Ai un cod de invitație?</string>
@@ -835,7 +835,7 @@
     <string name="nm_cloud_ev_contribute_deleted">Controlul datelor: conversațiile păstrate au fost șterse</string>
     <string name="nm_cloud_ev_contribute_default">Controlul datelor: pornit pentru conturile noi</string>
     <string name="nm_data_title">Controlul datelor</string>
-    <string name="nm_data_improve">Ajută la îmbunătățirea modelelor AI nanoMuse</string>
+    <string name="nm_data_improve">Ajută la îmbunătățirea modelelor AI Kestrel</string>
     <string name="nm_data_why">Cât e pornit, textul conversațiilor tale cu modelele nanoMuse Cloud (ce ai scris, ce a răspuns și uneltele pe care a ales să le apeleze) e păstrat pe relay pentru a antrena modelul deschis al comunității. Nu memoria sau SOUL (promptul de sistem), nu ce au returnat uneltele, nu imaginile, și niciodată alături de cine ești. Propria ta cheie API nu trece niciodată prin relay.</string>
     <string name="nm_data_default_on">Conturile noi pornesc cu el activat.</string>
     <string name="nm_data_default_off">Conturile noi pornesc cu el dezactivat.</string>
@@ -894,7 +894,7 @@
     <!-- 0.1.20: the coding agents on the account's computers -->
     <string name="nm_coding_title">Agenți de programare</string>
     <string name="nm_coding_intro">Cursor, Codex și Claude Code de pe computerele tale: sesiunile lor, ultimul lor răspuns și un mesaj către oricare dintre ei, de aici. Nimic de-al lor nu e copiat pe telefon.</string>
-    <string name="nm_coding_no_computer">Niciun computer cu un agent de programare nu e online. Rulează nanoMuse pe computerul unde e instalat Cursor, Codex sau Claude Code, conectat cu acest cont.</string>
+    <string name="nm_coding_no_computer">Niciun computer cu un agent de programare nu e online. Rulează Kestrel pe computerul unde e instalat Cursor, Codex sau Claude Code, conectat cu acest cont.</string>
     <string name="nm_coding_account_hint">Acest telefon e conectat ca %1$s; computerul trebuie să folosească același cont.</string>
     <string name="nm_coding_refresh">Reîmprospătează</string>
     <string name="nm_coding_all">Toate</string>
@@ -928,12 +928,12 @@
     <string name="nm_cloud_tokens_line">%1$s tokenuri în total · %2$s azi</string>
     <string name="nm_cloud_notice_title">Gratuit, open source, nonprofit</string>
     <string name="nm_cloud_notice_closing">Ai găsit o eroare, vrei o funcție, ai un patch? Depozitul GitHub e locul potrivit.</string>
-    <string name="nm_cloud_notice">nanoMuse este un proiect comunitar open source, nonprofit: gratuit, pentru totdeauna. Modelul vine cu un credit gratuit plătit de dezvoltator; după aceea, propria ta cheie. Nimic nu se vinde; ce păstrează relay-ul e în politica de confidențialitate, iar Setări → Controlul datelor e al tău. Șterge contul oricând vrei.</string>
+    <string name="nm_cloud_notice">Kestrel este un proiect comunitar open source, nonprofit: gratuit, pentru totdeauna. Modelul vine cu un credit gratuit plătit de dezvoltator; după aceea, propria ta cheie. Nimic nu se vinde; ce păstrează relay-ul e în politica de confidențialitate, iar Setări → Controlul datelor e al tău. Șterge contul oricând vrei.</string>
 
     <!-- nanoMuse: devices on the hub -->
     <string name="nm_hub_channel">Mesaje de la dispozitivele tale</string>
     <string name="nm_hub_service_channel">Conectat la dispozitivele tale</string>
-    <string name="nm_hub_service_title">nanoMuse · accesibil de pe dispozitivele tale</string>
+    <string name="nm_hub_service_title">Kestrel · accesibil de pe dispozitivele tale</string>
     <string name="nm_hub_service_connecting">Se conectează la nanoMuse Cloud…</string>
     <string name="nm_hub_service_alone">Niciun alt dispozitiv nu e online acum</string>
     <plurals name="nm_hub_service_devices">
@@ -975,7 +975,7 @@
     <string name="nm_hub_err_not_controllable">Acelui dispozitiv nu i se pot cere lucruri.</string>
     <string name="nm_hub_err_unknown_agent">Acel agent de programare nu e pe computer.</string>
     <string name="nm_hub_err_no_session">Acea sesiune nu mai e pe computer.</string>
-    <string name="nm_hub_err_unknown_action">Computerul rulează un nanoMuse mai vechi, care nu cunoaște această acțiune.</string>
+    <string name="nm_hub_err_unknown_action">Computerul rulează un Kestrel mai vechi, care nu cunoaște această acțiune.</string>
     <string name="nm_hub_err_bad_key">Deconectat pe relay; conectează-te din nou.</string>
     <string name="nm_hub_err_generic">Computerul nu a putut face asta.</string>
     <string name="nm_devices_refused">Refuzat de relay; conectează-te din nou</string>
@@ -994,7 +994,7 @@
     <string name="nm_connectors_sign_in">Conectează-te</string>
     <string name="nm_connectors_disconnect">Deconectează</string>
     <string name="nm_connectors_docs">Pagina furnizorului despre acest server</string>
-    <string name="nm_connectors_how_oauth">Se conectează cu contul tău %1$s în browser; nanoMuse se înregistrează singur la serviciu, așa că nu e nimic de tastat. Tokenul rămâne pe acest telefon.</string>
+    <string name="nm_connectors_how_oauth">Se conectează cu contul tău %1$s în browser; Kestrel se înregistrează singur la serviciu, așa că nu e nimic de tastat. Tokenul rămâne pe acest telefon.</string>
     <string name="nm_connectors_how_key">Are nevoie de o cheie de la serviciu: %1$s. E păstrată doar în intrarea MCP de pe acest telefon.</string>
     <string name="nm_connectors_how_none">Deschis tuturor; nu e nevoie de conectare.</string>
     <string name="nm_connectors_how_auto">Verifică mai întâi de ce are nevoie serverul: nimic, o conectare sau o cheie.</string>
@@ -1057,7 +1057,7 @@
     <string name="nm_devices_ask_hint">Atinge un dispozitiv care e online ca să-i scrii din conversație: mesajul începe cu @ și numele lui, iar acel dispozitiv face treaba.</string>
     <string name="nm_reach_the_provider">furnizorul</string>
     <string name="nm_reach_unreachable_title">%1$s nu poate fi atins din această rețea</string>
-    <string name="nm_reach_unreachable_body">Nimic nu a răspuns la %1$s. Este vorba de drumul de la acest telefon la furnizor; serverele nanoMuse nu sunt implicate.</string>
+    <string name="nm_reach_unreachable_body">Nimic nu a răspuns la %1$s. Este vorba de drumul de la acest telefon la furnizor; serverele Kestrel nu sunt implicate.</string>
     <string name="nm_reach_region_title">OpenAI nu deservește această regiune</string>
     <string name="nm_reach_region_body">Cererea a ajuns la OpenAI, care a răspuns că nu oferă serviciul acolo de unde vine această conexiune.</string>
     <string name="nm_reach_signed_out_title">Autentificarea ChatGPT nu mai este valabilă</string>

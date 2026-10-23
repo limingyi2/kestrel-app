@@ -1,3 +1,4 @@
+// nanoMuse: Kestrel display-name overlay; runtime identifiers are preserved.
 package com.openminis.app.service
 
 import android.app.Notification
@@ -189,7 +190,7 @@ class AgentForegroundService : Service() {
         if (com.openminis.app.crash.CrashFrequencyDetector.isSafeMode()) {
             try {
                 val stub = androidx.core.app.NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setContentTitle("nanoMuse")
+                    .setContentTitle("Kestrel")
                     .setSmallIcon(android.R.drawable.stat_sys_warning)
                     .setOngoing(false)
                     .build()
@@ -756,7 +757,7 @@ class AgentForegroundService : Service() {
         )
 
         // T-bg-overlay phase 1: enrich the ongoing notification.
-        // Title:   "nanoMuse is using <Tool>"  (or session-count summary when idle/between turns)
+        // Title:   "Kestrel is using <Tool>"  (or session-count summary when idle/between turns)
         // Text:    one-line "<sessionLabel> · <elapsed>" so the always-visible row stays compact
         // BigText: full status string from SessionActivityTracker.currentToolStatus when expanded
         // Progress: indeterminate while a tool is in flight (isToolRunning), hidden otherwise
@@ -767,7 +768,7 @@ class AgentForegroundService : Service() {
         // [T-android-live-update-completed] In the completed resting state the
         // title/status must stop describing work in progress. `toolName` is
         // already null by then (setInactive clears it), so the old code fell
-        // through to the generic "nanoMuse is running" title while the icon fell
+        // through to the generic "Kestrel is running" title while the icon fell
         // through to the wrench (toolSmallIconRes' else branch) — a finished
         // task rendered exactly like a running one.
         val titleText = when {
@@ -983,15 +984,15 @@ class AgentForegroundService : Service() {
      * so the user still gets a hint about what's running.
      */
     private fun toolDisplayLabel(toolName: String): String = when (toolName) {
-        "shell_execute" -> "nanoMuse is using Shell"
-        "file_read" -> "nanoMuse is reading File"
-        "file_write" -> "nanoMuse is using Editor"
-        "file_edit" -> "nanoMuse is editing File"
-        "browser_use" -> "nanoMuse is using Browser"
-        "read_image" -> "nanoMuse is reading Image"
-        "memory_write", "memory_get" -> "nanoMuse is using Memory"
-        "web_search" -> "nanoMuse is using Search"
-        else -> "nanoMuse is using $toolName"
+        "shell_execute" -> "Kestrel is using Shell"
+        "file_read" -> "Kestrel is reading File"
+        "file_write" -> "Kestrel is using Editor"
+        "file_edit" -> "Kestrel is editing File"
+        "browser_use" -> "Kestrel is using Browser"
+        "read_image" -> "Kestrel is reading Image"
+        "memory_write", "memory_get" -> "Kestrel is using Memory"
+        "web_search" -> "Kestrel is using Search"
+        else -> "Kestrel is using $toolName"
     }
 
     /**

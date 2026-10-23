@@ -1,3 +1,4 @@
+// nanoMuse: Kestrel display-name overlay; runtime identifiers are preserved.
 package com.openminis.app.ui.chat
 
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -162,7 +163,7 @@ internal fun TypingIndicator() {
     // (MinisApp.onCreate via refreshCache); collectAsState makes Compose
     // recompose the indicator immediately when it changes.
     val soulMeta by com.openminis.app.agent.SoulStore.cachedMetadata.collectAsState()
-    val soulName = soulMeta.name.trim().ifEmpty { "nanoMuse" }
+    val soulName = soulMeta.name.trim().ifEmpty { "Kestrel" }
 
     Row(
         modifier = Modifier.padding(top = 2.dp, bottom = 8.dp),

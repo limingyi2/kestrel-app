@@ -106,6 +106,7 @@ const runIt: DefaultTheme.SidebarItem[] = [
 ]
 
 const understandIt: DefaultTheme.SidebarItem[] = [
+  { text: 'Kestrel architecture', link: '/kestrel-architecture' },
   { text: 'Architecture', link: '/architecture' },
   { text: 'Sentinel', link: '/sentinel' },
   { text: 'Privacy', link: '/privacy' },
@@ -164,6 +165,7 @@ const zhRunIt: DefaultTheme.SidebarItem[] = [
 ]
 
 const zhUnderstandIt: DefaultTheme.SidebarItem[] = [
+  { text: 'Kestrel 架构', link: '/zh/kestrel-architecture' },
   { text: '架构', link: '/zh/architecture' },
   { text: '哨兵（Sentinel）', link: '/zh/sentinel' },
   { text: '隐私', link: '/zh/privacy' },

@@ -7,7 +7,7 @@
     <string name="nm_about_upstream">OpenMinis 1.13 tabanlı</string>
     <string name="nm_about_upstream_detail">GPL-3.0 · 2026-09-24’ten beri değiştirildi · kaynak GitHub’da</string>
     <string name="nm_about_trademark">Meta ile bağlantılı değildir</string>
-    <string name="nm_about_trademark_detail">Muse, Meta Platforms, Inc.’in tescilli markasıdır. nanoMuse bağımsız bir özgür yazılım projesidir.</string>
+    <string name="nm_about_trademark_detail">Muse, Meta Platforms, Inc.’in tescilli markasıdır. Kestrel bağımsız bir özgür yazılım projesidir.</string>
 
     <!-- Chat header -->
     <string name="nm_avatar_content_description">Ajanın. Adını, simgesini veya tarzını değiştirmek için dokun.</string>
@@ -22,27 +22,27 @@
     <string name="nm_star_action">GitHub’da yıldızla</string>
     <string name="nm_star_later">Şimdi değil</string>
     <string name="nm_star_done">Zaten yıldız verdim</string>
-    <string name="nm_star_signed_in">Hoş geldin. nanoMuse ücretsiz, açık kaynak ve kâr amacı gütmeyen bir proje: çalıştıran herkes için kişisel bir ajan. Senin için bir değeri varsa, GitHub’da bir yıldız bir sonraki kişinin onu bulmasını sağlar.</string>
+    <string name="nm_star_signed_in">Hoş geldin. Kestrel ücretsiz, açık kaynak ve kâr amacı gütmeyen bir proje: çalıştıran herkes için kişisel bir ajan. Senin için bir değeri varsa, GitHub’da bir yıldız bir sonraki kişinin onu bulmasını sağlar.</string>
     <plurals name="nm_star_tasks">
         <item quantity="one">Bir görev tamamlandı. nanoMuse yardımcı olduysa, GitHub’da bir yıldız onu geliştirenlere bunu söyler.</item>
         <item quantity="other">%1$d görev tamamlandı. nanoMuse işe yarıyorsa, GitHub’da bir yıldız bir sonraki kişinin onu bulmasına yardım eder.</item>
     </plurals>
-    <string name="nm_star_days_used_week">nanoMuse ile bir hafta. Gününde bir yer edindiyse, GitHub’da bir yıldız bir sonraki kişinin onu bulmasına yardım eder.</string>
-    <string name="nm_star_days_used_month">nanoMuse ile bir ay. Rutininin bir parçası olduysa, GitHub’da bir yıldız başkalarına denemeye değer olduğunu söyler.</string>
+    <string name="nm_star_days_used_week">Kestrel ile bir hafta. Gününde bir yer edindiyse, GitHub’da bir yıldız bir sonraki kişinin onu bulmasına yardım eder.</string>
+    <string name="nm_star_days_used_month">Kestrel ile bir ay. Rutininin bir parçası olduysa, GitHub’da bir yıldız başkalarına denemeye değer olduğunu söyler.</string>
     <plurals name="nm_star_days_used">
         <item quantity="one">nanoMuse ile bir gün. Yardımcı olduysa, GitHub’da bir yıldız bir sonraki kişinin onu bulmasına yardım eder.</item>
         <item quantity="other">nanoMuse ile %1$d gün. Gününde bir yer edindiyse, GitHub’da bir yıldız bir sonraki kişinin onu bulmasına yardım eder.</item>
     </plurals>
-    <string name="nm_star_goal_done">Hedefe ulaşıldı. nanoMuse oraya varmana yardım ettiyse, GitHub’da bir yıldız onu geliştirenlere bunu söyler.</string>
-    <string name="nm_star_new_look">Senin için çizilmiş yeni bir yüz. nanoMuse’un gidişatını beğeniyorsan, GitHub’da bir yıldız daha çok kişinin onu bulmasına yardım eder.</string>
-    <string name="nm_star_exhausted">Ücretsiz kota bitti. Buraya kadar geldiğin için teşekkürler. nanoMuse bunu hak ettiyse, GitHub’da bir yıldız projeyi bir sonraki kişinin gözü önünde tutar.</string>
+    <string name="nm_star_goal_done">Hedefe ulaşıldı. Kestrel oraya varmana yardım ettiyse, GitHub’da bir yıldız onu geliştirenlere bunu söyler.</string>
+    <string name="nm_star_new_look">Senin için çizilmiş yeni bir yüz. Kestrel’un gidişatını beğeniyorsan, GitHub’da bir yıldız daha çok kişinin onu bulmasına yardım eder.</string>
+    <string name="nm_star_exhausted">Ücretsiz kota bitti. Buraya kadar geldiğin için teşekkürler. Kestrel bunu hak ettiyse, GitHub’da bir yıldız projeyi bir sonraki kişinin gözü önünde tutar.</string>
     <string name="nm_chat_menu_rename">Sohbeti yeniden adlandır</string>
 
     <!-- Foreground-service notification title while no tool is running -->
     <string name="nm_notif_working">%1$s çalışıyor</string>
 
     <!-- First conversation: the scripted opening (see io.github.nanomuse.onboarding) -->
-    <string name="nm_intro_hello">Merhaba, ben nanoMuse, telefonunda yaşayan asistan. Birkaç işi üzerinden alayım.</string>
+    <string name="nm_intro_hello">Merhaba, ben Kestrel, telefonunda yaşayan asistan. Birkaç işi üzerinden alayım.</string>
     <string name="nm_intro_how_i_work">Nasıl çalıştığım hakkında birkaç söz:\n\n- Kendi bilgisayarım var (bir Linux sandbox’ı ve bir tarayıcı), yani komut çalıştırabilir, web sitelerini açabilir ve formları doldurabilirim.\n- Benim için bağladığın dosyaları ve fotoğrafları okuyup düzenleyebilir, hatırlatıcılarla ve zamanlanmış görevlerle ilgilenebilirim.\n- Önemli her adımdan önce sana sorarım.\n- Her şey bu telefonda çalışır. Mesajların yapılandırdığın modele gider; nanoMuse Cloud ile bu konuşma diğer cihazlarına da seninle gelir; Veri denetimlerinden kapatılabilir.</string>
     <string name="nm_intro_ask_name">Başlamadan önce, sana nasıl hitap edeyim?</string>
 
@@ -196,7 +196,7 @@
     <string name="nm_risk_class_outbound">Gönderme</string>
     <string name="nm_risk_class_money">Ödeme</string>
     <string name="nm_risk_class_install">Kurulum</string>
-    <string name="nm_grants_header">nanoMuse’un hatırladığı onaylar</string>
+    <string name="nm_grants_header">Kestrel’un hatırladığı onaylar</string>
     <string name="nm_grants_empty">Henüz hatırlanan bir şey yok</string>
     <string name="nm_grants_revoke">Geri al</string>
     <string name="nm_grants_revoke_confirm">Bu onay geri alınsın mı? Bir dahaki sefere yeniden sorulacak.</string>
@@ -204,7 +204,7 @@
     <string name="nm_risk_remember_money_note">Ekran kilidinle doğrulanır. Bu tek uygulama ya da sitedeki ödemeler bundan sonra kart gösterilmeden çalışır; Ayarlar → İzinler altında en üstte listelenir ve istediğin zaman geri alabilirsin.</string>
     <string name="nm_risk_remember_money_needs_lock">Ödemeleri hatırlamak için önce bir ekran kilidi ayarla (Ayarlar → Güvenlik): hatırlama işlemi onunla doğrulanır.</string>
     <string name="nm_risk_lock_title">Sen olduğunu doğrula</string>
-    <string name="nm_risk_lock_subtitle">nanoMuse %1$s için ödeme onaylarını hatırlayacak ve sormadan çalıştıracak.</string>
+    <string name="nm_risk_lock_subtitle">Kestrel %1$s için ödeme onaylarını hatırlayacak ve sormadan çalıştıracak.</string>
     <string name="nm_risk_remembered_toast">Hatırlandı · geri almak için Ayarlar → İzinler</string>
     <string name="nm_risk_tier_highest">Sormadan çalışır · ödemeler</string>
     <string name="nm_risk_tier_confirm">Karttan hatırlandı · silme ve gönderme</string>
@@ -275,7 +275,7 @@
     <string name="nm_sysfiles_open_memory">Belleği aç</string>
     <string name="nm_sysfiles_footer">Bu dosyalar ajanındır: kim olduğu, senin hakkında bildikleri, hatırladıkları, senin için yazdıkları ve ne zaman uyandığı. Telefonunun depolama alanında dururlar; ajan onları kabuğundan /var/minis/memory altında okur ve düzenler, sen de burada her şeyi düzenleyebilirsin.</string>
     <string name="nm_sysfile_about_lead">Bu dosya hakkında.</string>
-    <string name="nm_sysfile_about_soul">Bu, ajanın kişiliğidir: her konuşmada bağlı kalmaya çalıştığı değerler ve alışkanlıklar, adı ve yanıt verdiği üslup. nanoMuse ile gelen bir şablondan başlar; ajan zamanla onu geliştirebilir ve yaptığında sana söyler. İstediğin zaman düzenleyebilirsin. Bu not dosyanın parçası değildir.</string>
+    <string name="nm_sysfile_about_soul">Bu, ajanın kişiliğidir: her konuşmada bağlı kalmaya çalıştığı değerler ve alışkanlıklar, adı ve yanıt verdiği üslup. Kestrel ile gelen bir şablondan başlar; ajan zamanla onu geliştirebilir ve yaptığında sana söyler. İstediğin zaman düzenleyebilirsin. Bu not dosyanın parçası değildir.</string>
     <string name="nm_sysfile_about_user">Ajan bu dosyayı senin hakkındaki çalışma notları olarak tutar: adın, sana nasıl hitap edilmesini istediğin, saat dilimin ve işe yaraması için gereken bağlam, örneğin üzerinde çalıştığın şeyler. Zamanla konuşmalarından doldurur ve her konuşmanın başında okur. Ajanın o anki anlayışını yansıtır, bu yüzden eksik ya da güncelliğini yitirmiş olabilir. Burada her şeyi düzenleyebilirsin; ajan yazdıklarına uyar. Bu not dosyanın parçası değildir.</string>
     <string name="nm_sysfile_about_memory">Ajanın konuşmalar arasında tuttuğu kalıcı notlar: hatırlamaya değer şeyler, kendi sözleriyle, artı başka bir asistandan aktardıkların. Gün gün tutulan günlük, bellek klasöründe onun yanında durur. Bellek açıkken her konuşmanın başında okunur. Bu not dosyanın parçası değildir.</string>
     <string name="nm_sysfile_about_feed">Akışı yönlendiren tek paragraf: neyi daha çok istediğin, neyin atlanacağı, gönderilerin ne kadar uzun olacağı. Günlük akış rutini yazmadan önce onu okur. Bu not dosyanın parçası değildir.</string>
@@ -384,7 +384,7 @@
     <string name="nm_a11y_own_clip_preview">Klibinizin önizlemesi</string>
 
     <!-- First run (Muse-style welcome; the steps are OpenMinis' provider and model screens) -->
-    <string name="nm_setup_title">nanoMuse’a hoş geldin</string>
+    <string name="nm_setup_title">Kestrel’a hoş geldin</string>
     <string name="nm_setup_step_models">Modelleri seç</string>
     <string name="nm_setup_step_models_sub">Sağlayıcının sunduğu modeller senin için listelenir; en fazla üç tane seç</string>
     <string name="nm_setup_step_start">%1$s ile tanış</string>
@@ -400,7 +400,7 @@
     <string name="nm_settings_no_model">Henüz model yok</string>
     <string name="nm_settings_no_model_sub">Bir sağlayıcı ekle ve modellerini seç</string>
     <string name="nm_settings_change_model">Değiştir</string>
-    <string name="nm_settings_version">nanoMuse %1$s (%2$d)</string>
+    <string name="nm_settings_version">Kestrel %1$s (%2$d)</string>
     <string name="nm_version_title">Sürüm</string>
     <string name="nm_version_checking">En son sürüm denetleniyor…</string>
     <string name="nm_version_have">En son sürüm %1$s, sende var</string>
@@ -480,8 +480,8 @@
     <string name="nm_avatar_share_title">Avatarımı paylaş</string>
     <string name="nm_avatar_share_subtitle">Bir kart seç. Sistemin paylaşım sayfasıyla gönderilir.</string>
     <string name="nm_avatar_share_system">Paylaş</string>
-    <string name="nm_avatar_share_bubble">Merhaba, ben %1$s, kişisel bir yapay zekâ ajanıyım. nanoMuse ile tanış: açık kaynak, telefonunda çalışır.</string>
-    <string name="nm_avatar_share_tagline">Kişisel yapay zekâ ajanın, açık kaynak · github.com/nano-muse/nanoMuse</string>
+    <string name="nm_avatar_share_bubble">Merhaba, ben %1$s, kişisel bir yapay zekâ ajanıyım. Kestrel ile tanış: açık kaynak, telefonunda çalışır.</string>
+    <string name="nm_avatar_share_tagline">Kişisel yapay zekâ ajanın, açık kaynak · github.com/nano-muse/Kestrel</string>
 
     <!-- 0.1.10 · Motion -->
     <string name="nm_media_title">Görsel ve video modelleri</string>
@@ -532,7 +532,7 @@
     <string name="nm_hands_section_needs">Neye ihtiyacı var</string>
     <string name="nm_hands_needs_footer">Erişilebilirlik hizmeti ekran görüntüsünü alır ve hareketleri yapar; ekranın içeriğini okumaz. Diğer uygulamaların üzerine çizme izni kapsül içindir.</string>
     <string name="nm_hands_need_a11y">Erişilebilirlik hizmeti</string>
-    <string name="nm_hands_need_a11y_fix">Erişilebilirlik ayarlarında Yüklü uygulamalar altından nanoMuse’u aç</string>
+    <string name="nm_hands_need_a11y_fix">Erişilebilirlik ayarlarında Yüklü uygulamalar altından Kestrel’u aç</string>
     <string name="nm_hands_need_overlay">Diğer uygulamaların üzerinde göster</string>
     <string name="nm_hands_need_overlay_fix">Durdur düğmeli kapsülün gösterilebilmesi için izin ver</string>
     <string name="nm_hands_need_model">Resimleri gören bir model</string>
@@ -570,7 +570,7 @@
     <string name="nm_hands_protected_screen">Bu ekran korumalı ve okunamıyor. Bu kısmı kendin bitir, sonra Devam et’e dokun.</string>
     <string name="nm_hands_secret_field">Bir parola ya da kod alanı: lütfen kendin doldur, sonra Devam et’e dokun.</string>
     <string name="nm_hands_approval_title">Onayın bekleniyor</string>
-    <string name="nm_hands_approval_detail">“%1$s” öğesine dokun: nanoMuse’ta onayla (ekran kilidini ister).</string>
+    <string name="nm_hands_approval_detail">“%1$s” öğesine dokun: Kestrel’ta onayla (ekran kilidini ister).</string>
     <string name="nm_hands_approval_here">“%1$s” öğesine dokunulsun mu?</string>
     <string name="nm_hands_allow_once">İzin ver</string>
     <string name="nm_hands_deny">Reddet</string>
@@ -601,7 +601,7 @@
     <!-- Reach (0.1.13): the phone drives your computer -->
     <string name="nm_pc_title">Bilgisayarlar</string>
     <string name="nm_pc_none_short">Yok</string>
-    <string name="nm_pc_intro">Burada söyle, bilgisayarında yapılsın: bir komut, bir dosya, tarayıcısında bir sayfa, ekranına bir bakış ya da oradaki nanoMuse için bütün bir görev. Telefon bilgisayarı yönetir, asla tersi değil; her onay önce burada verilir.</string>
+    <string name="nm_pc_intro">Burada söyle, bilgisayarında yapılsın: bir komut, bir dosya, tarayıcısında bir sayfa, ekranına bir bakış ya da oradaki Kestrel için bütün bir görev. Telefon bilgisayarı yönetir, asla tersi değil; her onay önce burada verilir.</string>
     <string name="nm_pc_hub_title">Kolay yol: nanoMuse Desktop, aynı hesap</string>
     <string name="nm_pc_hub_body">Bilgisayara nanoMuse Desktop’ı kur ve bu telefonun hesabıyla oturum aç; saniyeler içinde Hesap → Cihazlar altında görünür.</string>
     <string name="nm_pc_hub_download">nanoMuse Desktop’ı edin</string>
@@ -653,7 +653,7 @@
     <string name="nm_welcome_feat_hands_sub">Treni ayırtır, yemeği sipariş eder, bir uygulamada bir şeye bakar; sen izlersin ve istediğin an durdurabilirsin</string>
     <string name="nm_welcome_feat_reach">Erişim: bilgisayarların, buradan</string>
     <string name="nm_welcome_feat_reach_sub">Bir Mac, Windows ya da Linux makinesine nanoMuse Desktop kur, aynı hesapla oturum aç ve ona telefondan iş ver</string>
-    <string name="nm_welcome_notice">nanoMuse kâr amacı gütmeyen, açık kaynaklı bir topluluk projesidir: ücretsiz, sonsuza kadar. Model, geliştiricinin ödediği ücretsiz bir kotayla gelir; sonrasında kendi anahtarın. Hiçbir şey satılmaz; relay’in neyi tuttuğu gizlilik politikasında yazar ve Ayarlar → Veri denetimleri senindir.</string>
+    <string name="nm_welcome_notice">Kestrel kâr amacı gütmeyen, açık kaynaklı bir topluluk projesidir: ücretsiz, sonsuza kadar. Model, geliştiricinin ödediği ücretsiz bir kotayla gelir; sonrasında kendi anahtarın. Hiçbir şey satılmaz; relay’in neyi tuttuğu gizlilik politikasında yazar ve Ayarlar → Veri denetimleri senindir.</string>
     <string name="nm_welcome_hands_title">Telefonunu kullanmasına izin ver</string>
     <string name="nm_welcome_hands_sub">İki izinle senin için uygulama açabilir, dokunabilir ve yazabilir. Her adımı ve bir Durdur düğmesini gösteren bir kapsül ekranda kalır; oturum açma, parolalar ve kodlar her zaman sana aittir.</string>
     <string name="nm_welcome_hands_turn_on">Aç</string>
@@ -791,7 +791,7 @@
     <string name="nm_cloud_invite_share">Bağlantıyı paylaş</string>
     <string name="nm_cloud_invite_copy">Kopyala</string>
     <string name="nm_cloud_invite_copied">Kopyalandı</string>
-    <string name="nm_cloud_invite_share_text">nanoMuse’u benimle dene: tamamen açık kaynaklı, ücretsiz bir kişisel ajan. %1$s kodumla kaydol: %2$s</string>
+    <string name="nm_cloud_invite_share_text">Kestrel’u benimle dene: tamamen açık kaynaklı, ücretsiz bir kişisel ajan. %1$s kodumla kaydol: %2$s</string>
     <string name="nm_cloud_invite_count">%1$d arkadaş katıldı</string>
     <string name="nm_cloud_invite_earned">Davetlerle ¥%1$s eklendi</string>
     <string name="nm_cloud_invite_have">Davet kodun var mı?</string>
@@ -832,7 +832,7 @@
     <string name="nm_cloud_ev_contribute_deleted">Veri denetimleri: saklanan konuşmalar silindi</string>
     <string name="nm_cloud_ev_contribute_default">Veri denetimleri: yeni hesaplar için açık</string>
     <string name="nm_data_title">Veri denetimleri</string>
-    <string name="nm_data_improve">nanoMuse’un yapay zekâ modellerini geliştirmeye yardım et</string>
+    <string name="nm_data_improve">Kestrel’un yapay zekâ modellerini geliştirmeye yardım et</string>
     <string name="nm_data_why">Bu açıkken nanoMuse Cloud modelleriyle yaptığın sohbetlerin metni (ne yazdığın, ne yanıtladığı ve çağırmayı seçtiği araçlar) topluluğun kendi açık modelini eğitmek için relay’de tutulur. Belleğin ya da SOUL (sistem istemi) değil, araçların döndürdükleri değil, resimler değil ve asla kim olduğunun yanında değil. Kendi API anahtarın asla relay’den geçmez.</string>
     <string name="nm_data_default_on">Yeni hesaplar açık olarak başlar.</string>
     <string name="nm_data_default_off">Yeni hesaplar kapalı olarak başlar.</string>
@@ -891,7 +891,7 @@
     <!-- 0.1.20: the coding agents on the account's computers -->
     <string name="nm_coding_title">Kodlama ajanları</string>
     <string name="nm_coding_intro">Bilgisayarlarındaki Cursor, Codex ve Claude Code: oturumları, son yanıtları ve herhangi birine bir mesaj, buradan. Onlara ait hiçbir şey telefona kopyalanmaz.</string>
-    <string name="nm_coding_no_computer">Kodlama ajanı olan çevrimiçi bir bilgisayar yok. nanoMuse’u Cursor, Codex ya da Claude Code’un kurulu olduğu bilgisayarda, bu hesapla oturum açarak çalıştır.</string>
+    <string name="nm_coding_no_computer">Kodlama ajanı olan çevrimiçi bir bilgisayar yok. Kestrel’u Cursor, Codex ya da Claude Code’un kurulu olduğu bilgisayarda, bu hesapla oturum açarak çalıştır.</string>
     <string name="nm_coding_account_hint">Bu telefon %1$s olarak oturum açmış; bilgisayar aynı hesabı kullanmalı.</string>
     <string name="nm_coding_refresh">Yenile</string>
     <string name="nm_coding_all">Tümü</string>
@@ -925,12 +925,12 @@
     <string name="nm_cloud_tokens_line">toplam %1$s token · bugün %2$s</string>
     <string name="nm_cloud_notice_title">Ücretsiz, açık kaynak, kâr amacı gütmeyen</string>
     <string name="nm_cloud_notice_closing">Bir hata mı buldun, bir özellik mi istiyorsun, bir yaman mı var? Yeri GitHub deposu.</string>
-    <string name="nm_cloud_notice">nanoMuse kâr amacı gütmeyen, açık kaynaklı bir topluluk projesidir: ücretsiz, sonsuza kadar. Model, geliştiricinin ödediği ücretsiz bir kotayla gelir; sonrasında kendi anahtarın. Hiçbir şey satılmaz; relay’in neyi tuttuğu gizlilik politikasında yazar ve Ayarlar → Veri denetimleri senindir. Hesabı istediğin zaman sil.</string>
+    <string name="nm_cloud_notice">Kestrel kâr amacı gütmeyen, açık kaynaklı bir topluluk projesidir: ücretsiz, sonsuza kadar. Model, geliştiricinin ödediği ücretsiz bir kotayla gelir; sonrasında kendi anahtarın. Hiçbir şey satılmaz; relay’in neyi tuttuğu gizlilik politikasında yazar ve Ayarlar → Veri denetimleri senindir. Hesabı istediğin zaman sil.</string>
 
     <!-- nanoMuse: devices on the hub -->
     <string name="nm_hub_channel">Cihazlarından gelen mesajlar</string>
     <string name="nm_hub_service_channel">Cihazlarına bağlı</string>
-    <string name="nm_hub_service_title">nanoMuse · cihazlarından erişilebilir</string>
+    <string name="nm_hub_service_title">Kestrel · cihazlarından erişilebilir</string>
     <string name="nm_hub_service_connecting">nanoMuse Cloud’a bağlanıyor…</string>
     <string name="nm_hub_service_alone">Şu anda başka bir cihaz çevrimiçi değil</string>
     <plurals name="nm_hub_service_devices">
@@ -971,7 +971,7 @@
     <string name="nm_hub_err_not_controllable">O cihazdan bir şey yapması istenemez.</string>
     <string name="nm_hub_err_unknown_agent">O kodlama ajanı bilgisayarda yok.</string>
     <string name="nm_hub_err_no_session">O oturum artık bilgisayarda yok.</string>
-    <string name="nm_hub_err_unknown_action">Bilgisayar bu eylemi bilmeyen daha eski bir nanoMuse çalıştırıyor.</string>
+    <string name="nm_hub_err_unknown_action">Bilgisayar bu eylemi bilmeyen daha eski bir Kestrel çalıştırıyor.</string>
     <string name="nm_hub_err_bad_key">Relay’de oturum kapatılmış; yeniden oturum aç.</string>
     <string name="nm_hub_err_generic">Bilgisayar bunu yapamadı.</string>
     <string name="nm_devices_refused">Relay reddetti; yeniden oturum aç</string>
@@ -990,7 +990,7 @@
     <string name="nm_connectors_sign_in">Oturum aç</string>
     <string name="nm_connectors_disconnect">Bağlantıyı kes</string>
     <string name="nm_connectors_docs">Satıcının bu sunucuyla ilgili sayfası</string>
-    <string name="nm_connectors_how_oauth">Tarayıcıda %1$s hesabınla oturum açar; nanoMuse kendini hizmete kaydeder, yani yazılacak bir şey yoktur. Jeton bu telefonda kalır.</string>
+    <string name="nm_connectors_how_oauth">Tarayıcıda %1$s hesabınla oturum açar; Kestrel kendini hizmete kaydeder, yani yazılacak bir şey yoktur. Jeton bu telefonda kalır.</string>
     <string name="nm_connectors_how_key">Hizmetten bir anahtar gerekir: %1$s. Yalnızca bu telefondaki MCP girdisinde tutulur.</string>
     <string name="nm_connectors_how_none">Herkese açık; oturum açmak gerekmez.</string>
     <string name="nm_connectors_how_auto">Önce sunucunun neye ihtiyacı olduğunu denetler: hiçbir şey, bir oturum açma ya da bir anahtar.</string>
@@ -1053,7 +1053,7 @@
     <string name="nm_devices_ask_hint">Sohbetten yazmak için çevrimiçi bir cihaza dokun: mesaj @ ve cihazın adıyla başlar, işi o cihaz yapar.</string>
     <string name="nm_reach_the_provider">sağlayıcı</string>
     <string name="nm_reach_unreachable_title">Bu ağdan %1$s adresine ulaşılamıyor</string>
-    <string name="nm_reach_unreachable_body">%1$s hiç yanıt vermedi. Sorun bu telefondan sağlayıcıya giden yolda; nanoMuse\'un kendi sunucuları işin içinde değil.</string>
+    <string name="nm_reach_unreachable_body">%1$s hiç yanıt vermedi. Sorun bu telefondan sağlayıcıya giden yolda; Kestrel\'un kendi sunucuları işin içinde değil.</string>
     <string name="nm_reach_region_title">OpenAI bu bölgeye hizmet vermiyor</string>
     <string name="nm_reach_region_body">İstek OpenAI\'a ulaştı; yanıt, bu bağlantının geldiği yerde hizmet sunulmadığı oldu.</string>
     <string name="nm_reach_signed_out_title">ChatGPT oturumu artık geçerli değil</string>

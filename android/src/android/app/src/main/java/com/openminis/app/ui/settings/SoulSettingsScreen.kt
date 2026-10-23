@@ -1,3 +1,4 @@
+// nanoMuse: Kestrel display-name overlay; runtime identifiers are preserved.
 package com.openminis.app.ui.settings
 
 import android.graphics.BitmapFactory
@@ -304,7 +305,7 @@ fun SoulSettingsScreen(onBack: () -> Unit) {
                 }
                 Column(modifier = Modifier.padding(start = 4.dp)) {
                     Text(
-                        text = name.ifBlank { "nanoMuse" },
+                        text = name.ifBlank { "Kestrel" },
                         fontSize = 17.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface,

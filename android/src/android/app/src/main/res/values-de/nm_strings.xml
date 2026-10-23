@@ -7,7 +7,7 @@
     <string name="nm_about_upstream">Basiert auf OpenMinis 1.13</string>
     <string name="nm_about_upstream_detail">GPL-3.0 · geändert seit 2026-09-24 · Quellcode auf GitHub</string>
     <string name="nm_about_trademark">Nicht mit Meta verbunden</string>
-    <string name="nm_about_trademark_detail">Muse ist eine Marke von Meta Platforms, Inc. nanoMuse ist ein unabhängiges Freie-Software-Projekt.</string>
+    <string name="nm_about_trademark_detail">Muse ist eine Marke von Meta Platforms, Inc. Kestrel ist ein unabhängiges Freie-Software-Projekt.</string>
 
     <!-- Chat header -->
     <string name="nm_avatar_content_description">Dein Agent. Tippe, um Name, Bild oder Stil zu ändern.</string>
@@ -22,27 +22,27 @@
     <string name="nm_star_action">Auf GitHub bewerten</string>
     <string name="nm_star_later">Jetzt nicht</string>
     <string name="nm_star_done">Stern schon gegeben</string>
-    <string name="nm_star_signed_in">Willkommen. nanoMuse ist kostenlos, quelloffen und gemeinnützig: ein persönlicher Agent für alle, die ihn ausführen. Wenn dir das etwas wert ist, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</string>
+    <string name="nm_star_signed_in">Willkommen. Kestrel ist kostenlos, quelloffen und gemeinnützig: ein persönlicher Agent für alle, die ihn ausführen. Wenn dir das etwas wert ist, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</string>
     <plurals name="nm_star_tasks">
         <item quantity="one">Eine Aufgabe erledigt. Wenn nanoMuse geholfen hat, zeigt ein Stern auf GitHub den Leuten, die daran bauen, dass es das getan hat.</item>
         <item quantity="other">%1$d Aufgaben erledigt. Wenn nanoMuse nützlich ist, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</item>
     </plurals>
-    <string name="nm_star_days_used_week">Eine Woche mit nanoMuse. Wenn es sich einen Platz in deinem Tag verdient hat, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</string>
-    <string name="nm_star_days_used_month">Ein Monat mit nanoMuse. Wenn es Teil deiner Routine geworden ist, sagt ein Stern auf GitHub anderen, dass sich ein Versuch lohnt.</string>
+    <string name="nm_star_days_used_week">Eine Woche mit Kestrel. Wenn es sich einen Platz in deinem Tag verdient hat, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</string>
+    <string name="nm_star_days_used_month">Ein Monat mit Kestrel. Wenn es Teil deiner Routine geworden ist, sagt ein Stern auf GitHub anderen, dass sich ein Versuch lohnt.</string>
     <plurals name="nm_star_days_used">
         <item quantity="one">Ein Tag mit nanoMuse. Wenn es geholfen hat, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</item>
         <item quantity="other">%1$d Tage mit nanoMuse. Wenn es sich einen Platz in deinem Tag verdient hat, hilft ein Stern auf GitHub der nächsten Person, es zu finden.</item>
     </plurals>
-    <string name="nm_star_goal_done">Ziel erreicht. Wenn nanoMuse dir dabei geholfen hat, sagt ein Stern auf GitHub das den Leuten, die daran bauen.</string>
-    <string name="nm_star_new_look">Ein neues Gesicht, für dich gezeichnet. Wenn dir gefällt, wohin nanoMuse geht, hilft ein Stern auf GitHub, dass mehr Leute es finden.</string>
-    <string name="nm_star_exhausted">Das kostenlose Guthaben ist aufgebraucht. Danke, dass du bis hierher gekommen bist. Wenn nanoMuse es verdient hat, hält ein Stern auf GitHub das Projekt für die nächste Person sichtbar.</string>
+    <string name="nm_star_goal_done">Ziel erreicht. Wenn Kestrel dir dabei geholfen hat, sagt ein Stern auf GitHub das den Leuten, die daran bauen.</string>
+    <string name="nm_star_new_look">Ein neues Gesicht, für dich gezeichnet. Wenn dir gefällt, wohin Kestrel geht, hilft ein Stern auf GitHub, dass mehr Leute es finden.</string>
+    <string name="nm_star_exhausted">Das kostenlose Guthaben ist aufgebraucht. Danke, dass du bis hierher gekommen bist. Wenn Kestrel es verdient hat, hält ein Stern auf GitHub das Projekt für die nächste Person sichtbar.</string>
     <string name="nm_chat_menu_rename">Chat umbenennen</string>
 
     <!-- Foreground-service notification title while no tool is running -->
     <string name="nm_notif_working">%1$s arbeitet</string>
 
     <!-- First conversation: the scripted opening (see io.github.nanomuse.onboarding) -->
-    <string name="nm_intro_hello">Hallo, ich bin nanoMuse, der Assistent, der auf deinem Telefon wohnt. Lass mich dir ein paar Dinge abnehmen.</string>
+    <string name="nm_intro_hello">Hallo, ich bin Kestrel, der Assistent, der auf deinem Telefon wohnt. Lass mich dir ein paar Dinge abnehmen.</string>
     <string name="nm_intro_how_i_work">Kurz dazu, wie ich arbeite:\n\n- Ich habe einen eigenen Computer (eine Linux-Sandbox und einen Browser), und kann damit Befehle ausführen, Websites öffnen und Formulare ausfüllen.\n- Ich kann die Dateien und Fotos lesen und ordnen, die du für mich einbindest, und mich um Erinnerungen und geplante Aufgaben kümmern.\n- Vor jedem Schritt, der zählt, frage ich dich zuerst.\n- Alles läuft auf diesem Telefon. Deine Nachrichten gehen an das Modell, das du eingerichtet hast; mit nanoMuse Cloud folgt dir dieses Gespräch auch auf deine anderen Geräte; in der Datenkontrolle lässt sich das abschalten.</string>
     <string name="nm_intro_ask_name">Bevor wir anfangen, wie soll ich dich nennen?</string>
 
@@ -196,7 +196,7 @@
     <string name="nm_risk_class_outbound">Senden</string>
     <string name="nm_risk_class_money">Bezahlen</string>
     <string name="nm_risk_class_install">Installieren</string>
-    <string name="nm_grants_header">Von nanoMuse gemerkte Freigaben</string>
+    <string name="nm_grants_header">Von Kestrel gemerkte Freigaben</string>
     <string name="nm_grants_empty">Noch nichts gemerkt</string>
     <string name="nm_grants_revoke">Widerrufen</string>
     <string name="nm_grants_revoke_confirm">Diese Freigabe widerrufen? Beim nächsten Mal wirst du wieder gefragt.</string>
@@ -204,7 +204,7 @@
     <string name="nm_risk_remember_money_note">Mit deiner Bildschirmsperre bestätigt. Zahlungen in dieser einen App oder Website laufen dann ohne Karte; sie stehen ganz oben unter Einstellungen → Berechtigungen, wo du sie jederzeit widerrufen kannst.</string>
     <string name="nm_risk_remember_money_needs_lock">Um Zahlungen zu merken, richte zuerst eine Bildschirmsperre ein (Einstellungen → Sicherheit): Das Merken wird damit bestätigt.</string>
     <string name="nm_risk_lock_title">Bestätige, dass du es bist</string>
-    <string name="nm_risk_lock_subtitle">nanoMuse merkt sich Zahlungsfreigaben für %1$s und führt sie ohne Nachfrage aus.</string>
+    <string name="nm_risk_lock_subtitle">Kestrel merkt sich Zahlungsfreigaben für %1$s und führt sie ohne Nachfrage aus.</string>
     <string name="nm_risk_remembered_toast">Gemerkt · zum Widerrufen siehe Einstellungen → Berechtigungen</string>
     <string name="nm_risk_tier_highest">Läuft ohne Nachfrage · Zahlungen</string>
     <string name="nm_risk_tier_confirm">Über die Karte gemerkt · Löschen und Senden</string>
@@ -275,7 +275,7 @@
     <string name="nm_sysfiles_open_memory">Gedächtnis öffnen</string>
     <string name="nm_sysfiles_footer">Diese Dateien gehören dem Agenten: wer er ist, was er über dich weiß, woran er sich erinnert, was er für dich schreibt und wann er aufwacht. Sie liegen im Speicher deines Telefons; der Agent liest und bearbeitet sie aus seiner Shell unter /var/minis/memory, und du kannst hier alles bearbeiten.</string>
     <string name="nm_sysfile_about_lead">Über diese Datei.</string>
-    <string name="nm_sysfile_about_soul">Das ist die Persönlichkeit des Agenten: die Werte und Gewohnheiten, an die er sich in jedem Gespräch zu halten versucht, sein Name und der Stil, in dem er antwortet. Sie beginnt mit einer Vorlage, die mit nanoMuse kommt; der Agent kann sie mit der Zeit verfeinern und sagt dir, wenn er das tut. Du kannst sie jederzeit bearbeiten. Dieser Hinweis ist nicht Teil der Datei.</string>
+    <string name="nm_sysfile_about_soul">Das ist die Persönlichkeit des Agenten: die Werte und Gewohnheiten, an die er sich in jedem Gespräch zu halten versucht, sein Name und der Stil, in dem er antwortet. Sie beginnt mit einer Vorlage, die mit Kestrel kommt; der Agent kann sie mit der Zeit verfeinern und sagt dir, wenn er das tut. Du kannst sie jederzeit bearbeiten. Dieser Hinweis ist nicht Teil der Datei.</string>
     <string name="nm_sysfile_about_user">Der Agent führt diese Datei als seine Arbeitsnotizen über dich: dein Name, wie du angesprochen werden möchtest, deine Zeitzone und der Kontext, den er braucht, um nützlich zu sein, etwa woran du gerade arbeitest. Er füllt sie mit der Zeit aus euren Gesprächen und liest sie zu Beginn jedes Gesprächs. Sie zeigt sein aktuelles Verständnis und kann darum unvollständig oder veraltet sein. Du kannst hier alles bearbeiten, und der Agent richtet sich nach dem, was du schreibst. Dieser Hinweis ist nicht Teil der Datei.</string>
     <string name="nm_sysfile_about_memory">Dauerhafte Notizen, die der Agent über Gespräche hinweg behält: das, was es wert ist, behalten zu werden, in seinen eigenen Worten, plus alles, was du aus einem anderen Assistenten importiert hast. Das tägliche Tagebuch liegt daneben im Gedächtnisordner. Wird zu Beginn jedes Gesprächs gelesen, wenn das Gedächtnis an ist. Dieser Hinweis ist nicht Teil der Datei.</string>
     <string name="nm_sysfile_about_feed">Ein Absatz, der den Feed lenkt: wovon du mehr willst, was er auslassen soll, wie lang Beiträge sein sollen. Die tägliche Feed-Routine liest ihn vor dem Schreiben. Dieser Hinweis ist nicht Teil der Datei.</string>
@@ -384,7 +384,7 @@
     <string name="nm_a11y_own_clip_preview">Vorschau deines Clips</string>
 
     <!-- First run (Muse-style welcome; the steps are OpenMinis' provider and model screens) -->
-    <string name="nm_setup_title">Willkommen bei nanoMuse</string>
+    <string name="nm_setup_title">Willkommen bei Kestrel</string>
     <string name="nm_setup_step_models">Modelle wählen</string>
     <string name="nm_setup_step_models_sub">Die Modelle deines Anbieters werden für dich aufgelistet; wähle bis zu drei</string>
     <string name="nm_setup_step_start">Lerne %1$s kennen</string>
@@ -400,7 +400,7 @@
     <string name="nm_settings_no_model">Noch kein Modell</string>
     <string name="nm_settings_no_model_sub">Füge einen Anbieter hinzu und wähle seine Modelle</string>
     <string name="nm_settings_change_model">Ändern</string>
-    <string name="nm_settings_version">nanoMuse %1$s (%2$d)</string>
+    <string name="nm_settings_version">Kestrel %1$s (%2$d)</string>
     <string name="nm_version_title">Version</string>
     <string name="nm_version_checking">Suche nach der neuesten Version…</string>
     <string name="nm_version_have">Neueste Version %1$s, du hast sie</string>
@@ -480,8 +480,8 @@
     <string name="nm_avatar_share_title">Meinen Avatar teilen</string>
     <string name="nm_avatar_share_subtitle">Wähle eine Karte. Sie geht über das Teilen-Menü des Systems hinaus.</string>
     <string name="nm_avatar_share_system">Teilen</string>
-    <string name="nm_avatar_share_bubble">Hallo, ich bin %1$s, ein persönlicher KI-Agent. Das ist nanoMuse: quelloffen, läuft auf deinem Telefon.</string>
-    <string name="nm_avatar_share_tagline">Dein persönlicher KI-Agent, quelloffen · github.com/nano-muse/nanoMuse</string>
+    <string name="nm_avatar_share_bubble">Hallo, ich bin %1$s, ein persönlicher KI-Agent. Das ist Kestrel: quelloffen, läuft auf deinem Telefon.</string>
+    <string name="nm_avatar_share_tagline">Dein persönlicher KI-Agent, quelloffen · github.com/nano-muse/Kestrel</string>
 
     <!-- 0.1.10 · Motion -->
     <string name="nm_media_title">Bild- und Videomodelle</string>
@@ -532,7 +532,7 @@
     <string name="nm_hands_section_needs">Was er braucht</string>
     <string name="nm_hands_needs_footer">Der Bedienungshilfen-Dienst macht den Screenshot und führt die Gesten aus; er liest den Bildschirminhalt nicht. Das Einblenden über anderen Apps ist für die Kapsel.</string>
     <string name="nm_hands_need_a11y">Bedienungshilfen-Dienst</string>
-    <string name="nm_hands_need_a11y_fix">Schalte nanoMuse in den Bedienungshilfen unter Installierte Apps ein</string>
+    <string name="nm_hands_need_a11y_fix">Schalte Kestrel in den Bedienungshilfen unter Installierte Apps ein</string>
     <string name="nm_hands_need_overlay">Über anderen Apps einblenden</string>
     <string name="nm_hands_need_overlay_fix">Erlaube es, damit die Kapsel mit Stopp gezeigt werden kann</string>
     <string name="nm_hands_need_model">Ein Modell, das Bilder sieht</string>
@@ -570,7 +570,7 @@
     <string name="nm_hands_protected_screen">Dieser Bildschirm ist geschützt und kann nicht gelesen werden. Erledige diesen Teil selbst und tippe dann auf Weiter.</string>
     <string name="nm_hands_secret_field">Ein Passwort- oder Codefeld: bitte fülle es selbst aus und tippe dann auf Weiter.</string>
     <string name="nm_hands_approval_title">Wartet auf deine Freigabe</string>
-    <string name="nm_hands_approval_detail">Auf „%1$s“ tippen: bestätige in nanoMuse (es fragt nach deiner Bildschirmsperre).</string>
+    <string name="nm_hands_approval_detail">Auf „%1$s“ tippen: bestätige in Kestrel (es fragt nach deiner Bildschirmsperre).</string>
     <string name="nm_hands_approval_here">Auf „%1$s“ tippen?</string>
     <string name="nm_hands_allow_once">Erlauben</string>
     <string name="nm_hands_deny">Ablehnen</string>
@@ -601,7 +601,7 @@
     <!-- Reach (0.1.13): the phone drives your computer -->
     <string name="nm_pc_title">Computer</string>
     <string name="nm_pc_none_short">Keiner</string>
-    <string name="nm_pc_intro">Hier gesagt, auf deinem Computer erledigt: ein Befehl, eine Datei, eine Seite in seinem Browser, ein Blick auf seinen Bildschirm oder eine ganze Aufgabe für das nanoMuse dort. Das Telefon steuert den Computer, nie umgekehrt; jede Freigabe wird zuerst hier entschieden.</string>
+    <string name="nm_pc_intro">Hier gesagt, auf deinem Computer erledigt: ein Befehl, eine Datei, eine Seite in seinem Browser, ein Blick auf seinen Bildschirm oder eine ganze Aufgabe für das Kestrel dort. Das Telefon steuert den Computer, nie umgekehrt; jede Freigabe wird zuerst hier entschieden.</string>
     <string name="nm_pc_hub_title">Der einfache Weg: nanoMuse Desktop, gleiches Konto</string>
     <string name="nm_pc_hub_body">Installiere nanoMuse Desktop auf dem Computer und melde dich mit dem Konto dieses Telefons an; er erscheint innerhalb von Sekunden unter Konto → Geräte.</string>
     <string name="nm_pc_hub_download">nanoMuse Desktop holen</string>
@@ -653,7 +653,7 @@
     <string name="nm_welcome_feat_hands_sub">Bucht den Zug, bestellt das Essen, schlägt etwas in einer App nach; du schaust zu und kannst ihn jederzeit stoppen</string>
     <string name="nm_welcome_feat_reach">Reichweite: deine Computer, von hier aus</string>
     <string name="nm_welcome_feat_reach_sub">Installiere nanoMuse Desktop auf einem Mac, Windows- oder Linux-Rechner, melde dich mit demselben Konto an und gib ihm Arbeit vom Telefon aus</string>
-    <string name="nm_welcome_notice">nanoMuse ist ein gemeinnütziges quelloffenes Community-Projekt: kostenlos, für immer. Das Modell kommt mit einem kostenlosen Guthaben, bezahlt vom Entwickler; danach dein eigener Schlüssel. Nichts wird verkauft; was das Relay behält, steht in der Datenschutzerklärung, und Einstellungen → Datenkontrolle gehört dir.</string>
+    <string name="nm_welcome_notice">Kestrel ist ein gemeinnütziges quelloffenes Community-Projekt: kostenlos, für immer. Das Modell kommt mit einem kostenlosen Guthaben, bezahlt vom Entwickler; danach dein eigener Schlüssel. Nichts wird verkauft; was das Relay behält, steht in der Datenschutzerklärung, und Einstellungen → Datenkontrolle gehört dir.</string>
     <string name="nm_welcome_hands_title">Lass ihn dein Telefon nutzen</string>
     <string name="nm_welcome_hands_sub">Mit zwei Berechtigungen kann er Apps öffnen, für dich tippen und eingeben. Eine Kapsel mit jedem Schritt und einem Stopp-Knopf bleibt auf dem Bildschirm; Logins, Passwörter und Codes bleiben immer bei dir.</string>
     <string name="nm_welcome_hands_turn_on">Einschalten</string>
@@ -791,7 +791,7 @@
     <string name="nm_cloud_invite_share">Link teilen</string>
     <string name="nm_cloud_invite_copy">Kopieren</string>
     <string name="nm_cloud_invite_copied">Kopiert</string>
-    <string name="nm_cloud_invite_share_text">Probier nanoMuse mit mir aus: ein vollständig quelloffener persönlicher Agent, kostenlos nutzbar. Registriere dich mit meinem Code %1$s: %2$s</string>
+    <string name="nm_cloud_invite_share_text">Probier Kestrel mit mir aus: ein vollständig quelloffener persönlicher Agent, kostenlos nutzbar. Registriere dich mit meinem Code %1$s: %2$s</string>
     <string name="nm_cloud_invite_count">%1$d Freunde sind dabei</string>
     <string name="nm_cloud_invite_earned">¥%1$s durch Einladungen dazugekommen</string>
     <string name="nm_cloud_invite_have">Hast du einen Einladungscode?</string>
@@ -832,7 +832,7 @@
     <string name="nm_cloud_ev_contribute_deleted">Datenkontrolle: behaltene Gespräche gelöscht</string>
     <string name="nm_cloud_ev_contribute_default">Datenkontrolle: für neue Konten an</string>
     <string name="nm_data_title">Datenkontrolle</string>
-    <string name="nm_data_improve">Die KI-Modelle von nanoMuse verbessern helfen</string>
+    <string name="nm_data_improve">Die KI-Modelle von Kestrel verbessern helfen</string>
     <string name="nm_data_why">Solange das an ist, wird der Text deiner Chats mit den Modellen von nanoMuse Cloud (was du geschrieben hast, was es geantwortet hat und welche Werkzeuge es aufgerufen hat) auf dem Relay behalten, um das eigene offene Modell der Community zu trainieren. Nicht dein Gedächtnis oder SOUL (der Systemprompt), nicht, was Werkzeuge zurückgegeben haben, keine Bilder, und nie zusammen damit, wer du bist. Dein eigener API-Schlüssel läuft nie über das Relay.</string>
     <string name="nm_data_default_on">Neue Konten beginnen damit an.</string>
     <string name="nm_data_default_off">Neue Konten beginnen damit aus.</string>
@@ -891,7 +891,7 @@
     <!-- 0.1.20: the coding agents on the account's computers -->
     <string name="nm_coding_title">Coding-Agenten</string>
     <string name="nm_coding_intro">Cursor, Codex und Claude Code auf deinen Computern: ihre Sitzungen, ihre letzte Antwort und eine Nachricht an jeden von ihnen, von hier aus. Nichts davon wird auf das Telefon kopiert.</string>
-    <string name="nm_coding_no_computer">Kein Computer mit einem Coding-Agenten ist online. Starte nanoMuse auf dem Computer, auf dem Cursor, Codex oder Claude Code installiert ist, angemeldet mit diesem Konto.</string>
+    <string name="nm_coding_no_computer">Kein Computer mit einem Coding-Agenten ist online. Starte Kestrel auf dem Computer, auf dem Cursor, Codex oder Claude Code installiert ist, angemeldet mit diesem Konto.</string>
     <string name="nm_coding_account_hint">Dieses Telefon ist als %1$s angemeldet; der Computer muss dasselbe Konto verwenden.</string>
     <string name="nm_coding_refresh">Aktualisieren</string>
     <string name="nm_coding_all">Alle</string>
@@ -925,12 +925,12 @@
     <string name="nm_cloud_tokens_line">%1$s Tokens insgesamt · %2$s heute</string>
     <string name="nm_cloud_notice_title">Kostenlos, quelloffen, gemeinnützig</string>
     <string name="nm_cloud_notice_closing">Einen Fehler gefunden, eine Funktion gewünscht, einen Patch parat? Das GitHub-Repository ist der richtige Ort.</string>
-    <string name="nm_cloud_notice">nanoMuse ist ein gemeinnütziges quelloffenes Community-Projekt: kostenlos, für immer. Das Modell kommt mit einem kostenlosen Guthaben, bezahlt vom Entwickler; danach dein eigener Schlüssel. Nichts wird verkauft; was das Relay behält, steht in der Datenschutzerklärung, und Einstellungen → Datenkontrolle gehört dir. Lösche das Konto, wann immer du willst.</string>
+    <string name="nm_cloud_notice">Kestrel ist ein gemeinnütziges quelloffenes Community-Projekt: kostenlos, für immer. Das Modell kommt mit einem kostenlosen Guthaben, bezahlt vom Entwickler; danach dein eigener Schlüssel. Nichts wird verkauft; was das Relay behält, steht in der Datenschutzerklärung, und Einstellungen → Datenkontrolle gehört dir. Lösche das Konto, wann immer du willst.</string>
 
     <!-- nanoMuse: devices on the hub -->
     <string name="nm_hub_channel">Nachrichten von deinen Geräten</string>
     <string name="nm_hub_service_channel">Mit deinen Geräten verbunden</string>
-    <string name="nm_hub_service_title">nanoMuse · von deinen Geräten erreichbar</string>
+    <string name="nm_hub_service_title">Kestrel · von deinen Geräten erreichbar</string>
     <string name="nm_hub_service_connecting">Verbinde mit nanoMuse Cloud…</string>
     <string name="nm_hub_service_alone">Gerade ist kein anderes Gerät online</string>
     <plurals name="nm_hub_service_devices">
@@ -971,7 +971,7 @@
     <string name="nm_hub_err_not_controllable">Dieses Gerät kann nicht um Aufgaben gebeten werden.</string>
     <string name="nm_hub_err_unknown_agent">Dieser Coding-Agent ist nicht auf dem Computer.</string>
     <string name="nm_hub_err_no_session">Diese Sitzung ist nicht mehr auf dem Computer.</string>
-    <string name="nm_hub_err_unknown_action">Auf dem Computer läuft ein älteres nanoMuse, das diese Aktion nicht kennt.</string>
+    <string name="nm_hub_err_unknown_action">Auf dem Computer läuft ein älteres Kestrel, das diese Aktion nicht kennt.</string>
     <string name="nm_hub_err_bad_key">Beim Relay abgemeldet; melde dich erneut an.</string>
     <string name="nm_hub_err_generic">Der Computer konnte es nicht erledigen.</string>
     <string name="nm_devices_refused">Vom Relay abgelehnt; erneut anmelden</string>
@@ -990,7 +990,7 @@
     <string name="nm_connectors_sign_in">Anmelden</string>
     <string name="nm_connectors_disconnect">Trennen</string>
     <string name="nm_connectors_docs">Die Seite des Anbieters zu diesem Server</string>
-    <string name="nm_connectors_how_oauth">Meldet sich im Browser mit deinem %1$s-Konto an; nanoMuse registriert sich selbst beim Dienst, es gibt also nichts einzutippen. Das Token bleibt auf diesem Telefon.</string>
+    <string name="nm_connectors_how_oauth">Meldet sich im Browser mit deinem %1$s-Konto an; Kestrel registriert sich selbst beim Dienst, es gibt also nichts einzutippen. Das Token bleibt auf diesem Telefon.</string>
     <string name="nm_connectors_how_key">Braucht einen Schlüssel vom Dienst: %1$s. Er wird nur im MCP-Eintrag auf diesem Telefon aufbewahrt.</string>
     <string name="nm_connectors_how_none">Offen für alle; keine Anmeldung nötig.</string>
     <string name="nm_connectors_how_auto">Prüft zuerst, was der Server braucht: nichts, eine Anmeldung oder einen Schlüssel.</string>
@@ -1119,12 +1119,12 @@
     <string name="nm_models_chat_applies">Gilt für den Hauptchat und für neue Chats; ein Nebenchat behält sein Modell.</string>
     <string name="nm_models_media_more">Weitere Optionen für Bilder und Clips</string>
     <string name="nm_models_media_more_sub">Einen Modellnamen eingeben, sehen, was ohne welches Modell nicht geht, oder erneut prüfen, welche Videomodelle ein Schlüssel nutzen kann.</string>
-    <string name="nm_models_cloud_switch">nanoMuse-Cloud-Modelle verwenden</string>
+    <string name="nm_models_cloud_switch">Kestrel-Cloud-Modelle verwenden</string>
     <string name="nm_models_cloud_on_sub">nanoMuse Cloud ist eine der Quellen für die Zeilen unten; was darauf läuft, geht von deinem Kontingent ab.</string>
     <string name="nm_models_cloud_off_sub">Aus: Nichts läuft auf nanoMuse Cloud, außer du tippst auf \"Diesmal nanoMuse Cloud verwenden\". Du bleibst angemeldet, für die Synchronisierung und deine Geräte.</string>
     <string name="nm_models_cloud_off_refused">Füge zuerst einen eigenen Anbieter hinzu; mit ausgeschalteter nanoMuse Cloud könnte sonst nichts antworten.</string>
     <string name="nm_chat_no_model">Gerade kann kein Modell antworten. Wähle eines unter Einstellungen › Modelle.</string>
-    <string name="nm_cloud_provider_no_delete">Dieser Anbieter ist dein nanoMuse-Cloud-Konto. Schalte ihn oben aus, um seine Modelle nicht mehr zu verwenden; zum Abmelden öffne Einstellungen › nanoMuse Cloud.</string>
+    <string name="nm_cloud_provider_no_delete">Dieser Anbieter ist dein Kestrel-Cloud-Konto. Schalte ihn oben aus, um seine Modelle nicht mehr zu verwenden; zum Abmelden öffne Einstellungen › nanoMuse Cloud.</string>
     <string name="nm_welcome_own_key">Stattdessen eigenen API-Schlüssel verwenden</string>
     <string name="nm_useit_title">Wofür verwenden</string>
     <string name="nm_useit_body_signed_out">Wähle, was dieser Schlüssel übernehmen soll.</string>

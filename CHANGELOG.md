@@ -14,9 +14,13 @@ All notable changes to nanoMuse. The format follows [Keep a Changelog](https://k
 
 ### Android
 
+- Initialized the Kestrel Android name, independent application identity, external links and fork update sources while retaining the Linux sandbox contracts.
+
 ### iOS
 
 ### Project
+
+- Added Kestrel architecture, proposed cross-device task and permission contracts, and fork initialization notes. No release APK was published.
 
 ## [1.0.6] - 2026-10-23 · Beacon
 

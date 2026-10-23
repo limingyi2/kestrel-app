@@ -1,3 +1,4 @@
+// nanoMuse: Kestrel display-name overlay; runtime identifiers are preserved.
 package com.openminis.app.service
 
 import android.animation.ObjectAnimator
@@ -456,7 +457,7 @@ class ToolOverlayController(private val context: Context) {
         // when the model didn't supply a title.
         // [T-android-overlay-no-idle] After a tool completes, SessionActivityTracker
         // resets currentToolStatus to "Idle" and toolName to null — flowing that
-        // through verbatim would render a noisy "nanoMuse / Idle" capsule that
+        // through verbatim would render a noisy "Kestrel / Idle" capsule that
         // tells the user nothing. When not running and we have neither a
         // toolTitle nor a real toolName, hide both the label and the status
         // row so only the reply excerpt (if any) plus glyph remain.
@@ -746,11 +747,11 @@ class ToolOverlayController(private val context: Context) {
 
     /**
      * Mirrors [AgentForegroundService.toolDisplayLabel] but trims the
-     * "nanoMuse is using " prefix — the overlay capsule is tight, so we just
+     * "Kestrel is using " prefix — the overlay capsule is tight, so we just
      * show the tool kind ("Shell", "Browser", …).
      */
     private fun toolDisplayLabel(toolName: String?): String = when (toolName) {
-        null -> "nanoMuse"
+        null -> "Kestrel"
         "shell_execute" -> "Shell"
         "file_read" -> "File"
         "file_write" -> "Editor"

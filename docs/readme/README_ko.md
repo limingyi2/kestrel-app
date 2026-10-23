@@ -1,3 +1,9 @@
+# Kestrel
+
+Android fork initialization: [Kestrel source](https://github.com/limingyi2/kestrel-app), [architecture](https://github.com/limingyi2/kestrel-app/blob/feat/kestrel-initialization/docs/kestrel-architecture.md), [brand and acceptance notes](https://github.com/limingyi2/kestrel-app/blob/feat/kestrel-initialization/docs/kestrel-initialization.md). No Kestrel release APK is published. The preserved nanoMuse documentation and downloads below describe the upstream project.
+
+---
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/nano-muse/nanoMuse/main/assets/brand/nanomuse-cover.png" alt="nanoMuse: 당신의 모든 기기를 위한 오픈소스 개인 에이전트">
 </p>

@@ -54,7 +54,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "io.github.nanomuse.app"
+        applicationId = "io.github.limingyi2.kestrel" // nanoMuse: Kestrel install identity
         minSdk = 26
         targetSdk = 35
         versionCode = 49
