@@ -88,6 +88,9 @@ def overlay() -> dict[Path, str]:
             "agent/SoulStore.kt",
             "ui/chat/ChatIndicators.kt",
             "ui/chat/ChatToolFormatting.kt",
+            "ui/browser/BrowserSheet.kt",
+            "ui/chat/ChatToolDetailUI.kt",
+            "ui/terminal/canvas/TerminalNativeView.kt",
             "ui/settings/SoulSettingsScreen.kt",
             "ui/components/QuickTestSheet.kt",
             "service/AgentForegroundService.kt",
@@ -96,6 +99,9 @@ def overlay() -> dict[Path, str]:
             "offload/AlarmOffloadManager.kt",
             "offload/ScheduledNotificationReceiver.kt",
             "backup/BackupPackageReader.kt",
+            "sandbox/offload/CalendarOffloadHandler.kt",
+            "sandbox/offload/ShizukuOffloadHandler.kt",
+            "sandbox/offload/SpeechOffloadHandler.kt",
         )
     ] + [
         NM / rel
@@ -104,6 +110,10 @@ def overlay() -> dict[Path, str]:
             "hands/HandsOperator.kt",
             "hands/HandsOffloadHandler.kt",
             "cloud/ProfileSync.kt",
+            "hub/HubActions.kt",
+            "ui/sysfiles/SystemFilesScreens.kt",
+            "ui/chat/ProviderReachCard.kt",
+            "ui/cloud/AllowanceWaysCard.kt",
         )
     ]
     for path in display_files:

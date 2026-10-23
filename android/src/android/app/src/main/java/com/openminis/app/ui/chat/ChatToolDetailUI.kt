@@ -1,3 +1,4 @@
+// nanoMuse: Kestrel display-name overlay; runtime identifiers are preserved.
 package com.openminis.app.ui.chat
 
 // [T-android-split-chat] Tool-detail sheet + reveal/editor helpers extracted
@@ -319,7 +320,7 @@ internal fun ToolDetailSheet(
                 .fillMaxHeight(0.85f)
                 .background(ChatColors.secondaryBg),
         ) {
-            // ── Top Nav Bar (iOS: X button + "nanoMuse Computer" + action button) ──
+            // ── Top Nav Bar (iOS: X button + "Kestrel Computer" + action button) ──
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -353,7 +354,7 @@ internal fun ToolDetailSheet(
                 // the elapsed-duration text) so it sits next to where the
                 // user is already scanning timing info.
                 Text(
-                    text = "nanoMuse Computer",
+                    text = "Kestrel Computer",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = ChatColors.primaryText,

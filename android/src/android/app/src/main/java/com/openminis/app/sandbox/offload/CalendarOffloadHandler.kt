@@ -1,3 +1,4 @@
+// nanoMuse: Kestrel display-name overlay; runtime identifiers are preserved.
 package com.openminis.app.sandbox.offload
 
 import android.Manifest
@@ -105,7 +106,7 @@ class CalendarOffloadHandler(private val context: Context) : NativeOffloadHandle
                     OffloadPermissionManager.SettingsGateRequest(
                         id = settingsId,
                         title = "Calendar permission needed",
-                        message = "nanoMuse needs $humanLabel permission to $humanLabel your calendar. Open Settings to allow it.",
+                        message = "Kestrel needs $humanLabel permission to $humanLabel your calendar. Open Settings to allow it.",
                         settingsAction = android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                         requiresPackageUri = true,
                         positiveLabel = "Open Settings",

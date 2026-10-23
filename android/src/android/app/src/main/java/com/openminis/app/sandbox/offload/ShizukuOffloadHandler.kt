@@ -1,3 +1,4 @@
+// nanoMuse: Kestrel display-name overlay; runtime identifiers are preserved.
 package com.openminis.app.sandbox.offload
 
 import android.content.Context
@@ -76,7 +77,7 @@ class ShizukuOffloadHandler(private val context: Context) : NativeOffloadHandler
             ShizukuManager.State.NOT_RUNNING ->
                 return errEnvelope("SERVICE_NOT_RUNNING", "Shizuku service is not running. Start it via adb or root, then retry.", args)
             ShizukuManager.State.NEED_PERMISSION ->
-                return errEnvelope("PERMISSION_DENIED", "nanoMuse is not authorized for Shizuku. Grant permission in Settings → Permissions → Shizuku.", args)
+                return errEnvelope("PERMISSION_DENIED", "Kestrel is not authorized for Shizuku. Grant permission in Settings → Permissions → Shizuku.", args)
             ShizukuManager.State.READY -> { /* fall through */ }
         }
 
