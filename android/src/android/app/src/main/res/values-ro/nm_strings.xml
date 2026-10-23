@@ -605,8 +605,8 @@
     <string name="nm_pc_title">Computere</string>
     <string name="nm_pc_none_short">Niciunul</string>
     <string name="nm_pc_intro">Spui aici, se face pe computerul tău: o comandă, un fișier, o pagină în browserul lui, o privire pe ecranul lui sau o sarcină întreagă pentru Kestrel de acolo. Telefonul conduce computerul, niciodată invers; fiecare aprobare se decide mai întâi aici.</string>
-    <string name="nm_pc_hub_title">Calea simplă: nanoMuse Desktop, același cont</string>
-    <string name="nm_pc_hub_body">Instalează nanoMuse Desktop pe computer și conectează-te cu contul acestui telefon; apare sub Cont → Dispozitive în câteva secunde.</string>
+    <string name="nm_pc_hub_title">Cross-device access is paused</string>
+    <string name="nm_pc_hub_body">Waiting for Kestrel Relay/Bridge. Local chat, tools, files, memory, Hands, Skills and MCP continue to work.</string>
     <string name="nm_pc_hub_download">Descarcă nanoMuse Desktop</string>
     <string name="nm_pc_hub_account">Cont și dispozitive</string>
     <string name="nm_pc_section_paired">Computere pe acest cont</string>
@@ -639,7 +639,7 @@
     <!-- nanoMuse: the first-run pages -->
     <string name="nm_welcome_tagline">Un agent personal open source pentru fiecare dispozitiv pe care îl ai.</string>
     <string name="nm_welcome_email">Conectează-te (gratuit)</string>
-    <string name="nm_welcome_fine_print">Un singur cont îți ține dispozitivele împreună și poartă utilizarea gratuită a modelului; nu se percepe nimic. Propria cheie API poate fi adăugată imediat după.</string>
+    <string name="nm_welcome_fine_print">Your API key stays on this device and is never sent to nanoMuse Cloud.</string>
     <string name="nm_setup_source_title">Care model răspunde?</string>
     <string name="nm_setup_source_sub">Contul tău aduce deja unul. Poți adăuga și propria cheie API și poți comuta oricând.</string>
     <string name="nm_setup_source_cloud">Folosește modelul nanoMuse Cloud</string>
@@ -656,7 +656,7 @@
     <string name="nm_welcome_feat_hands_sub">Rezervă trenul, comandă masa, caută ceva într-o aplicație; tu privești și îl poți opri oricând</string>
     <string name="nm_welcome_feat_reach">Acces: computerele tale, de aici</string>
     <string name="nm_welcome_feat_reach_sub">Instalează nanoMuse Desktop pe un Mac, un Windows sau un Linux, conectează-te cu același cont și dă-i de lucru de pe telefon</string>
-    <string name="nm_welcome_notice">Kestrel este un proiect comunitar open source, nonprofit: gratuit, pentru totdeauna. Modelul vine cu un credit gratuit plătit de dezvoltator; după aceea, propria ta cheie. Nimic nu se vinde; ce păstrează relay-ul e în politica de confidențialitate, iar Setări → Controlul datelor e al tău.</string>
+    <string name="nm_welcome_notice">Kestrel runs as a local agent and needs no account. It does not call nanoMuse Cloud account, allowance, profile, or conversation-sync APIs.</string>
     <string name="nm_welcome_hands_title">Lasă-l să-ți folosească telefonul</string>
     <string name="nm_welcome_hands_sub">Cu două permisiuni poate deschide aplicații, atinge și tasta pentru tine. O capsulă cu fiecare pas și un buton Stop rămâne pe ecran; autentificările, parolele și codurile sunt întotdeauna ale tale.</string>
     <string name="nm_welcome_hands_turn_on">Pornește</string>
@@ -1129,7 +1129,7 @@
     <string name="nm_models_cloud_off_refused">Adaugă mai întâi un furnizor al tău; cu nanoMuse Cloud oprit, nimic altceva nu ar putea răspunde.</string>
     <string name="nm_chat_no_model">Niciun model nu poate răspunde acum. Alege unul în Setări › Modele.</string>
     <string name="nm_cloud_provider_no_delete">Acest furnizor este contul tău nanoMuse Cloud. Oprește-l mai sus ca să nu-i mai folosești modelele; pentru deconectare, deschide Setări › nanoMuse Cloud.</string>
-    <string name="nm_welcome_own_key">Folosește propria cheie API</string>
+    <string name="nm_welcome_own_key">Configure model</string>
     <string name="nm_useit_title">La ce să o folosești</string>
     <string name="nm_useit_body_signed_out">Alege de ce să se ocupe această cheie.</string>
     <string name="nm_useit_use">Folosește</string>

@@ -599,8 +599,8 @@
     <string name="nm_pc_title">Komputer</string>
     <string name="nm_pc_none_short">Tiada</string>
     <string name="nm_pc_intro">Sebut di sini, dilakukan di komputer anda: perintah, fail, halaman dalam pelayarnya, pandangan skrinnya, atau satu tugas penuh untuk Kestrel di sana. Telefon mengendalikan komputer, bukan sebaliknya; setiap kelulusan diputuskan di sini dahulu.</string>
-    <string name="nm_pc_hub_title">Cara mudah: nanoMuse Desktop, akaun yang sama</string>
-    <string name="nm_pc_hub_body">Pasang nanoMuse Desktop di komputer dan log masuk dengan akaun telefon ini; ia muncul di bawah Akaun → Peranti dalam beberapa saat.</string>
+    <string name="nm_pc_hub_title">Cross-device access is paused</string>
+    <string name="nm_pc_hub_body">Waiting for Kestrel Relay/Bridge. Local chat, tools, files, memory, Hands, Skills and MCP continue to work.</string>
     <string name="nm_pc_hub_download">Dapatkan nanoMuse Desktop</string>
     <string name="nm_pc_hub_account">Akaun dan peranti</string>
     <string name="nm_pc_section_paired">Komputer pada akaun ini</string>
@@ -633,7 +633,7 @@
     <!-- nanoMuse: the first-run pages -->
     <string name="nm_welcome_tagline">Ejen peribadi sumber terbuka untuk setiap peranti yang anda miliki.</string>
     <string name="nm_welcome_email">Log masuk (percuma)</string>
-    <string name="nm_welcome_fine_print">Satu akaun menyatukan peranti anda dan membawa penggunaan model percuma; tiada apa-apa dicaj. Kunci API anda sendiri boleh ditambah sejurus selepas itu.</string>
+    <string name="nm_welcome_fine_print">Your API key stays on this device and is never sent to nanoMuse Cloud.</string>
     <string name="nm_setup_source_title">Model mana yang menjawab?</string>
     <string name="nm_setup_source_sub">Akaun anda sudah membawa satu. Anda juga boleh menambah kunci API anda sendiri dan bertukar bila-bila masa.</string>
     <string name="nm_setup_source_cloud">Guna model nanoMuse Cloud</string>
@@ -650,7 +650,7 @@
     <string name="nm_welcome_feat_hands_sub">Menempah kereta api, memesan makanan, mencari sesuatu dalam aplikasi; anda memerhati, dan boleh menghentikannya bila-bila masa</string>
     <string name="nm_welcome_feat_reach">Capaian: komputer anda, dari sini</string>
     <string name="nm_welcome_feat_reach_sub">Pasang nanoMuse Desktop pada mesin Mac, Windows atau Linux, log masuk dengan akaun yang sama, dan beri ia kerja dari telefon</string>
-    <string name="nm_welcome_notice">Kestrel ialah projek komuniti sumber terbuka bukan untuk keuntungan: percuma, selamanya. Model datang dengan peruntukan percuma yang dibayar oleh pembangun; selepas itu, kunci anda sendiri. Tiada apa-apa dijual; apa yang disimpan relay ada dalam dasar privasi, dan Tetapan → Kawalan data adalah milik anda.</string>
+    <string name="nm_welcome_notice">Kestrel runs as a local agent and needs no account. It does not call nanoMuse Cloud account, allowance, profile, or conversation-sync APIs.</string>
     <string name="nm_welcome_hands_title">Benarkan ia menggunakan telefon anda</string>
     <string name="nm_welcome_hands_sub">Dengan dua kebenaran, ia boleh membuka aplikasi, mengetik dan menaip untuk anda. Satu kapsul dengan setiap langkah dan butang Berhenti kekal di skrin; log masuk, kata laluan dan kod sentiasa milik anda.</string>
     <string name="nm_welcome_hands_turn_on">Hidupkan</string>
@@ -1121,7 +1121,7 @@
     <string name="nm_models_cloud_off_refused">Tambah penyedia anda sendiri dahulu; dengan nanoMuse Cloud dimatikan, tiada yang lain boleh menjawab.</string>
     <string name="nm_chat_no_model">Tiada model yang boleh menjawab sekarang. Pilih satu di Tetapan › Model.</string>
     <string name="nm_cloud_provider_no_delete">Pembekal ini ialah akaun nanoMuse Cloud anda. Matikan di atas untuk berhenti menggunakan modelnya; untuk log keluar, buka Tetapan › nanoMuse Cloud.</string>
-    <string name="nm_welcome_own_key">Guna kunci API sendiri</string>
+    <string name="nm_welcome_own_key">Configure model</string>
     <string name="nm_useit_title">Guna untuk</string>
     <string name="nm_useit_body_signed_out">Pilih apa yang patut diuruskan kunci ini.</string>
     <string name="nm_useit_use">Guna</string>

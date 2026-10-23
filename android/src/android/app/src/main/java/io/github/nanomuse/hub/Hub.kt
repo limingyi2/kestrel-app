@@ -81,11 +81,13 @@ object Hub {
     @Volatile private var client: HubClient? = null
     @Volatile private var appContext: Context? = null
 
-    /** Joins the hub when the account is signed in and the switch is on; a no-op otherwise. */
+    /**
+     * Cross-device authentication is paused until Kestrel Relay/Bridge is integrated.
+     * Keep this lifecycle hook so the Hub transport can be re-enabled without changing its protocol.
+     */
     @Synchronized
     fun autoStart(context: Context) {
-        if (!enabled(context) || !NanoMuseCloud.isSignedIn(context)) return
-        start(context)
+        stop(context)
     }
 
     @Synchronized

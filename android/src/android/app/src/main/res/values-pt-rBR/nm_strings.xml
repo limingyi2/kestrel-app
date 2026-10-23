@@ -603,8 +603,8 @@
     <string name="nm_pc_title">Computadores</string>
     <string name="nm_pc_none_short">Nenhum</string>
     <string name="nm_pc_intro">Diga aqui, feito no seu computador: um comando, um arquivo, uma página no navegador dele, uma olhada na tela dele, ou uma tarefa inteira para o Kestrel de lá. O celular comanda o computador, nunca o contrário; toda aprovação é decidida aqui primeiro.</string>
-    <string name="nm_pc_hub_title">O jeito fácil: nanoMuse Desktop, mesma conta</string>
-    <string name="nm_pc_hub_body">Instale o nanoMuse Desktop no computador e entre com a conta deste celular; ele aparece em Conta → Dispositivos em segundos.</string>
+    <string name="nm_pc_hub_title">Cross-device access is paused</string>
+    <string name="nm_pc_hub_body">Waiting for Kestrel Relay/Bridge. Local chat, tools, files, memory, Hands, Skills and MCP continue to work.</string>
     <string name="nm_pc_hub_download">Baixar o nanoMuse Desktop</string>
     <string name="nm_pc_hub_account">Conta e dispositivos</string>
     <string name="nm_pc_section_paired">Computadores nesta conta</string>
@@ -637,7 +637,7 @@
     <!-- nanoMuse: the first-run pages -->
     <string name="nm_welcome_tagline">Um agente pessoal de código aberto para todos os seus dispositivos.</string>
     <string name="nm_welcome_email">Entrar (grátis)</string>
-    <string name="nm_welcome_fine_print">Uma conta mantém seus dispositivos juntos e traz o uso gratuito do modelo; nada é cobrado. Sua própria chave de API pode ser adicionada logo depois.</string>
+    <string name="nm_welcome_fine_print">Your API key stays on this device and is never sent to nanoMuse Cloud.</string>
     <string name="nm_setup_source_title">Qual modelo responde?</string>
     <string name="nm_setup_source_sub">Sua conta já traz um. Você também pode adicionar sua própria chave de API e trocar a qualquer momento.</string>
     <string name="nm_setup_source_cloud">Usar o modelo do nanoMuse Cloud</string>
@@ -654,7 +654,7 @@
     <string name="nm_welcome_feat_hands_sub">Reserva o trem, pede a comida, procura algo em um app; você acompanha e pode parar a qualquer momento</string>
     <string name="nm_welcome_feat_reach">Alcance: seus computadores, daqui</string>
     <string name="nm_welcome_feat_reach_sub">Instale o nanoMuse Desktop em um Mac, Windows ou Linux, entre com a mesma conta e passe trabalho a ele pelo celular</string>
-    <string name="nm_welcome_notice">O Kestrel é um projeto comunitário de código aberto, sem fins lucrativos: gratuito, para sempre. O modelo vem com uma cota gratuita paga pelo desenvolvedor; depois dela, sua própria chave. Nada é vendido; o que o relay guarda está na política de privacidade, e Configurações → Controles de dados é seu.</string>
+    <string name="nm_welcome_notice">Kestrel runs as a local agent and needs no account. It does not call nanoMuse Cloud account, allowance, profile, or conversation-sync APIs.</string>
     <string name="nm_welcome_hands_title">Deixe-o usar seu celular</string>
     <string name="nm_welcome_hands_sub">Com duas permissões ele pode abrir apps, tocar e digitar por você. Uma cápsula com cada passo e um botão Parar fica na tela; logins, senhas e códigos são sempre seus.</string>
     <string name="nm_welcome_hands_turn_on">Ligar</string>
@@ -1126,7 +1126,7 @@
     <string name="nm_models_cloud_off_refused">Adicione primeiro um provedor seu; com o nanoMuse Cloud desligado, nada mais poderia responder.</string>
     <string name="nm_chat_no_model">Nenhum modelo pode responder agora. Escolha um em Configurações › Modelos.</string>
     <string name="nm_cloud_provider_no_delete">Este provedor é a sua conta do nanoMuse Cloud. Desligue-o acima para parar de usar seus modelos; para sair, abra Ajustes › nanoMuse Cloud.</string>
-    <string name="nm_welcome_own_key">Usar minha própria chave de API</string>
+    <string name="nm_welcome_own_key">Configure model</string>
     <string name="nm_useit_title">Usar para</string>
     <string name="nm_useit_body_signed_out">Escolha do que esta chave deve cuidar.</string>
     <string name="nm_useit_use">Usar</string>

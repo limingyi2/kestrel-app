@@ -603,8 +603,8 @@
     <string name="nm_pc_title">Ordinateurs</string>
     <string name="nm_pc_none_short">Aucun</string>
     <string name="nm_pc_intro">Dites-le ici, c’est fait sur votre ordinateur : une commande, un fichier, une page dans son navigateur, un coup d’œil à son écran, ou une tâche entière pour le Kestrel qui s’y trouve. Le téléphone pilote l’ordinateur, jamais l’inverse ; chaque approbation se décide ici d’abord.</string>
-    <string name="nm_pc_hub_title">Le plus simple : nanoMuse Desktop, même compte</string>
-    <string name="nm_pc_hub_body">Installez nanoMuse Desktop sur l’ordinateur et connectez-vous avec le compte de ce téléphone ; il apparaît sous Compte → Appareils en quelques secondes.</string>
+    <string name="nm_pc_hub_title">Cross-device access is paused</string>
+    <string name="nm_pc_hub_body">Waiting for Kestrel Relay/Bridge. Local chat, tools, files, memory, Hands, Skills and MCP continue to work.</string>
     <string name="nm_pc_hub_download">Télécharger nanoMuse Desktop</string>
     <string name="nm_pc_hub_account">Compte et appareils</string>
     <string name="nm_pc_section_paired">Ordinateurs sur ce compte</string>
@@ -637,7 +637,7 @@
     <!-- nanoMuse: the first-run pages -->
     <string name="nm_welcome_tagline">Un agent personnel open source pour chaque appareil que vous possédez.</string>
     <string name="nm_welcome_email">Se connecter (gratuit)</string>
-    <string name="nm_welcome_fine_print">Un compte relie vos appareils et porte l’usage gratuit du modèle ; rien n’est facturé. Votre propre clé d’API peut être ajoutée juste après.</string>
+    <string name="nm_welcome_fine_print">Your API key stays on this device and is never sent to nanoMuse Cloud.</string>
     <string name="nm_setup_source_title">Quel modèle répond ?</string>
     <string name="nm_setup_source_sub">Votre compte en apporte déjà un. Vous pouvez aussi ajouter votre propre clé d’API et changer à tout moment.</string>
     <string name="nm_setup_source_cloud">Utiliser le modèle nanoMuse Cloud</string>
@@ -654,7 +654,7 @@
     <string name="nm_welcome_feat_hands_sub">Réserve le train, commande le repas, cherche quelque chose dans une app ; vous regardez, et pouvez l’arrêter à tout moment</string>
     <string name="nm_welcome_feat_reach">Portée : vos ordinateurs, d’ici</string>
     <string name="nm_welcome_feat_reach_sub">Installez nanoMuse Desktop sur un Mac, un PC Windows ou Linux, connectez-vous avec le même compte et donnez-lui du travail depuis le téléphone</string>
-    <string name="nm_welcome_notice">Kestrel est un projet communautaire open source sans but lucratif : gratuit, pour toujours. Le modèle vient avec un crédit gratuit payé par le développeur ; ensuite, votre propre clé. Rien n’est vendu ; ce que le relais conserve est dans la politique de confidentialité, et Réglages → Contrôle des données vous appartient.</string>
+    <string name="nm_welcome_notice">Kestrel runs as a local agent and needs no account. It does not call nanoMuse Cloud account, allowance, profile, or conversation-sync APIs.</string>
     <string name="nm_welcome_hands_title">Laissez-le utiliser votre téléphone</string>
     <string name="nm_welcome_hands_sub">Avec deux permissions, il peut ouvrir des apps, toucher et saisir pour vous. Une capsule avec chaque étape et un bouton Stop reste à l’écran ; les connexions, mots de passe et codes restent toujours à vous.</string>
     <string name="nm_welcome_hands_turn_on">Activer</string>
@@ -1126,7 +1126,7 @@
     <string name="nm_models_cloud_off_refused">Ajoutez d’abord un fournisseur à vous ; nanoMuse Cloud désactivé, rien d’autre ne pourrait répondre.</string>
     <string name="nm_chat_no_model">Aucun modèle ne peut répondre pour le moment. Choisissez-en un dans Réglages › Modèles.</string>
     <string name="nm_cloud_provider_no_delete">Ce fournisseur est votre compte nanoMuse Cloud. Désactivez-le ci-dessus pour ne plus utiliser ses modèles ; pour vous déconnecter, ouvrez Réglages › nanoMuse Cloud.</string>
-    <string name="nm_welcome_own_key">Utiliser plutôt ma propre clé d’API</string>
+    <string name="nm_welcome_own_key">Configure model</string>
     <string name="nm_useit_title">L’utiliser pour</string>
     <string name="nm_useit_body_signed_out">Choisissez ce que cette clé doit prendre en charge.</string>
     <string name="nm_useit_use">L’utiliser</string>

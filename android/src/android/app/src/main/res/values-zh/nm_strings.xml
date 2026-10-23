@@ -586,8 +586,8 @@
     <string name="nm_pc_title">电脑</string>
     <string name="nm_pc_none_short">无</string>
     <string name="nm_pc_intro">手机上说一句，电脑上就做：一条命令、一个文件、浏览器里的一个页面、看一眼它的屏幕，或者把整件事交给那边的 Kestrel。只有手机操作电脑，反过来不行；每一次审批都先在这里决定。</string>
-    <string name="nm_pc_hub_title">最简单的办法：装桌面版，登同一个账号</string>
-    <string name="nm_pc_hub_body">在电脑上安装 Kestrel 桌面版，用这台手机的账号登录；几秒钟后它就出现在「账号 → 设备」里。</string>
+    <string name="nm_pc_hub_title">跨设备连接暂不可用</string>
+    <string name="nm_pc_hub_body">等待 Kestrel Relay/Bridge 接入。本地聊天、工具、文件、记忆、Hands、Skills 和 MCP 可继续使用。</string>
     <string name="nm_pc_hub_download">获取 Kestrel 桌面版</string>
     <string name="nm_pc_hub_account">账号与设备</string>
     <string name="nm_pc_section_paired">这个账号下的电脑</string>
@@ -618,7 +618,7 @@
     <!-- nanoMuse: the first-run pages -->
     <string name="nm_welcome_tagline">一个开源的个人智能体，装在你的每一台设备上。</string>
     <string name="nm_welcome_email">登录，免费开始</string>
-    <string name="nm_welcome_fine_print">一个账号连起你的几台设备，也承载免费的模型额度；不收费。登录之后随时可以改用自己的 API key。</string>
+    <string name="nm_welcome_fine_print">API key 只保存在这台设备上，不会发送到 nanoMuse Cloud。</string>
     <string name="nm_setup_source_title">让哪个模型来回答？</string>
     <string name="nm_setup_source_sub">你的账号已经自带了一个。也可以加上自己的 API key，随时切换。</string>
     <string name="nm_setup_source_cloud">用 nanoMuse Cloud 的模型</string>
@@ -635,7 +635,7 @@
     <string name="nm_welcome_feat_hands_sub">订车票、点外卖、在应用里查东西；你全程看着，随时可以停</string>
     <string name="nm_welcome_feat_reach">Reach：从手机使用你的电脑</string>
     <string name="nm_welcome_feat_reach_sub">在 Mac、Windows 或 Linux 电脑上装好 Kestrel 桌面版，用同一个账号登录，就能在手机上派活给它</string>
-    <string name="nm_welcome_notice">Kestrel 是非营利的开源社区项目，永久免费。模型自带一份由开发者承担的免费额度，用完换自己的 key。数据不会出售；服务器保存什么写在隐私政策里，「设置 → 数据控制」由你决定。</string>
+    <string name="nm_welcome_notice">Kestrel 是在本机运行的智能体，无需账号。它不会请求 nanoMuse Cloud 的账号、额度、资料或聊天同步接口。</string>
     <string name="nm_welcome_hands_title">让它替你操作手机</string>
     <string name="nm_welcome_hands_sub">开启两项权限后，它就能替你打开应用、点按和输入。屏幕上始终有显示当前步骤和「停止」的胶囊；登录、密码和验证码永远由你自己来。</string>
     <string name="nm_welcome_hands_turn_on">去开启</string>
@@ -1098,7 +1098,7 @@
     <string name="nm_models_cloud_off_refused">先添加一个自己的服务商；关掉 nanoMuse Cloud 后没有别的模型能回答。</string>
     <string name="nm_chat_no_model">现在没有能回答的模型。请在「设置 › 模型」里选一个。</string>
     <string name="nm_cloud_provider_no_delete">这个服务商就是你的 nanoMuse Cloud 账号。要停用它的模型，请在上面关闭开关；要退出登录，请打开「设置 › nanoMuse Cloud」。</string>
-    <string name="nm_welcome_own_key">改用自己的 API key</string>
+    <string name="nm_welcome_own_key">配置模型</string>
     <string name="nm_useit_title">用它来做什么</string>
     <string name="nm_useit_body_signed_out">选这把 key 负责哪些事。</string>
     <string name="nm_useit_use">就这样</string>

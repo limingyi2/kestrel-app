@@ -5,7 +5,6 @@ import com.openminis.app.MinisApp
 import com.openminis.app.logging.AppLogger
 import com.openminis.app.scheduled.ScheduledTask
 import com.openminis.app.scheduled.ScheduledTaskManager
-import io.github.nanomuse.cloud.NanoMuseCloud
 import io.github.nanomuse.sync.SessionOwner
 import io.github.nanomuse.sync.SyncDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -48,9 +47,8 @@ object AccountData {
         app = context.applicationContext
     }
 
-    /** The key the signed-in account's data is filed under; [AccountScope.LOCAL] while signed out. */
-    fun key(context: Context): String =
-        AccountScope.key(NanoMuseCloud.account(context)?.accountId, NanoMuseCloud.apiKey(context))
+    /** Kestrel has no app account: all sessions belong to this device. */
+    fun key(context: Context): String = AccountScope.LOCAL
 
     private fun prefs(context: Context) = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
@@ -66,8 +64,11 @@ object AccountData {
         val dao = SyncDatabase.get(ctx).dao()
         val ids = repo.dao.listSessions().map { it.id }
         val owners = dao.owners().associate { it.sessionId to it.owner }
-        val syncOwners = dao.conversations().associate { it.sessionId to it.owner }
-        val r = AccountScope.reconcile(ids, owners, syncOwners, current)
+        // Old builds assigned chats to a relay account. Adopt those rows locally so an upgrade
+        // keeps every conversation visible and no saved account token is needed to reach it.
+        val adopted = owners.filterKeys { it in ids }.keys.map { SessionOwner(it, AccountScope.LOCAL) }
+        if (adopted.isNotEmpty()) dao.putOwners(adopted)
+        val r = AccountScope.reconcile(ids, owners.mapValues { AccountScope.LOCAL }, emptyMap(), AccountScope.LOCAL)
         if (r.claimed.isNotEmpty()) dao.putOwners(r.claimed.map { (id, owner) -> SessionOwner(id, owner) })
         if (r.stale.isNotEmpty()) dao.removeOwners(r.stale.toList())
         return r.hidden

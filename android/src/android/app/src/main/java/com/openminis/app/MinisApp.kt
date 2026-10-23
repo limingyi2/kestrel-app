@@ -555,7 +555,9 @@ class MinisApp : Application(), ImageLoaderFactory {
         NativeOffloadServer.register("nanomuse-hands", io.github.nanomuse.hands.HandsOffloadHandler(this))
         // nanoMuse: nanomuse-pc — the phone drives the user's other devices (shell, files, browser, screen, tasks).
         NativeOffloadServer.register("nanomuse-pc", io.github.nanomuse.reach.ReachOffloadHandler(this))
-        // nanoMuse: join the hub, so the user's other devices can reach this phone and it can reach them.
+        // nanoMuse: old installations drop the relay token locally before any Reach service can start.
+        io.github.nanomuse.cloud.NanoMuseCloud.disableAccountRuntime(this)
+        // Keep the Hub service and protocol for a future Kestrel Relay/Bridge transport.
         io.github.nanomuse.hub.Hub.autoStart(this)
         // T-config: minis-config — agent-facing settings management
         // (read/write registered ConfigFields with audit + revert).
@@ -661,9 +663,7 @@ class MinisApp : Application(), ImageLoaderFactory {
         io.github.nanomuse.feed.FeedFlow.init(this) // nanoMuse
         io.github.nanomuse.chat.RoutineWakes.init(this) // nanoMuse: which chat rows a routine sent
         io.github.nanomuse.avatar.AvatarStore.init(this) // nanoMuse: the user's own face, if any
-        io.github.nanomuse.cloud.ProfileSync.init(this) // nanoMuse: the name and face the account's devices share
         io.github.nanomuse.account.AccountData.init(this) // nanoMuse: whose chat is whose (contract C12)
-        io.github.nanomuse.sync.ConversationSync.init(this) // nanoMuse: the conversations, the same on every device
         io.github.nanomuse.avatar.AvatarStudio.init(this) // nanoMuse: the feed's files and its built-in routine
         val nmRiskNotifier = io.github.nanomuse.guard.RiskApprovalNotifier(this, ::isAppForeground)
         io.github.nanomuse.guard.RiskGate.backgroundNotifier = { nmRiskNotifier.notifyIfBackgrounded(it) }

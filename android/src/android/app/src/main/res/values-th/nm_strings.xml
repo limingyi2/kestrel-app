@@ -599,8 +599,8 @@
     <string name="nm_pc_title">คอมพิวเตอร์</string>
     <string name="nm_pc_none_short">ไม่มี</string>
     <string name="nm_pc_intro">สั่งที่นี่ ทำบนคอมพิวเตอร์ของคุณ: คำสั่ง ไฟล์ หน้าเว็บในเบราว์เซอร์ของมัน ดูหน้าจอของมัน หรือมอบงานทั้งชิ้นให้ Kestrel ที่นั่น โทรศัพท์เป็นฝ่ายสั่งคอมพิวเตอร์ ไม่ใช่ในทางกลับกัน ทุกการอนุมัติตัดสินใจที่นี่ก่อน</string>
-    <string name="nm_pc_hub_title">วิธีง่าย: nanoMuse Desktop บัญชีเดียวกัน</string>
-    <string name="nm_pc_hub_body">ติดตั้ง nanoMuse Desktop บนคอมพิวเตอร์แล้วลงชื่อเข้าใช้ด้วยบัญชีของโทรศัพท์เครื่องนี้ มันจะปรากฏใต้ บัญชี → อุปกรณ์ ภายในไม่กี่วินาที</string>
+    <string name="nm_pc_hub_title">Cross-device access is paused</string>
+    <string name="nm_pc_hub_body">Waiting for Kestrel Relay/Bridge. Local chat, tools, files, memory, Hands, Skills and MCP continue to work.</string>
     <string name="nm_pc_hub_download">ดาวน์โหลด nanoMuse Desktop</string>
     <string name="nm_pc_hub_account">บัญชีและอุปกรณ์</string>
     <string name="nm_pc_section_paired">คอมพิวเตอร์ในบัญชีนี้</string>
@@ -633,7 +633,7 @@
     <!-- nanoMuse: the first-run pages -->
     <string name="nm_welcome_tagline">เอเจนต์ส่วนตัวแบบโอเพนซอร์สสำหรับทุกอุปกรณ์ที่คุณมี</string>
     <string name="nm_welcome_email">ลงชื่อเข้าใช้ (ฟรี)</string>
-    <string name="nm_welcome_fine_print">บัญชีเดียวเชื่อมอุปกรณ์ของคุณไว้ด้วยกันและมาพร้อมการใช้โมเดลฟรี ไม่มีค่าใช้จ่าย เพิ่มคีย์ API ของคุณเองได้ทันทีหลังจากนี้</string>
+    <string name="nm_welcome_fine_print">Your API key stays on this device and is never sent to nanoMuse Cloud.</string>
     <string name="nm_setup_source_title">ให้โมเดลไหนตอบ</string>
     <string name="nm_setup_source_sub">บัญชีของคุณมีโมเดลมาให้แล้วหนึ่งตัว คุณเพิ่มคีย์ API ของตัวเองได้ด้วยและสลับได้ทุกเมื่อ</string>
     <string name="nm_setup_source_cloud">ใช้โมเดลของ nanoMuse Cloud</string>
@@ -650,7 +650,7 @@
     <string name="nm_welcome_feat_hands_sub">จองรถไฟ สั่งอาหาร ค้นหาบางอย่างในแอป คุณดูอยู่ และหยุดได้ทุกเมื่อ</string>
     <string name="nm_welcome_feat_reach">สั่งงานคอมพิวเตอร์ของคุณจากที่นี่</string>
     <string name="nm_welcome_feat_reach_sub">ติดตั้ง nanoMuse Desktop บนเครื่อง Mac, Windows หรือ Linux ลงชื่อเข้าใช้ด้วยบัญชีเดียวกัน แล้วมอบงานให้จากโทรศัพท์</string>
-    <string name="nm_welcome_notice">Kestrel เป็นโครงการชุมชนโอเพนซอร์สที่ไม่แสวงหากำไร ฟรีตลอดไป โมเดลมาพร้อมโควตาฟรีที่ผู้พัฒนาออกค่าใช้จ่ายให้ หลังจากนั้นใช้คีย์ของคุณเอง ไม่มีการขายอะไร สิ่งที่รีเลย์เก็บไว้ระบุในนโยบายความเป็นส่วนตัว และ การตั้งค่า → การควบคุมข้อมูล เป็นของคุณ</string>
+    <string name="nm_welcome_notice">Kestrel runs as a local agent and needs no account. It does not call nanoMuse Cloud account, allowance, profile, or conversation-sync APIs.</string>
     <string name="nm_welcome_hands_title">ให้มันใช้โทรศัพท์ของคุณ</string>
     <string name="nm_welcome_hands_sub">ด้วยสิทธิ์สองอย่าง มันจะเปิดแอป แตะ และพิมพ์แทนคุณได้ แคปซูลที่แสดงแต่ละขั้นตอนพร้อมปุ่มหยุดจะอยู่บนหน้าจอ การล็อกอิน รหัสผ่าน และรหัสยืนยันเป็นของคุณเสมอ</string>
     <string name="nm_welcome_hands_turn_on">เปิด</string>
@@ -1121,7 +1121,7 @@
     <string name="nm_models_cloud_off_refused">เพิ่มผู้ให้บริการของคุณเองก่อน เมื่อปิด nanoMuse Cloud แล้วจะไม่มีอะไรอื่นตอบได้</string>
     <string name="nm_chat_no_model">ตอนนี้ไม่มีโมเดลที่ตอบได้ เลือกสักตัวใน การตั้งค่า › โมเดล</string>
     <string name="nm_cloud_provider_no_delete">ผู้ให้บริการนี้คือบัญชี nanoMuse Cloud ของคุณ ปิดสวิตช์ด้านบนเพื่อเลิกใช้โมเดลของมัน หากต้องการออกจากระบบ ให้เปิด การตั้งค่า › nanoMuse Cloud</string>
-    <string name="nm_welcome_own_key">ใช้คีย์ API ของตัวเองแทน</string>
+    <string name="nm_welcome_own_key">Configure model</string>
     <string name="nm_useit_title">ใช้ทำอะไร</string>
     <string name="nm_useit_body_signed_out">เลือกว่าคีย์นี้จะรับผิดชอบอะไร</string>
     <string name="nm_useit_use">ใช้</string>

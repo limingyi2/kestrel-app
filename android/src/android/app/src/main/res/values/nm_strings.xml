@@ -590,8 +590,8 @@
     <string name="nm_pc_title">Computers</string>
     <string name="nm_pc_none_short">None</string>
     <string name="nm_pc_intro">Say it here, done on your computer: a command, a file, a page in its browser, a look at its screen, or a whole task for the Kestrel there. The phone drives the computer, never the other way round; every approval is decided here first.</string>
-    <string name="nm_pc_hub_title">The easy way: nanoMuse Desktop, same account</string>
-    <string name="nm_pc_hub_body">Install nanoMuse Desktop on the computer and sign in with this phone\'s account; it appears under Account → Devices within seconds.</string>
+    <string name="nm_pc_hub_title">Cross-device access is paused</string>
+    <string name="nm_pc_hub_body">Waiting for Kestrel Relay/Bridge. Local chat, tools, files, memory, Hands, Skills and MCP continue to work.</string>
     <string name="nm_pc_hub_download">Get nanoMuse Desktop</string>
     <string name="nm_pc_hub_account">Account and devices</string>
     <string name="nm_pc_section_paired">Computers on this account</string>
@@ -622,7 +622,7 @@
     <!-- nanoMuse: the first-run pages -->
     <string name="nm_welcome_tagline">An open-source personal agent for every device you own.</string>
     <string name="nm_welcome_email">Sign in (free)</string>
-    <string name="nm_welcome_fine_print">One account keeps your devices together and carries the free model use; nothing is charged. Your own API key can be added right after.</string>
+    <string name="nm_welcome_fine_print">Your API key stays on this device and is never sent to nanoMuse Cloud.</string>
     <string name="nm_setup_source_title">Which model answers?</string>
     <string name="nm_setup_source_sub">Your account already brings one. You can add your own API key as well and switch at any time.</string>
     <string name="nm_setup_source_cloud">Use the nanoMuse Cloud model</string>
@@ -639,7 +639,7 @@
     <string name="nm_welcome_feat_hands_sub">Books the train, orders the meal, looks something up in an app; you watch, and can stop it any time</string>
     <string name="nm_welcome_feat_reach">Reach: your computers, from here</string>
     <string name="nm_welcome_feat_reach_sub">Install nanoMuse Desktop on a Mac, Windows or Linux machine, sign in with the same account, and give it work from the phone</string>
-    <string name="nm_welcome_notice">Kestrel is a non-profit open-source community project: free, forever. The model comes with a free allowance paid by the developer; after that, your own key. Nothing is sold; what the relay keeps is in the privacy policy, and Settings → Data controls is yours.</string>
+    <string name="nm_welcome_notice">Kestrel runs as a local agent and needs no account. It does not call nanoMuse Cloud account, allowance, profile, or conversation-sync APIs.</string>
     <string name="nm_welcome_hands_title">Let it use your phone</string>
     <string name="nm_welcome_hands_sub">With two permissions it can open apps, tap and type for you. A capsule with each step and a Stop button stays on screen; logins, passwords and codes are always yours.</string>
     <string name="nm_welcome_hands_turn_on">Turn on</string>
@@ -1104,7 +1104,7 @@
     <string name="nm_models_cloud_off_refused">Add a provider of your own first; with nanoMuse Cloud off, nothing else could answer.</string>
     <string name="nm_chat_no_model">No model can answer right now. Choose one under Settings › Models.</string>
     <string name="nm_cloud_provider_no_delete">This provider is your nanoMuse Cloud account. Switch it off above to stop using its models; to sign out, open Settings › nanoMuse Cloud.</string>
-    <string name="nm_welcome_own_key">Use your own API key instead</string>
+    <string name="nm_welcome_own_key">Configure model</string>
     <string name="nm_useit_title">Use it for</string>
     <string name="nm_useit_body_signed_out">Pick what this key should handle.</string>
     <string name="nm_useit_use">Use it</string>

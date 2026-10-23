@@ -195,19 +195,14 @@ fun NanoMuseHome(
         }
     }
     var setupDone by remember { mutableStateOf(FirstRunSetup.isDone(context)) }
-    // A provider of the person's own that could answer: enabled and holding a credential. The
-    // Cloud instance is the account, counted through `signedIn` below.
-    val cloudId = io.github.nanomuse.cloud.NanoMuseCloud.instance(context)?.id
+    // A provider configured by the user and holding a device-local credential.
     val hasProviders = remember(providerConfig) {
-        providerConfig.instances.any { it.id != cloudId && it.isEnabled && providerRepository.hasAnyCredential(it) }
+        providerConfig.instances.any { it.isEnabled && providerRepository.hasAnyCredential(it) }
     }
     val hasGroups = providerConfig.modelGroups.isNotEmpty()
-    // The flow flips when the sign-in lands (or the key is revoked); signed out with a key of
-    // one's own the chat stays, the sign-in is an invitation under Settings.
-    val signedIn by io.github.nanomuse.cloud.NanoMuseCloud.signedIn(context).collectAsState()
     val phase = when {
-        !configLoaded || sessions == null || signedIn == null -> HomePhase.LOADING
-        FirstRunSetup.needed(signedIn == true, hasProviders, sessions!!.isNotEmpty(), setupDone) -> HomePhase.SETUP
+        !configLoaded || sessions == null -> HomePhase.LOADING
+        FirstRunSetup.needed(hasProviders, sessions!!.isNotEmpty(), setupDone) -> HomePhase.SETUP
         else -> HomePhase.HOME
     }
     // Once the chat has been shown the setup is over for good: an empty main chat is a draft
@@ -528,10 +523,8 @@ fun NanoMuseHome(
             HomePhase.LOADING -> Surface(color = MuseTones.surface, modifier = Modifier.fillMaxSize()) {}
             HomePhase.SETUP -> FirstRunSetupScreen(
                 agentName = agentName,
-                signedIn = signedIn == true,
                 hasGroups = hasGroups,
                 hasProviders = hasProviders,
-                onSignIn = { navController.safeNavigate(io.github.nanomuse.ui.cloud.ROUTE_CLOUD_SIGN_IN) },
                 onAddProvider = { navController.safeNavigate(Routes.ADD_PROVIDER) },
                 onSelectModels = { navController.safeNavigate(Routes.ONBOARDING_MODELS) },
                 onStart = { FirstRunSetup.markDone(context); setupDone = true },
