@@ -595,42 +595,6 @@ fun ChatScreen(
     val nmRequestBrief = remember(messages) {
         io.github.nanomuse.ui.header.requestBrief(messages.lastOrNull { it.role == "user" }?.content)
     }
-    // nanoMuse: after a finished task, one card under the reply asking for a star when the
-    // relay's policy says this is a moment for it (StarPrompt / Nudges: a few counts, a
-    // cooldown, a lifetime cap, and never again after the person went).
-    var nmStarNudge by remember { mutableStateOf<io.github.nanomuse.community.StarPrompt.Ask?>(null) }
-    var nmSawRun by remember { mutableStateOf(false) }
-    LaunchedEffect(isStreaming) {
-        if (isStreaming) { nmSawRun = true; return@LaunchedEffect }
-        if (!nmSawRun) return@LaunchedEffect
-        nmSawRun = false
-        // A task is a turn the person started, after the first conversation (the naming) was
-        // over; a routine, the feed or a goal check streaming in this session is not one.
-        val countable = viewModel.nmTakeCountableTurn()
-        if (!countable || nmStarNudge != null) return@LaunchedEffect
-        kotlinx.coroutines.delay(400) // the turn's last words land in the list a beat after the stream ends
-        val last = viewModel.uiMessages.value.lastOrNull() ?: return@LaunchedEffect
-        val replied = last.role == "assistant" && last.error.isNullOrBlank() &&
-            (last.content.isNotBlank() || last.toolBlocks.any { it.kind == "text" && it.content.isNotBlank() })
-        if (!replied) return@LaunchedEffect
-        val ask = io.github.nanomuse.community.StarPrompt.taskAsk(context, io.github.nanomuse.community.StarPrompt.countTask(context))
-            ?: return@LaunchedEffect
-        io.github.nanomuse.community.StarPrompt.markShown(context, ask)
-        nmStarNudge = ask
-    }
-    // nanoMuse: the asks that arrive away from any screen (the 7th / 30th day the app was
-    // opened) show here, in the main chat, when the agent is not mid-reply.
-    if (nmHome != null && nmHome.isMainChat) {
-        val nmPendingAsk by io.github.nanomuse.community.StarPrompt.pending.collectAsState()
-        LaunchedEffect(nmPendingAsk, isStreaming) {
-            val ask = nmPendingAsk ?: return@LaunchedEffect
-            if (ask.moment != io.github.nanomuse.community.StarPrompt.Moment.DAYS_USED || isStreaming || nmStarNudge != null) return@LaunchedEffect
-            io.github.nanomuse.community.StarPrompt.clearPending(ask)
-            if (!io.github.nanomuse.community.StarPrompt.due(context, ask)) return@LaunchedEffect
-            io.github.nanomuse.community.StarPrompt.markShown(context, ask)
-            nmStarNudge = ask
-        }
-    }
     // [T-android-compact-progress] null when no compaction is running.
     val compactProgress by viewModel.compactProgress.collectAsState()
     val error by viewModel.error.collectAsState()
@@ -1751,7 +1715,6 @@ fun ChatScreen(
         viewModel.endSlashSessionForSend()
         viewModel.setInputText("")
         releaseComposerAfterSend()
-        viewModel.nmMarkPersonTurn() // nanoMuse: the person started this turn (StarPrompt counts those)
         viewModel.sendMessage(rawText)
         noteSendForInputModePref()
         userScrolledAway = false
@@ -4122,18 +4085,6 @@ fun ChatScreen(
                             })
                         }
                     }
-                    // nanoMuse: the ask for a star under a finished task, or on the 7th / 30th
-                    // day (reverseLayout: declared first, drawn at the bottom).
-                    val nmStarAsk = nmStarNudge
-                    if (nmStarAsk != null && !isStreaming) {
-                        item(key = "__star_nudge__", contentType = "star_nudge") {
-                            io.github.nanomuse.community.StarNudgeCard(
-                                text = remember(nmStarAsk) { io.github.nanomuse.community.StarPrompt.text(context, nmStarAsk) },
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                onDone = { nmStarNudge = null },
-                            )
-                        }
-                    }
                     items(
                         items = flatItems.asReversed(),
                         key = { it.key },
@@ -5923,7 +5874,6 @@ fun ChatScreen(
                             lastSendTimeMs = System.currentTimeMillis()
                             viewModel.setInputText("")
                             releaseComposerAfterSend()
-                            viewModel.nmMarkPersonTurn() // nanoMuse: the person started this turn (StarPrompt counts those)
                             viewModel.sendMessage(toSend)
                             noteSendForInputModePref()
                             userScrolledAway = false
