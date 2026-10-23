@@ -1165,4 +1165,17 @@
     <string name="nm_font_scale_medium">ปานกลาง</string>
     <string name="nm_font_scale_large">ใหญ่</string>
     <string name="nm_font_scale_extra_large">ใหญ่มาก</string>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">การเชื่อมต่อนี้เป็นตัวเลือกและช่วยให้อุปกรณ์ของคุณค้นหากันได้ แชตในเครื่อง ไฟล์ แซนด์บ็อกซ์ Linux, Skills และ MCP ใช้งานได้โดยไม่ต้องเข้าสู่ระบบ คีย์ API ของโมเดลจะเก็บไว้ในอุปกรณ์นี้</string>
+    <string name="nm_hub_connection_relay">ที่อยู่ Relay</string>
+    <string name="nm_hub_connection_online">เชื่อมต่อแล้ว</string>
+    <string name="nm_hub_connection_offline">ไม่ได้เชื่อมต่อ</string>
+    <string name="nm_hub_connection_email">อีเมล</string>
+    <string name="nm_hub_connection_code">รหัสจากอีเมล</string>
+    <string name="nm_hub_connection_sign_in">เข้าสู่ระบบ Relay</string>
+    <string name="nm_hub_connection_send_code">ส่งรหัส</string>
+    <string name="nm_hub_connection_devices">อุปกรณ์ใน Relay นี้</string>
+    <string name="nm_hub_connection_sign_out">ยกเลิกการเชื่อมต่อและออกจากระบบ</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · ออนไลน์</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · ออฟไลน์</string>
 </resources>

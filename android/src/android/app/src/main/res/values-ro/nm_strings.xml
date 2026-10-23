@@ -1173,4 +1173,17 @@
     <string name="nm_font_scale_medium">Mediu</string>
     <string name="nm_font_scale_large">Mare</string>
     <string name="nm_font_scale_extra_large">Foarte mare</string>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">Această conexiune opțională permite dispozitivelor să se găsească între ele. Chatul local, fișierele, sandboxul Linux, Skills și MCP funcționează fără autentificare. Cheile API ale modelelor rămân pe acest dispozitiv.</string>
+    <string name="nm_hub_connection_relay">Adresa Relay</string>
+    <string name="nm_hub_connection_online">Conectat</string>
+    <string name="nm_hub_connection_offline">Neconectat</string>
+    <string name="nm_hub_connection_email">E-mail</string>
+    <string name="nm_hub_connection_code">Cod prin e-mail</string>
+    <string name="nm_hub_connection_sign_in">Autentificare în Relay</string>
+    <string name="nm_hub_connection_send_code">Trimite codul</string>
+    <string name="nm_hub_connection_devices">Dispozitive pe acest Relay</string>
+    <string name="nm_hub_connection_sign_out">Deconectare și ieșire</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · online</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · offline</string>
 </resources>

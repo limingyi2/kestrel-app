@@ -1169,4 +1169,17 @@
     <string name="nm_font_scale_medium">Orta</string>
     <string name="nm_font_scale_large">Büyük</string>
     <string name="nm_font_scale_extra_large">Çok büyük</string>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">Bu isteğe bağlı bağlantı cihazlarınızın birbirini bulmasını sağlar. Yerel sohbet, dosyalar, Linux sanal alanı, Skills ve MCP oturum açmadan çalışır. Model API anahtarları bu cihazda kalır.</string>
+    <string name="nm_hub_connection_relay">Relay adresi</string>
+    <string name="nm_hub_connection_online">Bağlandı</string>
+    <string name="nm_hub_connection_offline">Bağlı değil</string>
+    <string name="nm_hub_connection_email">E-posta</string>
+    <string name="nm_hub_connection_code">E-posta kodu</string>
+    <string name="nm_hub_connection_sign_in">Relay hesabına giriş yap</string>
+    <string name="nm_hub_connection_send_code">Kod gönder</string>
+    <string name="nm_hub_connection_devices">Bu Relay üzerindeki cihazlar</string>
+    <string name="nm_hub_connection_sign_out">Bağlantıyı kes ve çıkış yap</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · çevrimiçi</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · çevrimdışı</string>
 </resources>

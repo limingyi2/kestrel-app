@@ -1169,4 +1169,17 @@
     <string name="nm_font_scale_medium">Katamtaman</string>
     <string name="nm_font_scale_large">Malaki</string>
     <string name="nm_font_scale_extra_large">Napakalaki</string>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">Opsyonal ang koneksiyong ito para makita ng mga device mo ang isa’t isa. Gumagana nang walang pag-sign in ang lokal na chat, mga file, Linux sandbox, Skills, at MCP. Nananatili sa device na ito ang mga model API key.</string>
+    <string name="nm_hub_connection_relay">Relay address</string>
+    <string name="nm_hub_connection_online">Nakakonekta</string>
+    <string name="nm_hub_connection_offline">Hindi nakakonekta</string>
+    <string name="nm_hub_connection_email">Email</string>
+    <string name="nm_hub_connection_code">Email code</string>
+    <string name="nm_hub_connection_sign_in">Mag-sign in sa Relay</string>
+    <string name="nm_hub_connection_send_code">Magpadala ng code</string>
+    <string name="nm_hub_connection_devices">Mga device sa Relay na ito</string>
+    <string name="nm_hub_connection_sign_out">Idiskonekta at mag-sign out</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · online</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · offline</string>
 </resources>
