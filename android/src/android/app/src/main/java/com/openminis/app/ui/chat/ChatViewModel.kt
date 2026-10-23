@@ -6444,6 +6444,9 @@ class ChatViewModel(
         }
     }
 
+    // nanoMuse: per-turn Hands latency, attached to the native call at tool dispatch.
+    private var nmHandsTimeline: io.github.nanomuse.hands.HandsTimeline? = null
+
     fun sendMessage(text: String) {
         // nanoMuse: "change your avatar to …" (and a pick while the options are
         // up) is handled in the app, not by the model.
@@ -6919,6 +6922,8 @@ class ChatViewModel(
         // inside the send button's tap closure).
         if (_hasInjectedShareContent.value) _hasInjectedShareContent.value = false
 
+        // nanoMuse: accepted user turn, before provider/session setup.
+        nmHandsTimeline = io.github.nanomuse.hands.HandsTimeline(instructionReceived = true)
         val initialProvider = currentProvider
         if (initialProvider == null) {
             _error.value = context.getString(R.string.nm_chat_no_model) // nanoMuse: where to fix it, in the person's language
@@ -8495,6 +8500,8 @@ class ChatViewModel(
                         }
                     }
                     is LLMStreamChunk.Text -> {
+                        // nanoMuse: first visible main-agent response, independent of provider TTFB.
+                        nmHandsTimeline?.mark("agent_first_response")
                         // [T-android-readaloud-stop-stale] First actual text of
                         // this reply — stop the previous reply's Read Aloud so
                         // old and new audio don't overlap. Deferred to here
@@ -8751,6 +8758,9 @@ class ChatViewModel(
                         // same value (matches the rename applied at start).
                         val toolCompleteId = dedupeToolCompleteId(chunk.id)
                         android.util.Log.d("ToolChain[VM]", "[turn=$turn] ToolCallComplete id=$toolCompleteId name=${chunk.name} args=${chunk.args.toString().take(300)}")
+                        // nanoMuse: a tool-only reply is also a first agent response.
+                        nmHandsTimeline?.mark("agent_first_response")
+                        if (chunk.args.toString().contains("nanomuse-hands")) nmHandsTimeline?.mark("hands_tool_call")
                         toolCalls.add(Triple(toolCompleteId, chunk.name, chunk.args))
                         // [T-android-gemini3-thoughtsig / #179] Stash the Gemini
                         // 3.x thought signature keyed by the (deduped) tool call id.
@@ -9446,6 +9456,11 @@ class ChatViewModel(
                 }
 
                 android.util.Log.d("ToolChain[VM]", "[turn=$turn] executeTool START name=$name args=${argsStr.take(200)}")
+                // nanoMuse: correlate scheduling and native startup without logging command contents.
+                if (argsStr.contains("nanomuse-hands")) nmHandsTimeline?.let {
+                    it.mark("hands_tool_dispatch")
+                    io.github.nanomuse.hands.HandsTimeline.bind(activeSessionId, it)
+                }
                 val result = executeTool(name, argsStr, id, allToolBlocks, assistantId, accumulatedText)
                 android.util.Log.d("ToolChain[VM]", "[turn=$turn] executeTool END name=$name success=${result.success} title=${result.toolTitle} outputLen=${result.output.length} output=${result.output.take(200)}")
 

@@ -14,6 +14,8 @@ All notable changes to nanoMuse. The format follows [Keep a Changelog](https://k
 
 ### Android
 
+- Added correlated Hands startup milestones, bounded accessibility transition detection, live target reconfirmation and foreground-app reuse; device performance measurements remain pending.
+
 - Initialized the Kestrel Android name, independent application identity, external links and fork update sources while retaining the Linux sandbox contracts.
 - Removed the nanoMuse account requirement from Android startup, kept provider credentials and sessions on-device, and paused account-authenticated cross-device entry points pending Kestrel Relay/Bridge.
 - Made Android first-run provider setup optional, added a persistent skip path, and show a model-configuration prompt when chat has no configured model.

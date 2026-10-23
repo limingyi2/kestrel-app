@@ -58,6 +58,8 @@ class HandsOffloadHandler(private val context: Context) : NativeOffloadHandler {
     }
 
     private fun run(args: MediaOffloadHandler.Args, sessionId: String?): NativeOffloadResult {
+        val timeline = HandsTimeline.take(sessionId) ?: HandsTimeline()
+        timeline.mark("hands_native_received")
         val task = args.get("task")?.trim().orEmpty()
         if (task.isEmpty()) return NativeOffloadResult(2, "nanomuse-hands run: --task is required\n")
         if (!Hands.enabled(context)) return refused("off", "Operating the screen is switched off in Settings → Hands.")
@@ -76,6 +78,7 @@ class HandsOffloadHandler(private val context: Context) : NativeOffloadHandler {
         val maxSteps = args.get("max-steps")?.toIntOrNull()?.coerceAtLeast(0) ?: HandsOperator.DEFAULT_MAX_STEPS
         val opts = HandsOperator.Options(
             task = task,
+            timeline = timeline,
             appHint = args.get("app")?.trim()?.takeIf { it.isNotEmpty() },
             maxSteps = maxSteps,
             sessionId = sessionId,

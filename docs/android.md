@@ -45,10 +45,10 @@ legacy account and data-control links show a local Relay/Bridge pause notice.
 
 Hands writes per-step timings to its existing JSONL trace: screenshot capture, image encoding and
 save, screen-model request, accessibility lookup, risk approval, Android action, and settle or
-model-directed wait. `run-summary.json` records the terminal outcome and end-to-end duration. The
-settle floor remains the existing 900 ms for taps and 1,100 ms for swipes. After that floor,
-accessibility events can extend the wait by up to one second while the screen is still changing.
-This avoids guessing a shorter delay before collecting device measurements. The existing model
+model-directed wait. `run-summary.json` records the terminal outcome and end-to-end duration. P1.4 subscribes before actions and takes the next screenshot after a change, 250 ms of quiet,
+visible content and no progress indicator. Missing events or nodes retain the 900 ms tap and
+1,100 ms swipe fallback, with at most one extra second for ongoing changes. See
+[P1.4 diagnosis and device measurements](hands-p1.4.md). The existing model
 request timeout is 90 seconds and screenshot capture is retried once.
 
 When the task succeeds or fails, Kestrel returns to chat by default. Turn off **Return to Kestrel
