@@ -8619,6 +8619,8 @@ class ChatViewModel(
                         }
                     }
                     is LLMStreamChunk.ToolUseStart -> {
+                        // nanoMuse: the visible tool card is a response before its arguments finish.
+                        nmHandsTimeline?.mark("agent_first_response")
                         // [T-dedupe-toolcallid] Rewrite duplicate id ASAP — the
                         // renamed value drives the AssistantBlock.id used by
                         // ToolCallComplete / ToolInputDelta lookups and ends

@@ -24,7 +24,7 @@ Android 主 Agent 收齐工具调用后，才交给 shell/offload 调度。`Hand
 
 ## Trace 与报告 {#trace-and-reporting}
 
-`run-summary.json` 增加单调时钟的 `milestones_ms`，相对已接受的用户消息计时：指令接收、首次可见主 Agent 文本或完整工具响应、Hands 调用、工具派发、原生接收、操作器启动、首次截图、首次视觉响应、首次动作派发、页面变化、下一次动作及任务结束（包含返回确认）。`android_action_N` 记录每次派发尝试。直接 shell 或后台调用缺少用户指令节点时保留缺失值。这里的任务结束指 Hands 任务，不包含主 Agent 随后的最终文字。复用已有 provider 首块诊断和 PR #3 单步计时，不重复记录。
+`run-summary.json` 增加单调时钟的 `milestones_ms`，相对已接受的用户消息计时：指令接收、首次可见主 Agent 文本或工具卡片、Hands 调用、工具派发、原生接收、操作器启动、首次截图、首次视觉响应、首次动作派发、页面变化、下一次动作及任务结束（包含返回确认）。`android_action_N` 记录每次派发尝试。直接 shell 或后台调用缺少用户指令节点时保留缺失值。这里的任务结束指 Hands 任务，不包含主 Agent 随后的最终文字。复用已有 provider 首块诊断和 PR #3 单步计时，不重复记录。
 
 运行 `python scripts/android/hands-report.py <exported-hands-directory>`，输出最近秩法 P50/P95、样本数、每次模型和页面等待耗时、动作尝试次数、返回结果及结束状态成功率。叶阶段占比的分母是操作器总耗时。排除包含子阶段的 `action_and_wait_ms`，未归属时间单独显示。没有 trace 时输出 `pending_device_measurement`，分位数与成功率为 null。旧 PR #3 trace 可用于单步计时，但不能重建指令到首次动作耗时。
 

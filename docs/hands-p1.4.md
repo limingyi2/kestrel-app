@@ -54,7 +54,7 @@ settings-specific path or inferred destructive action sequence was added.
 ## Trace and reporting
 
 `run-summary.json` adds monotonic `milestones_ms`, relative to the accepted user turn:
-instruction received, first visible agent text or complete tool response, Hands call,
+instruction received, first visible agent text or tool card, Hands call,
 tool dispatch, native receive, operator start, first screenshot, first visual response,
 first action dispatch, page change, next action dispatch and task finish (after return
 confirmation). `android_action_N` records every attempted dispatch. Direct shell or

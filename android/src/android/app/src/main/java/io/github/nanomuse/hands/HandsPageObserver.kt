@@ -25,11 +25,18 @@ class HandsPageObserver(private val svc: MinisAccessibilityService, private val 
         val waitStarted = SystemClock.elapsedRealtime()
         val deadline = waitStarted + fallbackMs + 1_000L
         var reason = "timeout_screenshot_fallback"
+        var nextContentCheck = waitStarted
         while (!stopped()) {
             val now = SystemClock.elapsedRealtime()
-            val content = contentState()
-            val ready = synchronized(monitor) { state.ready(now, content.first, content.second) }
-            if (ready) { reason = "event_stable"; break }
+            // Tree reads involve Binder calls. Only inspect a quiet changed page, never
+            // traverse every 50 ms while waiting for the first event or an animation.
+            val quiet = synchronized(monitor) { state.ready(now, true, false) }
+            if (quiet && now >= nextContentCheck) {
+                val content = contentState()
+                val ready = synchronized(monitor) { state.ready(SystemClock.elapsedRealtime(), content.first, content.second) }
+                if (ready) { reason = "event_stable"; break }
+                nextContentCheck = SystemClock.elapsedRealtime() + HandsPageState.QUIET_MS
+            }
             if (now >= deadline) break
             // No usable events: retain the previous fallback before taking a fresh screenshot.
             if (!changed() && now - waitStarted >= fallbackMs) break
@@ -48,8 +55,13 @@ class HandsPageObserver(private val svc: MinisAccessibilityService, private val 
         var visible = false
         var loading = false
         var count = 0
+        var truncated = false
+        val readDeadline = SystemClock.elapsedRealtime() + 200L
         fun visit(node: android.view.accessibility.AccessibilityNodeInfo, depth: Int) {
-            if (depth > 60 || count++ >= 2500) return
+            if (depth > 60 || count++ >= 2500 || SystemClock.elapsedRealtime() >= readDeadline) {
+                truncated = true
+                return
+            }
             if (node.isVisibleToUser) {
                 if (!node.text.isNullOrBlank() || !node.contentDescription.isNullOrBlank()) visible = true
                 if (node.className?.toString()?.contains("ProgressBar") == true) loading = true
@@ -64,7 +76,7 @@ class HandsPageObserver(private val svc: MinisAccessibilityService, private val 
             svc.rootNodes().forEach { root ->
                 try { if (root.packageName?.toString() == pkg) visit(root, 0) } finally { root.recycle() }
             }
-            (visible && count < 2500) to loading
+            (visible && !truncated) to loading
         } catch (_: Exception) { false to false }
     }
 

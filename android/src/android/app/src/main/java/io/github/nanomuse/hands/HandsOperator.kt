@@ -356,6 +356,7 @@ class HandsOperator(private val context: Context) {
                         val nodeLookupStarted = SystemClock.elapsedRealtime()
                         val nodePoint = action.tapTarget?.let { ScreenWords.uniqueClickableCenter(svc, it) }
                         timings["accessibility_lookup_ms"] = SystemClock.elapsedRealtime() - nodeLookupStarted
+                        timings["target_unique_visible"] = if (nodePoint != null) 1L else 0L
                         val px = nodePoint?.x ?: modelX
                         val py = nodePoint?.y ?: modelY
                         // the label the model gave, read next to what the screen itself says is there
