@@ -164,7 +164,6 @@ class HandsOperator(private val context: Context) {
             var formatErrors = 0
             var blackScreens = 0
             var modelErrors = 0
-            var retryObservation: Triple<Jpeg, Int, Int>? = null
             // the same action on an unchanged screen: a note at the third, a stop at the sixth
             val watch = HandsLoopWatch()
             var loopNote: String? = null
@@ -360,9 +359,9 @@ class HandsOperator(private val context: Context) {
                         gate.notice?.let { log += it }
                         if (stop.get()) return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
                         // An event-less app can change while approval is pending. Dangerous
-                        // coordinate taps require a fresh identical image; live nodes are
-                        // reacquired below. A failed check never falls through to a tap.
-                        if (nodePoint == null && TapWords.classify(target, ScreenWords.at(svc, px, py)) != null) {
+                        // taps require a fresh identical image as well as a live target.
+                        // A failed check never falls through to a tap.
+                        if (TapWords.classify(target, ScreenWords.at(svc, px, py)) != null) {
                             val freshStarted = SystemClock.elapsedRealtime()
                             val fresh = screenshot(svc)?.bitmap
                             val unchanged = fresh?.let {
@@ -563,6 +562,7 @@ class HandsOperator(private val context: Context) {
                         JSONObject().put("outcome", outcome?.code ?: "unknown").put("steps", steps)
                             .put("elapsed_ms", SystemClock.elapsedRealtime() - startedElapsed)
                             .put("milestones_ms", JSONObject(timeline.snapshot()))
+                            .put("accessibility_health", HandsAccessibilityHealth.snapshot(context))
                             .put("android_action_attempts", actionCount)
                             .put("return_requested", shouldReturn)
                             .put("launch_attempted", returnAttempt.launchAttempted)

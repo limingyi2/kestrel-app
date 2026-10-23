@@ -52,10 +52,16 @@ class MinisAccessibilityService : AccessibilityService() {
 
     val nodeRegistry: NodeRegistry = NodeRegistry()
 
+    // nanoMuse: diagnostic state distinguishes a constructed service from a bound connection.
+    @Volatile var handsConnected: Boolean = false
+        private set
+
     override fun onCreate() {
         super.onCreate()
         _instance = this
         AppLogger.info(TAG, "service created")
+        // nanoMuse: retain lifecycle evidence across process restarts without screen contents.
+        io.github.nanomuse.hands.HandsAccessibilityHealth.lifecycle(this, "created")
     }
 
     override fun onServiceConnected() {
@@ -68,6 +74,9 @@ class MinisAccessibilityService : AccessibilityService() {
         // remediation is the user whitelisting autostart + battery (see
         // SystemPermissionsScreen OEM guidance).
         AppLogger.info(TAG, "service connected (manufacturer=${android.os.Build.MANUFACTURER})")
+        // nanoMuse: a connected callback is distinct from permission being enabled in Settings.
+        handsConnected = true
+        io.github.nanomuse.hands.HandsAccessibilityHealth.lifecycle(this, "connected")
         // [T-android-a11y-force-stop-recovery] Latch that the grant existed, so
         // a later absence can be recognized as a revocation rather than a
         // never-configured service. This is the one callback that only fires
@@ -98,9 +107,21 @@ class MinisAccessibilityService : AccessibilityService() {
 
     override fun onInterrupt() {
         AppLogger.info(TAG, "service interrupted")
+        // nanoMuse: interruption alone does not mean the system permission was revoked.
+        io.github.nanomuse.hands.HandsAccessibilityHealth.lifecycle(this, "interrupted")
+    }
+
+    // nanoMuse: record unbinding without re-enabling or changing the user's system permission.
+    override fun onUnbind(intent: android.content.Intent?): Boolean {
+        handsConnected = false
+        io.github.nanomuse.hands.HandsAccessibilityHealth.lifecycle(this, "unbound")
+        return super.onUnbind(intent)
     }
 
     override fun onDestroy() {
+        // nanoMuse: orderly destruction evidence; abrupt exits are read from ActivityManager.
+        handsConnected = false
+        io.github.nanomuse.hands.HandsAccessibilityHealth.lifecycle(this, "destroyed")
         super.onDestroy()
         if (_instance === this) _instance = null
         eventRing.clear()

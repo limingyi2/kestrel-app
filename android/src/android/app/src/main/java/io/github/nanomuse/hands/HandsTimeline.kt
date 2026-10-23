@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap
 class HandsTimeline(instructionReceived: Boolean = false, private val origin: Long = SystemClock.elapsedRealtime()) {
     private val milestones = linkedMapOf<String, Long>()
 
-    init { if (instructionReceived) mark("instruction_received") }
+    init { if (instructionReceived) milestones["instruction_received"] = 0L }
 
     @Synchronized fun mark(name: String) {
         milestones.putIfAbsent(name, SystemClock.elapsedRealtime() - origin)

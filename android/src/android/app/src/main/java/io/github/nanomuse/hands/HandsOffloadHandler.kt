@@ -44,6 +44,7 @@ class HandsOffloadHandler(private val context: Context) : NativeOffloadHandler {
             .put("ready", r.ready)
             .put("android_11_or_newer", r.androidOk)
             .put("accessibility_service", r.serviceOn)
+            .put("accessibility_health", HandsAccessibilityHealth.snapshot(context))
             .put("draw_over_apps", r.overlayOk)
             .put("screen_model", r.model?.let { JSONObject().put("model", it.modelId).put("provider", it.instance.label) } ?: JSONObject.NULL)
             .put("running", Hands.active.value)
@@ -129,6 +130,7 @@ class HandsOffloadHandler(private val context: Context) : NativeOffloadHandler {
     private fun refused(error: String, message: String): NativeOffloadResult = NativeOffloadResult(
         3,
         JSONObject().put("ok", false).put("error", error).put("message", message)
+            .put("accessibility_health", HandsAccessibilityHealth.snapshot(context))
             .put("tell_user", "Tell the user in one line, in their language, and give the link ${Hands.DEEP_LINK} so they can switch it on or fix the setting. Do not use android-a11y-cli instead.")
             .toString(2) + "\n",
     )

@@ -53,6 +53,9 @@ def report(root: Path) -> dict[str, Any]:
     totals = dict.fromkeys(LEAVES, 0.0)
     runs = []
     elapsed = 0.0
+    end_to_end_elapsed = 0.0
+    end_to_end_totals = dict.fromkeys(LEAVES, 0.0)
+    pre_operator = 0.0
     for path in sorted(root.rglob("run-summary.json")):
         summary = json.loads(path.read_text(encoding="utf-8"))
         milestones = summary.get("milestones_ms", {})
@@ -62,16 +65,25 @@ def report(root: Path) -> dict[str, Any]:
         duration = summary["elapsed_ms"]
         elapsed += duration
         rows = []
+        run_totals = dict.fromkeys(LEAVES, 0.0)
         trace = path.with_name("trace.jsonl")
         for line in trace.read_text(encoding="utf-8").splitlines() if trace.exists() else []:
             row = json.loads(line)
             times = row.get("timings_ms", {})
             for key in LEAVES:
                 totals[key] += times.get(key, 0)
+                run_totals[key] += times.get(key, 0)
             for name, field in (("model_call", "model_ms"), ("page_wait", "settle_wait_ms")):
                 if field in times:
                     distributions[name].append(times[field])
             rows.append({"step": row.get("step"), "timings_ms": times})
+        if all(
+            key in milestones for key in ("instruction_received", "hands_started", "task_finished")
+        ):
+            end_to_end_elapsed += milestones["task_finished"] - milestones["instruction_received"]
+            pre_operator += milestones["hands_started"] - milestones["instruction_received"]
+            for key, value in run_totals.items():
+                end_to_end_totals[key] += value
         runs.append(
             {
                 "run": path.parent.name,
@@ -92,6 +104,19 @@ def report(root: Path) -> dict[str, Any]:
         "operator_stage_share": {
             key: {"total_ms": value, "percent": value / elapsed * 100 if elapsed else None}
             for key, value in {**totals, "unattributed_ms": max(0, elapsed - counted)}.items()
+        },
+        "end_to_end_stage_share": {
+            key: {
+                "total_ms": value,
+                "percent": value / end_to_end_elapsed * 100 if end_to_end_elapsed else None,
+            }
+            for key, value in {
+                "pre_operator_ms": pre_operator,
+                **end_to_end_totals,
+                "unattributed_ms": max(
+                    0, end_to_end_elapsed - pre_operator - sum(end_to_end_totals.values())
+                ),
+            }.items()
         },
         "success_rate": sum(r["outcome"] == "done" for r in runs) / len(runs) if runs else None,
         "success_definition": "operator_done; verify Android version against device before acceptance",

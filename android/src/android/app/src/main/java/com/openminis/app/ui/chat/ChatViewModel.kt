@@ -6852,6 +6852,8 @@ class ChatViewModel(
      *   re-entry with `skipCompactCheck`.
      */
     private fun sendMessage(text: String, skipContextCheck: Boolean) {
+        // nanoMuse: include synchronous pre-send/context preparation in Hands latency.
+        val nmReceivedAt = android.os.SystemClock.elapsedRealtime()
         // [T-android-paste-mediaref] `[Pasted#N]` markers are NOT expanded here
         // any more.
         //
@@ -6873,6 +6875,10 @@ class ChatViewModel(
         if (_isStreaming.value) {
             enqueuePrompt(text)
             return
+        }
+        // nanoMuse: compaction resubmits the same instruction, preserving its original clock.
+        if (!skipContextCheck || nmHandsTimeline == null) {
+            nmHandsTimeline = io.github.nanomuse.hands.HandsTimeline(instructionReceived = true, origin = nmReceivedAt)
         }
         // T180: allow attachments-only sends (no caption). Mirrors iOS, where
         // an empty text + non-empty attachments still produces a valid user
@@ -6922,8 +6928,6 @@ class ChatViewModel(
         // inside the send button's tap closure).
         if (_hasInjectedShareContent.value) _hasInjectedShareContent.value = false
 
-        // nanoMuse: accepted user turn, before provider/session setup.
-        nmHandsTimeline = io.github.nanomuse.hands.HandsTimeline(instructionReceived = true)
         val initialProvider = currentProvider
         if (initialProvider == null) {
             _error.value = context.getString(R.string.nm_chat_no_model) // nanoMuse: where to fix it, in the person's language

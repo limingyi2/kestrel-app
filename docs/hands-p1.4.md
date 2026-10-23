@@ -97,3 +97,43 @@ and a foreground Settings app. Compile/unit tests cannot replace these measureme
 | Verified success and return/stay behavior | Pending device measurement | Pending device measurement |
 
 No performance improvement or task success rate is claimed without paired device data.
+
+## Accessibility switch investigation
+
+Reported device: Xiaomi 15 Pro, HyperOS 4. The user reports that the system switch
+became off, rather than an enabled service showing a connection failure. APK version,
+incident time and device logs are not yet available; the specific cause is unresolved.
+
+The source contains no `disableSelf()` or automatic permission-off write in Hands.
+The existing recovery path only adds an enabled service after a user chooses repair.
+The generic authorized Shizuku tool can force-stop a supplied package or write secure
+settings; therefore tool history must also be checked before excluding an agent action.
+[AOSP's force-stop handler](https://android.googlesource.com/platform/frameworks/base.git/+/6953b903c2457a26cd1288691261a2b02ac70a46/services/accessibility/java/com/android/server/accessibility/AccessibilityManagerService.java)
+removes a stopped package's service from the enabled list. This is a possible mechanism,
+not evidence of what happened on this phone. A normal disconnected service and a removed
+grant require different diagnoses; a crash or low-memory exit alone does not identify
+who changed a system setting.
+
+`nanomuse-hands status`, refused calls and run summaries now include read-only
+`accessibility_health`: the grant state, actual service connection, the last 16 lifecycle
+events and up to five Android process exit reasons/timestamps. The lifecycle log contains
+no UI content. Missing/read-failed evidence stays unknown. `onInterrupt` is recorded but
+does not itself mark the connection or grant disabled. No automatic permission recovery
+was added.
+
+After installing this build, collect `nanomuse-hands status` immediately after recurrence,
+before re-enabling the service, plus the installed APK version and approximate incident
+time. Correlate `permission_disabled` versus `enabled_disconnected`, lifecycle and process
+exits with the chat's shell/Shizuku calls. If ADB is available, save these read-only outputs:
+
+```sh
+adb shell settings get secure enabled_accessibility_services
+adb shell dumpsys accessibility
+adb shell dumpsys activity exit-info io.github.limingyi2.kestrel
+adb logcat -d -v threadtime
+```
+
+Inspect system force-stop lines, caller/reason, service disconnection, crash/ANR and
+tool invocations around the incident. Redact unrelated apps, screen contents and private
+data before sharing logs. Background autostart and battery settings are investigation
+variables, not a verified fix for this incident.

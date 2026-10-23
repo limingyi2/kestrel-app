@@ -45,3 +45,22 @@ Android 主 Agent 收齐工具调用后，才交给 shell/offload 调度。`Hand
 | 核实后的成功率及返回或停留行为 | 待真机测量 | 待真机测量 |
 
 没有成对真机数据时，不声称性能改善或任务成功率。
+
+## 无障碍开关关闭调查 {#accessibility-switch-investigation}
+
+用户设备为小米 15 Pro、澎湃 OS 4，确认系统开关实际变为关闭，并非开关仍开启但连接故障。尚无 APK 版本、事发时间及设备日志，本次具体原因未确定。
+
+Hands 源码没有 `disableSelf()` 或自动关闭授权的设置写入。现有恢复路径只在用户选择修复后添加启用项。但通用、经授权的 Shizuku 工具能够强停指定包或写入 secure 设置，排除 Agent 操作前也必须核对工具历史。[AOSP 强停处理代码](https://android.googlesource.com/platform/frameworks/base.git/+/6953b903c2457a26cd1288691261a2b02ac70a46/services/accessibility/java/com/android/server/accessibility/AccessibilityManagerService.java)会从启用列表移除被强停应用的服务。这只是可能机制，不能证明本机这次发生了强停。服务断线与授权移除需要分别诊断；单独出现崩溃或低内存退出，无法确定是谁更改了系统设置。
+
+`nanomuse-hands status`、拒绝运行的结果和 run summary 现包含只读的 `accessibility_health`：系统授权状态、实际服务连接、最近 16 条生命周期事件，以及最多五条 Android 进程退出原因和时间。生命周期记录不包含界面内容。缺失或读取失败的证据保持未知。记录 `onInterrupt`，但不会据此认定连接或授权失效。没有增加自动恢复权限。
+
+安装本构建后，如再次发生，请在重新打开开关前取得 `nanomuse-hands status`，并记录安装版本和大致时间。将 `permission_disabled` 与 `enabled_disconnected`、生命周期及进程退出记录，与聊天中的 shell/Shizuku 调用对齐。如果可以使用 ADB，保存以下只读输出：
+
+```sh
+adb shell settings get secure enabled_accessibility_services
+adb shell dumpsys accessibility
+adb shell dumpsys activity exit-info io.github.limingyi2.kestrel
+adb logcat -d -v threadtime
+```
+
+核对事发前后的系统强停记录、调用方和原因、服务断连、崩溃或 ANR，以及工具调用。分享日志前遮盖其他应用、屏幕内容和隐私信息。后台自启动与省电设置属于调查变量，尚不能称为本次故障的已验证修复。
