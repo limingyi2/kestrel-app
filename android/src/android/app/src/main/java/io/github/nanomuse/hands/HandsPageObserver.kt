@@ -67,6 +67,7 @@ class HandsPageObserver(private val svc: MinisAccessibilityService, private val 
                 if (node.className?.toString()?.contains("ProgressBar") == true) loading = true
             }
             for (i in 0 until node.childCount) {
+                if (truncated) return
                 val child = node.getChild(i) ?: continue
                 try { visit(child, depth + 1) } finally { child.recycle() }
             }

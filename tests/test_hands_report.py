@@ -68,6 +68,32 @@ class HandsReportTest(unittest.TestCase):
         self.assertEqual(result["latencies"]["instruction_to_first_action"]["n"], 0)
         self.assertIsNone(result["runs"][0]["android_action_attempts"])
 
+    def test_end_to_end_shares_include_agent_and_dispatch_before_operator(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "run-summary.json").write_text(
+                json.dumps(
+                    {
+                        "elapsed_ms": 600,
+                        "outcome": "done",
+                        "milestones_ms": {
+                            "instruction_received": 0,
+                            "hands_started": 400,
+                            "task_finished": 1000,
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (root / "trace.jsonl").write_text(
+                '{"timings_ms": {"model_ms": 500}}\n', encoding="utf-8"
+            )
+            result = REPORT.report(root)
+        shares = result["end_to_end_stage_share"]
+        self.assertEqual(shares["pre_operator_ms"]["percent"], 40)
+        self.assertEqual(shares["model_ms"]["percent"], 50)
+        self.assertEqual(shares["unattributed_ms"]["percent"], 10)
+
 
 if __name__ == "__main__":
     unittest.main()
