@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import com.openminis.app.BuildConfig
 import com.openminis.app.logging.AppLogger
-import io.github.nanomuse.cloud.NanoMuseCloud
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -67,7 +66,7 @@ object Hub {
         return raw.trim().ifBlank { "Phone" }.take(60)
     }
 
-    fun webConsoleUrl(context: Context): String = NanoMuseCloud.baseUrl(context).trimEnd('/') + "/app/"
+    fun webConsoleUrl(context: Context): String = HubAccount.relay(context) + "/app/"
 
     // ── the connection ─────────────────────────────────────────────────────
 
@@ -81,21 +80,23 @@ object Hub {
     @Volatile private var client: HubClient? = null
     @Volatile private var appContext: Context? = null
 
-    /**
-     * Cross-device authentication is paused until Kestrel Relay/Bridge is integrated.
-     * Keep this lifecycle hook so the Hub transport can be re-enabled without changing its protocol.
-     */
+    /** Join only after the person explicitly signs in to a Kestrel Relay account. */
     @Synchronized
     fun autoStart(context: Context) {
-        stop(context)
+        if (!enabled(context) || HubAccount.token(context) == null) {
+            stop(context)
+            return
+        }
+        start(context)
     }
 
     @Synchronized
     fun start(context: Context) {
         if (client != null) return
         val app = context.applicationContext
-        val key = NanoMuseCloud.apiKey(app) ?: return
-        val base = NanoMuseCloud.baseUrl(app).trimEnd('/')
+        if (!enabled(app)) return
+        val key = HubAccount.token(app) ?: return
+        val base = HubAccount.relay(app)
         val url = base.replaceFirst("https://", "wss://").replaceFirst("http://", "ws://") + "/v1/hub"
         appContext = app
         val c = HubClient(
@@ -105,9 +106,7 @@ object Hub {
             onCall = { call -> HubActions.handle(app, call) },
             onDevices = { list -> _devices.value = list },
             onState = { on, detail -> _connected.value = on; _detail.value = detail },
-            onProfile = { frame -> io.github.nanomuse.cloud.ProfileSync.onFrame(app, frame) },
-            onSync = { frame -> io.github.nanomuse.sync.ConversationSync.onFrame(app, frame) },
-            onWorking = { frame -> io.github.nanomuse.sync.ConversationSync.onWorkingFrame(app, frame) },
+            // Hub-only accounts do not enable cloud profile or conversation synchronization.
         )
         client = c
         c.start()
@@ -149,7 +148,7 @@ object Hub {
 
     @Throws(HubException::class)
     fun call(to: String, action: String, args: JSONObject = JSONObject(), timeoutMs: Long = 120_000L, onEvent: ((JSONObject) -> Unit)? = null): JSONObject {
-        val c = client ?: throw HubException("disconnected", "this phone is not on the hub; sign in to nanoMuse Cloud and turn on Devices")
+        val c = client ?: throw HubException("disconnected", "This phone is not connected to a Kestrel Relay account")
         return c.call(to, action, args, timeoutMs, onEvent)
     }
 
