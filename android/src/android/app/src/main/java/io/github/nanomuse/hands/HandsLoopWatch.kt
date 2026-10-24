@@ -73,9 +73,9 @@ class HandsLoopWatch(private val noteAt: Int = NOTE_AT, private val stopAt: Int 
 
         /** The same action, as a person would judge it: the same tap give or take a few pixels, the same swipe, the same text. */
         fun sameAction(a: HandsAction, b: HandsAction): Boolean = when (a) {
-            is HandsAction.Click -> b is HandsAction.Click && near(a.at, b.at)
-            is HandsAction.DoubleTap -> b is HandsAction.DoubleTap && near(a.at, b.at)
-            is HandsAction.LongPress -> b is HandsAction.LongPress && near(a.at, b.at)
+            is HandsAction.Click -> b is HandsAction.Click && (sameTarget(a.target, b.target) || near(a.at, b.at))
+            is HandsAction.DoubleTap -> b is HandsAction.DoubleTap && (sameTarget(a.target, b.target) || near(a.at, b.at))
+            is HandsAction.LongPress -> b is HandsAction.LongPress && (sameTarget(a.target, b.target) || near(a.at, b.at))
             is HandsAction.Swipe -> b is HandsAction.Swipe && near(a.from, b.from) && near(a.to, b.to)
             is HandsAction.Scroll -> b is HandsAction.Scroll && a.direction == b.direction
             is HandsAction.InputText -> b is HandsAction.InputText && a.text == b.text
