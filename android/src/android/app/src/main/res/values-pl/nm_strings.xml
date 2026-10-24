@@ -1177,4 +1177,17 @@
     <string name="nm_font_scale_medium">Średni</string>
     <string name="nm_font_scale_large">Duży</string>
     <string name="nm_font_scale_extra_large">Bardzo duży</string>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">To opcjonalne połączenie pozwala urządzeniom odnajdywać się wzajemnie. Lokalny czat, pliki, piaskownica Linux, Skills i MCP działają bez logowania. Klucze API modeli pozostają na tym urządzeniu.</string>
+    <string name="nm_hub_connection_relay">Adres Relay</string>
+    <string name="nm_hub_connection_online">Połączono</string>
+    <string name="nm_hub_connection_offline">Nie połączono</string>
+    <string name="nm_hub_connection_email">E-mail</string>
+    <string name="nm_hub_connection_code">Kod e-mail</string>
+    <string name="nm_hub_connection_sign_in">Zaloguj do Relay</string>
+    <string name="nm_hub_connection_send_code">Wyślij kod</string>
+    <string name="nm_hub_connection_devices">Urządzenia w tym Relay</string>
+    <string name="nm_hub_connection_sign_out">Rozłącz i wyloguj</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · online</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · offline</string>
 </resources>

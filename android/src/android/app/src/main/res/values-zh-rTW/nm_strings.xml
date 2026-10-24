@@ -1135,4 +1135,17 @@
     <string name="nm_font_scale_medium">中</string>
     <string name="nm_font_scale_large">大</string>
     <string name="nm_font_scale_extra_large">特大</string>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">這是選用的裝置連線功能。聊天、檔案、Linux 沙箱、Skills 和 MCP 無需登入即可使用。模型 API Key 僅儲存在此裝置。</string>
+    <string name="nm_hub_connection_relay">Relay 位址</string>
+    <string name="nm_hub_connection_online">已連線</string>
+    <string name="nm_hub_connection_offline">未連線</string>
+    <string name="nm_hub_connection_email">電子郵件</string>
+    <string name="nm_hub_connection_code">電子郵件驗證碼</string>
+    <string name="nm_hub_connection_sign_in">登入 Relay</string>
+    <string name="nm_hub_connection_send_code">傳送驗證碼</string>
+    <string name="nm_hub_connection_devices">此 Relay 上的裝置</string>
+    <string name="nm_hub_connection_sign_out">中斷連線並登出</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · 線上</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · 離線</string>
 </resources>

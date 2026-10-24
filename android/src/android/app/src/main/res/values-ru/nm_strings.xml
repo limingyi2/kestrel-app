@@ -1177,4 +1177,17 @@
     <string name="nm_font_scale_medium">Средний</string>
     <string name="nm_font_scale_large">Крупный</string>
     <string name="nm_font_scale_extra_large">Очень крупный</string>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">Это необязательное подключение позволяет устройствам находить друг друга. Локальный чат, файлы, песочница Linux, Skills и MCP работают без входа. Ключи API моделей остаются на этом устройстве.</string>
+    <string name="nm_hub_connection_relay">Адрес Relay</string>
+    <string name="nm_hub_connection_online">Подключено</string>
+    <string name="nm_hub_connection_offline">Не подключено</string>
+    <string name="nm_hub_connection_email">Электронная почта</string>
+    <string name="nm_hub_connection_code">Код из письма</string>
+    <string name="nm_hub_connection_sign_in">Войти в Relay</string>
+    <string name="nm_hub_connection_send_code">Отправить код</string>
+    <string name="nm_hub_connection_devices">Устройства в этом Relay</string>
+    <string name="nm_hub_connection_sign_out">Отключиться и выйти</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · в сети</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · не в сети</string>
 </resources>

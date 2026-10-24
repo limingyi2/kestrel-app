@@ -1165,4 +1165,17 @@
     <string name="nm_font_scale_medium">中</string>
     <string name="nm_font_scale_large">大きい</string>
     <string name="nm_font_scale_extra_large">とても大きい</string>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">この任意の接続を使うと、デバイス同士を見つけられます。ローカルチャット、ファイル、Linux サンドボックス、Skills、MCP はログインなしで利用できます。モデル API キーはこのデバイスに保存されます。</string>
+    <string name="nm_hub_connection_relay">Relay アドレス</string>
+    <string name="nm_hub_connection_online">接続済み</string>
+    <string name="nm_hub_connection_offline">未接続</string>
+    <string name="nm_hub_connection_email">メールアドレス</string>
+    <string name="nm_hub_connection_code">メール確認コード</string>
+    <string name="nm_hub_connection_sign_in">Relay にログイン</string>
+    <string name="nm_hub_connection_send_code">コードを送信</string>
+    <string name="nm_hub_connection_devices">この Relay のデバイス</string>
+    <string name="nm_hub_connection_sign_out">切断してログアウト</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · オンライン</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · オフライン</string>
 </resources>

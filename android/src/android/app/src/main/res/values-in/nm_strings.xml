@@ -1165,4 +1165,17 @@
     <string name="nm_font_scale_medium">Sedang</string>
     <string name="nm_font_scale_large">Besar</string>
     <string name="nm_font_scale_extra_large">Sangat besar</string>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">Koneksi opsional ini membantu perangkat Anda saling menemukan. Obrolan lokal, file, sandbox Linux, Skills, dan MCP berfungsi tanpa masuk. Kunci API model tetap tersimpan di perangkat ini.</string>
+    <string name="nm_hub_connection_relay">Alamat Relay</string>
+    <string name="nm_hub_connection_online">Terhubung</string>
+    <string name="nm_hub_connection_offline">Tidak terhubung</string>
+    <string name="nm_hub_connection_email">Email</string>
+    <string name="nm_hub_connection_code">Kode email</string>
+    <string name="nm_hub_connection_sign_in">Masuk ke Relay</string>
+    <string name="nm_hub_connection_send_code">Kirim kode</string>
+    <string name="nm_hub_connection_devices">Perangkat di Relay ini</string>
+    <string name="nm_hub_connection_sign_out">Putuskan koneksi dan keluar</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · online</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · offline</string>
 </resources>
