@@ -11,16 +11,14 @@ class HandsLoopWatchTest {
     private fun screen(seed: Int): IntArray = IntArray(240) { (it * 7 + seed) % 256 }
     private fun tap(x: Int, y: Int, label: String = "OK") = HandsAction.Click(HandsAction.Point(x, y), label)
 
-    @Test fun `the same tap on the same screen notes at three and stops at six`() {
+    @Test fun `the same tap on the same screen notes at two and stops at four`() {
         val w = HandsLoopWatch()
         val s = screen(0)
         assertEquals(Verdict.FINE, w.step(s, tap(500, 500)))
-        assertEquals(Verdict.FINE, w.step(s, tap(500, 500)))
+        assertEquals(Verdict.NOTE, w.step(s, tap(500, 500)))
         assertEquals(Verdict.NOTE, w.step(s, tap(510, 495))) // a few pixels apart is the same tap
-        assertEquals(Verdict.NOTE, w.step(s, tap(500, 500)))
-        assertEquals(Verdict.NOTE, w.step(s, tap(500, 500)))
         assertEquals(Verdict.STOP, w.step(s, tap(500, 500)))
-        assertEquals(6, w.streak)
+        assertEquals(4, w.streak)
     }
 
 
