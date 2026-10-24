@@ -328,26 +328,30 @@ class HandsOperator(private val context: Context) {
                     return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
                 }
                 val turn = Turn(currentTurnText, jpeg.bytes, reply)
-                turns += turn
+                // Keep malformed model output out of future context; lastResult carries the repair hint.
                 val parsed = try {
                     HandsAction.parse(reply, modelResponse.stopReason)
                 } catch (e: HandsAction.Companion.FormatError) {
+                    val failedStep = steps
+                    // A malformed response did not perform an action and must not consume maxSteps.
+                    steps = (steps - 1).coerceAtLeast(0)
                     AppLogger.warning(TAG, "source=${if (e.failure == HandsAction.Companion.ParseFailure.PROVIDER_REFUSAL) "provider_refusal" else "response_parse_failure"} category=${e.failure} provider=${model.instance.label} model=${model.modelId} stopReason=${modelResponse.stopReason ?: "none"} chars=${reply.length}")
                     if (e.failure == HandsAction.Companion.ParseFailure.PROVIDER_REFUSAL) {
-                        trace(traceDir, steps, "", reply, "provider_refusal", lastScreen, timings)
+                        trace(traceDir, failedStep, "", reply, "provider_refusal", lastScreen, timings)
                         return finish(Outcome.Failed("the selected screen model provider refused the request"), steps, runId, lastScreen, traceDir, log, model.label)
                     }
                     formatErrors++
                     if (formatErrors >= 3) {
-                        trace(traceDir, steps, "", reply, "model_format_failed:${e.failure};stop_reason=${modelResponse.stopReason ?: "none"};reply_chars=${reply.length}", lastScreen, timings)
+                        trace(traceDir, failedStep, "", reply, "model_format_failed:${e.failure};stop_reason=${modelResponse.stopReason ?: "none"};reply_chars=${reply.length}", lastScreen, timings)
                         return finish(Outcome.Failed("the screen model returned ${e.failure.name.lowercase().replace('_', ' ')} three times (${e.message})"), steps, runId, lastScreen, traceDir, log, model.label)
                     }
                     lastResult = "your reply could not be read (${e.failure}: ${e.message}); answer with `Thought:` and one JSON `Action:` only."
-                    log += "step $steps: unreadable reply (${e.failure})"
-                    trace(traceDir, steps, "", reply, "response_parse_retry:${e.failure};stop_reason=${modelResponse.stopReason ?: "none"};reply_chars=${reply.length}", lastScreen, timings)
+                    log += "attempt $failedStep: unreadable reply (${e.failure}); no action was performed"
+                    trace(traceDir, failedStep, "", reply, "response_parse_retry:${e.failure};stop_reason=${modelResponse.stopReason ?: "none"};reply_chars=${reply.length}", lastScreen, timings)
                     continue
                 }
                 formatErrors = 0
+                turns += turn
                 val action = parsed.action
                 // Content events during observation are animations or counters, not a page
                 // switch. A tap with a live unique node acts (the executor re-resolves the
