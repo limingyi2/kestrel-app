@@ -6,6 +6,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Test
 
 class HandsActionTest {
@@ -22,6 +23,41 @@ class HandsActionTest {
         assertEquals(HandsAction.Point(500, 120), a.at)
         assertEquals("搜索", a.target)
         assertEquals("搜索", a.tapTarget)
+    }
+
+    @Test fun `standalone normalized JSON action works without marker`() {
+        val p = HandsAction.parse("""{"action_type":"click","coordinate":[420,180],"target":"搜索"}""")
+        assertTrue(p.action is HandsAction.Click)
+        assertEquals(HandsAction.Point(420, 180), (p.action as HandsAction.Click).at)
+    }
+
+    @Test fun `standalone JSON code fence works without marker`() {
+        val p = HandsAction.parse("Thought: Search is visible.\n```json\n{\"action_type\":\"input_text\",\"text\":\"牛奶\",\"field\":\"搜索框\"}\n```")
+        assertEquals(HandsAction.InputText("牛奶", "搜索框"), p.action)
+        assertEquals("Search is visible.", p.thought)
+    }
+
+    @Test fun `parse errors distinguish empty missing invalid truncated and provider refusal`() {
+        fun failure(reply: String, stopReason: String? = null) = try {
+            HandsAction.parse(reply, stopReason)
+            fail("expected FormatError")
+            HandsAction.Companion.ParseFailure.INVALID_ACTION
+        } catch (e: HandsAction.Companion.FormatError) { e.failure }
+
+        assertEquals(HandsAction.Companion.ParseFailure.EMPTY_RESPONSE, failure("  "))
+        assertEquals(HandsAction.Companion.ParseFailure.MISSING_ACTION, failure("Tap at x=420 y=180"))
+        assertEquals(HandsAction.Companion.ParseFailure.INVALID_JSON, failure("Action: {not json}"))
+        assertEquals(HandsAction.Companion.ParseFailure.TRUNCATED, failure("Action: {\"action_type\":\"click\"", "length"))
+        assertEquals(HandsAction.Companion.ParseFailure.TRUNCATED, failure("Only part of the reply arrived", "max_tokens"))
+        assertEquals(HandsAction.Companion.ParseFailure.PROVIDER_REFUSAL, failure("The request was rejected because it was considered high risk"))
+        assertEquals(HandsAction.Companion.ParseFailure.PROVIDER_REFUSAL, failure("", "content_filter"))
+        assertEquals(HandsAction.Companion.ParseFailure.INVALID_JSON, failure("{\"action_type\":\"back\"} arbitrary trailing text"))
+    }
+
+    @Test fun `natural language coordinates are never guessed`() {
+        assertThrows(HandsAction.Companion.FormatError::class.java) {
+            HandsAction.parse("Tap the search icon at x=420 y=180")
+        }
     }
 
     @Test fun `grid maps to pixels`() {

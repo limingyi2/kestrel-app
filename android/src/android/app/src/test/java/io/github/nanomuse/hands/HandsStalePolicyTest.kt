@@ -7,14 +7,18 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * How a decided action is judged after the page moved while it was being decided. Regression
- * for the Pinduoduo symptom: an animated home page fired content events constantly, every
- * decision was skipped as stale, and the run re-screenshotted and re-decided on a
- * near-identical screen without ever tapping.
+ * How a decided action is judged after the page moved while it was being decided.
  *
- * The other side of the coin is also regression-covered here: a coordinate-fallback tap
- * cannot act on content-changed pixels, and a `status` verdict may not accept completion
- * about a screen whose window has already switched away.
+ * Regression history this suite guards:
+ * - P1.6: a content event during observation threw every decision away; an animated home
+ *   page looped screenshot → decide → discard without ever tapping (invisible to the loop
+ *   watch, which only sees executed actions).
+ * - PR #7 first cut: the whole-image byte compare failed forever on animated pages, the
+ *   window-switch re-observation had no bound, and alternating strategies reset the
+ *   coordinate budget — the run kept "thinking" and never tapped.
+ * - P0 restore: local evidence (the screenshot region around the point, or a live label)
+ *   unblocks honest taps, and ONE shared budget bounds every rejection whatever refused
+ *   the step, reset only by an actually executed action.
  */
 class HandsStalePolicyTest {
 
@@ -25,35 +29,30 @@ class HandsStalePolicyTest {
     }
 
     @Test fun `content events alone do not discard a node-grounded tap`() {
-        // the case the old skip looped on: animations, clocks, carousels
         assertEquals(Verdict.ACT, HandsStalePolicy.afterDecision(windowChanged = false, contentChanged = true, actsOnScreen = true, tapGrounded = true))
     }
 
-    @Test fun `content events plus no unique node demand coordinate freshness proof`() {
-        // the coordinate fallback must not tap pixels that may be stale
+    @Test fun `content events plus no unique node demand local evidence`() {
         assertEquals(Verdict.VERIFY, HandsStalePolicy.afterDecision(windowChanged = false, contentChanged = true, actsOnScreen = true, tapGrounded = false))
     }
 
     @Test fun `an unchanged screen needs no coordinate verification`() {
-        assertEquals(Verdict.ACT, HandsStalePolicy.afterDecision(windowChanged = false, contentChanged = false, actsOnScreen = true, tapGrounded = null))
+        assertEquals(Verdict.ACT, HandsStalePolicy.afterDecision(windowChanged = false, contentChanged = false, actsOnScreen = true))
     }
 
     @Test fun `content events do not gate non-tap actions that revalidate themselves`() {
-        // typing re-finds the focused field, Enter requires focus, scroll sweeps live
         assertEquals(Verdict.ACT, HandsStalePolicy.afterDecision(windowChanged = false, contentChanged = true, actsOnScreen = true, tapGrounded = null))
     }
 
     @Test fun `a status verdict is re-verified after a window switch`() {
-        // completion declared about a screen that is gone is not accepted as-is
-        assertEquals(Verdict.REOBSERVE, HandsStalePolicy.afterDecision(windowChanged = true, contentChanged = true, actsOnScreen = true, tapGrounded = null))
+        assertEquals(Verdict.REOBSERVE, HandsStalePolicy.afterDecision(windowChanged = true, contentChanged = true, actsOnScreen = true))
     }
 
     @Test fun `a status verdict stands on content-only changes`() {
-        assertEquals(Verdict.ACT, HandsStalePolicy.afterDecision(windowChanged = false, contentChanged = true, actsOnScreen = true, tapGrounded = null))
+        assertEquals(Verdict.ACT, HandsStalePolicy.afterDecision(windowChanged = false, contentChanged = true, actsOnScreen = true))
     }
 
     @Test fun `a paused or waiting answer survives a window change`() {
-        // Wait, TakeOver and AskUser neither act on the changed screen nor state about it
         assertEquals(Verdict.ACT, HandsStalePolicy.afterDecision(windowChanged = true, contentChanged = true, actsOnScreen = false))
     }
 
@@ -75,40 +74,46 @@ class HandsStalePolicyTest {
         assertEquals(Verdict.ACT, HandsStalePolicy.beforeGesture(stopped = false, windowChanged = false, nodeMoved = false))
     }
 
-    // ── the bounded coordinate fallback ────────────────────────────────────
+    // ── local evidence: the region around the point ─────────────────────────
 
-    @Test fun `a live label at the coordinate rescues the tap at any attempt count`() {
-        assertEquals(
-            HandsStalePolicy.CoordinateFallback.ACT_ON_LABEL,
-            HandsStalePolicy.afterFreshnessFailure(liveLabelMatches = true, failedAttempts = 1),
-        )
-        assertEquals(
-            HandsStalePolicy.CoordinateFallback.ACT_ON_LABEL,
-            HandsStalePolicy.afterFreshnessFailure(liveLabelMatches = true, failedAttempts = HandsStalePolicy.MAX_COORDINATE_VERIFY_FAILS),
-        )
+    private fun grid(fill: Int) = IntArray(12 * 20) { fill }
+
+    @Test fun `an animation elsewhere leaves the region around the point provable`() {
+        val old = grid(100)
+        val new = grid(100)
+        // the top banner (first two rows) cycles hard — the search box at mid-screen does not
+        for (c in 0 until 12) { new[c] = (c * 37) % 256; new[12 + c] = (c * 91) % 256 }
+        assertTrue(HandsStalePolicy.regionUnchanged(old, new, fracX = 0.5, fracY = 0.5))
     }
 
-    @Test fun `no label proof reobserves below the attempt ceiling`() {
-        assertEquals(
-            HandsStalePolicy.CoordinateFallback.REOBSERVE,
-            HandsStalePolicy.afterFreshnessFailure(liveLabelMatches = false, failedAttempts = 1),
-        )
-        assertEquals(
-            HandsStalePolicy.CoordinateFallback.REOBSERVE,
-            HandsStalePolicy.afterFreshnessFailure(liveLabelMatches = false, failedAttempts = HandsStalePolicy.MAX_COORDINATE_VERIFY_FAILS - 1),
-        )
+    @Test fun `the target region itself changing is no evidence`() {
+        val old = grid(100)
+        val new = grid(100)
+        // the control under the point flipped: every cell of its rows changed
+        for (r in 8..12) for (c in 3..8) new[r * 12 + c] = 200
+        assertFalse(HandsStalePolicy.regionUnchanged(old, new, fracX = 0.5, fracY = 0.5))
     }
 
-    @Test fun `at the attempt ceiling the run gives up with the reason`() {
-        assertEquals(
-            HandsStalePolicy.CoordinateFallback.EXHAUSTED,
-            HandsStalePolicy.afterFreshnessFailure(liveLabelMatches = false, failedAttempts = HandsStalePolicy.MAX_COORDINATE_VERIFY_FAILS),
-        )
-        assertEquals(
-            HandsStalePolicy.CoordinateFallback.EXHAUSTED,
-            HandsStalePolicy.afterFreshnessFailure(liveLabelMatches = false, failedAttempts = 10),
-        )
+    @Test fun `a cursor blink inside the window is tolerated`() {
+        val old = grid(100)
+        val new = grid(100)
+        new[10 * 12 + 6] = 60 // one cell flickers
+        assertTrue(HandsStalePolicy.regionUnchanged(old, new, fracX = 0.5, fracY = 0.5))
     }
+
+    @Test fun `mismatched or empty grids are no evidence`() {
+        assertFalse(HandsStalePolicy.regionUnchanged(grid(100), IntArray(12 * 19) { 100 }, 0.5, 0.5))
+        assertFalse(HandsStalePolicy.regionUnchanged(IntArray(0), IntArray(0), 0.5, 0.5))
+    }
+
+    @Test fun `the window hugs the screen edges without leaving the grid`() {
+        val old = grid(100)
+        val new = grid(100)
+        assertTrue(HandsStalePolicy.regionUnchanged(old, new, fracX = 0.0, fracY = 0.0))
+        assertTrue(HandsStalePolicy.regionUnchanged(old, new, fracX = 1.0, fracY = 1.0))
+    }
+
+    // ── the label proof ─────────────────────────────────────────────────────
 
     @Test fun `a label match reads the way a person would accept`() {
         assertTrue(HandsStalePolicy.labelMatchesTarget("搜索", "搜索 商品"))
@@ -123,59 +128,81 @@ class HandsStalePolicyTest {
     // ── behavior: the Pinduoduo home page, simulated end to end ────────────
 
     /**
-     * Drives the exact decision sequence HandsOperator runs per step — observe (content
-     * events always fire), decide a coordinate tap, verify pixels, fall back to the label —
-     * and asserts the two properties the runtime needs: with a live label under the point
-     * the tap happens on every attempt (no re-observation churn), and without one the run
-     * is bounded: exactly MAX_COORDINATE_VERIFY_FAILS verify failures, then a terminal
-     * verdict, never an unbounded loop.
+     * Drives the exact decision sequence HandsOperator runs per step against a page that
+     * animates everywhere and never settles, and asserts the P0 contract:
+     * - an honest coordinate tap (its region static, label proof unneeded) executes on the
+     *   first attempt — the P1.6 and PR#7-lockout behavior of never tapping is gone;
+     * - whatever cannot be proven ends the run after exactly MAX_STALE_REJECTIONS refused
+     *   steps — "keeps thinking" forever is impossible;
+     * - rejections accumulate across refusal kinds and strategies: only an executed action
+     *   restarts the budget.
      */
-    @Test fun `a busy page with a matching label taps every time, without one the run ends bounded`() {
-        fun simulateStep(labelUnderPoint: String?, failuresSoFar: Int): Pair<HandsStalePolicy.Verdict, HandsStalePolicy.CoordinateFallback?> {
+    @Test fun `an honest tap on an animated page executes at once, an unprovable one ends the run bounded`() {
+        // per step: the observer fires (content always changing), no unique node matches,
+        // the model insists on the coordinate tap
+        fun decide(labelUnderPoint: String?, regionOk: Boolean, rejections: Int): String {
             val verdict = HandsStalePolicy.afterDecision(
                 windowChanged = false, contentChanged = true, actsOnScreen = true, tapGrounded = false,
             )
-            if (verdict != Verdict.VERIFY) return verdict to null
-            val fallback = HandsStalePolicy.afterFreshnessFailure(
-                liveLabelMatches = labelUnderPoint != null &&
-                    HandsStalePolicy.labelMatchesTarget("搜索商品", labelUnderPoint),
-                failedAttempts = failuresSoFar + 1,
-            )
-            return verdict to fallback
-        }
-
-        // the search entry is where the model said it is: every attempt taps, no budget burn
-        repeat(HandsStalePolicy.MAX_COORDINATE_VERIFY_FAILS + 2) { attempt ->
-            val (_, fallback) = simulateStep("搜索商品", 0)
-            assertEquals(HandsStalePolicy.CoordinateFallback.ACT_ON_LABEL, fallback)
-        }
-
-        // the point no longer names the target: re-observe, and the third failure ends the run
-        var failures = 0
-        var exhausted = false
-        repeat(10) {
-            when (simulateStep(null, failures).second) {
-                HandsStalePolicy.CoordinateFallback.REOBSERVE -> failures++
-                HandsStalePolicy.CoordinateFallback.EXHAUSTED -> { exhausted = true; return@repeat }
-                else -> {}
+            if (verdict == Verdict.VERIFY) {
+                val labelProof = labelUnderPoint != null && HandsStalePolicy.labelMatchesTarget("搜索", labelUnderPoint)
+                if (regionOk || labelProof) return "TAP"
+                val rejections = rejections + 1
+                return if (HandsStalePolicy.rejectionsExhausted(rejections)) "FAIL" else "REOBSERVE"
             }
+            return "ACT"
         }
-        assertTrue(exhausted)
-        // two re-observations, then the third failed verify terminates the run
-        assertEquals(HandsStalePolicy.MAX_COORDINATE_VERIFY_FAILS - 1, failures)
+
+        // the search entrance region is static although the banner animates: taps at once
+        assertEquals("TAP", decide(labelUnderPoint = null, regionOk = true, rejections = 0))
+        // the pixels around the point moved but the live label names the target: taps too
+        assertEquals("TAP", decide(labelUnderPoint = "搜索商品或店铺", regionOk = false, rejections = 2))
+        // nothing proves the point: exactly MAX_STALE_REJECTIONS refusals, then a terminal stop
+        var rejections = 0
+        var outcome = ""
+        var step = 0
+        while (step < 10) {
+            step++
+            outcome = decide(labelUnderPoint = null, regionOk = false, rejections = rejections)
+            if (outcome == "REOBSERVE") rejections++
+            if (outcome == "FAIL") { rejections++; break } // the terminal refusal is one too
+        }
+        assertEquals("FAIL", outcome)
+        assertEquals(HandsStalePolicy.MAX_STALE_REJECTIONS, rejections)
     }
 
-    /** A model that changes tack (a node-grounded tap, a scroll) gets a fresh verify budget. */
-    @Test fun `changing strategy resets the coordinate verify budget`() {
-        var failures = 0
-        // two failures on the coordinate fallback …
-        repeat(2) {
-            failures++
-            assertEquals(HandsStalePolicy.CoordinateFallback.REOBSERVE, HandsStalePolicy.afterFreshnessFailure(false, failures))
+    /**
+     * The window-switch rejection path is bounded as well — the exact P0 "keeps thinking,
+     * never taps" loop, where every step was discarded as stale and nothing but the 30-minute
+     * run limit ever stopped it.
+     */
+    @Test fun `a page that keeps switching windows ends the run instead of thinking forever`() {
+        var rejections = 0
+        var ended = false
+        var step = 0
+        while (step < 10 && !ended) {
+            step++
+            // every step: a window event fired during observation, the model re-decides the tap
+            val verdict = HandsStalePolicy.afterDecision(
+                windowChanged = true, contentChanged = true, actsOnScreen = true, tapGrounded = true,
+            )
+            if (verdict == Verdict.REOBSERVE) {
+                rejections++
+                if (HandsStalePolicy.rejectionsExhausted(rejections)) ended = true
+            }
         }
-        // … then the model taps a node it found: budget resets (tapGrounded != false), so a
-        // later coordinate fallback starts over at one, not three.
-        failures = 0
-        assertEquals(HandsStalePolicy.CoordinateFallback.REOBSERVE, HandsStalePolicy.afterFreshnessFailure(false, failures + 1))
+        assertTrue(ended)
+        assertEquals(HandsStalePolicy.MAX_STALE_REJECTIONS, rejections)
+    }
+
+    /** Only an executed action restarts the budget — alternating rejections cannot reset it. */
+    @Test fun `alternating refusal kinds and strategies still exhaust the shared budget`() {
+        var rejections = 0
+        // window-change rejection, then a coordinate rejection, then a moved-node rejection —
+        // three different refusals, one budget
+        repeat(2) { rejections++ } // stale_observation_skipped + stale_coordinate_rejected
+        assertFalse(HandsStalePolicy.rejectionsExhausted(rejections))
+        rejections++ // target_reconfirmation_failed
+        assertTrue(HandsStalePolicy.rejectionsExhausted(rejections))
     }
 }
