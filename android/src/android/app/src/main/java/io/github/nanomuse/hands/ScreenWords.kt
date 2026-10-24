@@ -240,9 +240,16 @@ object ScreenWords {
         return listOf(text, desc).filter { it.isNotEmpty() }.joinToString(" ").ifBlank { null }
     }
 
-    private fun editableLabel(node: AccessibilityNodeInfo): String =
-        listOfNotNull(node.hintText?.toString()?.trim(), node.contentDescription?.toString()?.trim(), node.text?.toString()?.trim())
-            .firstOrNull { it.isNotEmpty() }.orEmpty()
+    /** Semantic field name only; never use node.text because it is the user's current input. */
+    private fun editableLabel(node: AccessibilityNodeInfo): String {
+        val hint = node.hintText?.toString()?.trim().orEmpty()
+        if (hint.isNotEmpty()) return hint
+        // Some apps mirror the current value into contentDescription. Only use it while the
+        // field is empty; once populated, use a generic role label instead of leaking input.
+        val description = node.contentDescription?.toString()?.trim().orEmpty()
+        if (node.text.isNullOrEmpty() && description.isNotEmpty()) return description
+        return if (node.className?.toString()?.contains("EditText", ignoreCase = true) == true) "text field" else "editable field"
+    }
 
     private fun editableSecurityLabel(node: AccessibilityNodeInfo): String {
         val metadata = listOfNotNull(node.hintText?.toString()?.trim(), node.contentDescription?.toString()?.trim())
