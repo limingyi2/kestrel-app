@@ -27,9 +27,15 @@ class TapWordsTest {
     }
 
     @Test fun `ordinary taps pass`() {
-        for (label in listOf("", "搜索", "查询", "北京南", "Next", "OK", "详情", "08:00 G1234", "筛选")) {
+        for (label in listOf("", "搜索", "查询", "北京南", "Next", "OK", "详情", "08:00 G1234", "筛选", "搜索牛奶", "按价格排序", "查看商品图片", "商品详情")) {
             assertNull(label, TapWords.classify(label))
         }
+    }
+
+    @Test fun `ordinary shopping search and image viewing are not false risk approvals`() {
+        assertNull(TapWords.classify("搜索牛奶", "拼多多 搜索 牛奶"))
+        assertNull(TapWords.classify("按价格查看", "商品图片 ¥19.9"))
+        assertEquals(RiskClass.MONEY, TapWords.classify("查看商品", "立即购买"))
     }
 
     @Test fun `money outranks the rest`() {

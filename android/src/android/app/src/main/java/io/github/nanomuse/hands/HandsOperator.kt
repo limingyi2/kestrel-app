@@ -282,13 +282,13 @@ class HandsOperator(private val context: Context) {
                 capsule.working(steps, context.getString(com.openminis.app.R.string.nm_hands_deciding))
                 val modelStarted = SystemClock.elapsedRealtime()
                 modelCallCount++
-                val reply = try {
+                val modelResponse = try {
                     runBlocking {
                         val callJob = currentCoroutineContext()[Job]
                         modelCall.set(callJob)
                         try {
                             withTimeout(MODEL_TIMEOUT_MS) {
-                                provider.sendMessage(messages, system, maxTokens = 1024, temperature = 0.0, thinkingLevel = ThinkingLevel.OFF).text
+                                provider.sendMessage(messages, system, maxTokens = HANDS_MAX_OUTPUT_TOKENS, temperature = 0.0, thinkingLevel = ThinkingLevel.OFF)
                             }
                         } finally {
                             modelCall.compareAndSet(callJob, null)
@@ -302,8 +302,13 @@ class HandsOperator(private val context: Context) {
                         return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
                     }
                     log += "step $steps timing: model=${timings["model_ms"]}ms (failed)"
+                    if (HandsAction.isProviderRefusal(t.message.orEmpty())) {
+                        AppLogger.warning(TAG, "source=provider_refusal provider=${model.instance.label} model=${model.modelId} error=${t.javaClass.simpleName}")
+                        trace(traceDir, steps, "", "", "provider_refusal", lastScreen, timings)
+                        return finish(Outcome.Failed("the selected screen model provider refused the request"), steps, runId, lastScreen, traceDir, log, model.label)
+                    }
                     modelErrors++
-                    AppLogger.warning(TAG, "model call failed: ${t.message}")
+                    AppLogger.warning(TAG, "source=provider_call_failure provider=${model.instance.label} model=${model.modelId} error=${t.javaClass.simpleName}: ${t.message}")
                     if (modelErrors >= 3) {
                         val message = "the screen model failed three times: ${t.message}"
                         trace(traceDir, steps, "", "", message, lastScreen, timings)
@@ -316,6 +321,7 @@ class HandsOperator(private val context: Context) {
                 }
                 timings["model_ms"] = SystemClock.elapsedRealtime() - modelStarted
                 modelTotalMs += timings["model_ms"] ?: 0L
+                val reply = modelResponse.text
                 timeline.mark("first_visual_response")
                 if (stop.get()) {
                     trace(traceDir, steps, "", "", "stopped_after_model", lastScreen, timings)
@@ -324,16 +330,21 @@ class HandsOperator(private val context: Context) {
                 val turn = Turn(currentTurnText, jpeg.bytes, reply)
                 turns += turn
                 val parsed = try {
-                    HandsAction.parse(reply)
+                    HandsAction.parse(reply, modelResponse.stopReason)
                 } catch (e: HandsAction.Companion.FormatError) {
+                    AppLogger.warning(TAG, "source=${if (e.failure == HandsAction.Companion.ParseFailure.PROVIDER_REFUSAL) "provider_refusal" else "response_parse_failure"} category=${e.failure} provider=${model.instance.label} model=${model.modelId} stopReason=${modelResponse.stopReason ?: "none"} chars=${reply.length}")
+                    if (e.failure == HandsAction.Companion.ParseFailure.PROVIDER_REFUSAL) {
+                        trace(traceDir, steps, "", reply, "provider_refusal", lastScreen, timings)
+                        return finish(Outcome.Failed("the selected screen model provider refused the request"), steps, runId, lastScreen, traceDir, log, model.label)
+                    }
                     formatErrors++
                     if (formatErrors >= 3) {
-                        trace(traceDir, steps, "", reply, "model_format_failed", lastScreen, timings)
-                        return finish(Outcome.Failed("the screen model did not answer in the action format (${e.message})"), steps, runId, lastScreen, traceDir, log, model.label)
+                        trace(traceDir, steps, "", reply, "model_format_failed:${e.failure};stop_reason=${modelResponse.stopReason ?: "none"};reply_chars=${reply.length}", lastScreen, timings)
+                        return finish(Outcome.Failed("the screen model returned ${e.failure.name.lowercase().replace('_', ' ')} three times (${e.message})"), steps, runId, lastScreen, traceDir, log, model.label)
                     }
-                    lastResult = "your reply could not be read (${e.message}); answer with `Thought:` and one JSON `Action:` only."
-                    log += "step $steps: unreadable reply"
-                    trace(traceDir, steps, "", reply, lastResult, lastScreen, timings)
+                    lastResult = "your reply could not be read (${e.failure}: ${e.message}); answer with `Thought:` and one JSON `Action:` only."
+                    log += "step $steps: unreadable reply (${e.failure})"
+                    trace(traceDir, steps, "", reply, "response_parse_retry:${e.failure};stop_reason=${modelResponse.stopReason ?: "none"};reply_chars=${reply.length}", lastScreen, timings)
                     continue
                 }
                 formatErrors = 0
@@ -477,7 +488,7 @@ class HandsOperator(private val context: Context) {
                         timings["risk_approval_ms"] = SystemClock.elapsedRealtime() - approvalStarted
                         if (gate.denied != null) {
                             log += "step $steps timing: " + timings.entries.joinToString { "${it.key}=${it.value}ms" }
-                            trace(traceDir, steps, parsed.thought, reply, "refused: ${gate.denied}", lastScreen, timings)
+                            trace(traceDir, steps, parsed.thought, reply, "risk_approval_denied: ${gate.denied}", lastScreen, timings)
                             return finish(Outcome.Infeasible("the user did not allow the tap “${gate.shown.take(40)}” — ${gate.denied}"), steps, runId, lastScreen, traceDir, log, model.label)
                         }
                         // A remembered approval, or a payment that ran on one: the chat model
@@ -593,7 +604,7 @@ class HandsOperator(private val context: Context) {
                         timings["risk_approval_ms"] = SystemClock.elapsedRealtime() - approvalStarted
                         if (gate.denied != null) {
                             log += "step $steps timing: " + timings.entries.joinToString { "${it.key}=${it.value}ms" }
-                            trace(traceDir, steps, parsed.thought, reply, "refused: ${gate.denied}", lastScreen, timings)
+                            trace(traceDir, steps, parsed.thought, reply, "risk_approval_denied: ${gate.denied}", lastScreen, timings)
                             return finish(Outcome.Infeasible("the user did not allow sending with Enter — ${gate.denied}"), steps, runId, lastScreen, traceDir, log, model.label)
                         }
                         gate.notice?.let { log += it }
@@ -1120,6 +1131,9 @@ class HandsOperator(private val context: Context) {
         private const val SHOT_WIDTH = 720
         private const val JPEG_QUALITY = 78
         private const val HISTORY_IMAGES = 1
+        // Keep the configured screen-model request unchanged until device traces show a
+        // provider-specific incompatibility; the returned finish reason is now recorded.
+        private const val HANDS_MAX_OUTPUT_TOKENS = 1024
         private const val MODEL_TIMEOUT_MS = 90_000L
         private const val TAKE_OVER_TIMEOUT_MS = 5 * 60_000L
         private const val MAX_RUN_MS = 30 * 60_000L

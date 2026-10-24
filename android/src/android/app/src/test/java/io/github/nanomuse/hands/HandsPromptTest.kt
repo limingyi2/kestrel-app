@@ -22,6 +22,12 @@ class HandsPromptTest {
         assertTrue(prompt.contains("Never type a password"))
     }
 
+    @Test fun `ordinary product search and image viewing remain read-only`() {
+        val prompt = HandsPrompt.system("search milk and view products", emptyList(), "Kestrel", "Chinese")
+        assertTrue(prompt.contains("search, sorting, and viewing products or images are read-only"))
+        assertTrue(prompt.contains("does not change approval for any actual sensitive action"))
+    }
+
     @Test fun `the turn text carries the last result and quotes controls as untrusted`() {
         val text = HandsPrompt.turnText(3, "tap “搜索” was performed.", listOf("clickable: 搜索"))
         assertTrue(text.contains("Step 3."))

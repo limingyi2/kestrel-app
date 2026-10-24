@@ -77,7 +77,9 @@ sealed class HandsAction {
         /** `Thought:` and `Action:` pulled out of a reply. */
         data class Parsed(val thought: String, val action: HandsAction, val raw: String)
 
-        class FormatError(message: String) : Exception(message)
+        enum class ParseFailure { EMPTY_RESPONSE, MISSING_ACTION, INVALID_JSON, TRUNCATED, INVALID_ACTION, PROVIDER_REFUSAL }
+
+        class FormatError(message: String, val failure: ParseFailure = ParseFailure.INVALID_ACTION) : Exception(message)
 
         private val aliases = mapOf(
             "click" to "click", "tap" to "click", "press" to "click", "touch" to "click",
@@ -98,18 +100,98 @@ sealed class HandsAction {
         )
 
         /**
-         * Reads a reply of the form `Thought: … Action: {json}`. Tolerant of a missing
-         * `Thought:` label, of a fenced code block around the JSON and of text after it.
+         * Reads the normal Thought/Action protocol, plus an exact JSON object or JSON fence
+         * for providers that omit the labels. Unmarked prose is never searched for coordinates.
          */
-        fun parse(reply: String): Parsed {
+        fun parse(reply: String, stopReason: String? = null): Parsed {
             val text = reply.trim()
-            val idx = text.lastIndexOf("Action:")
-            if (idx < 0) throw FormatError("no `Action:` line")
-            var thought = text.substring(0, idx).replace(Regex("<think>[\\s\\S]*?</think>"), "").trim()
+            if (isProviderRefusal(text, stopReason)) {
+                throw FormatError("model provider refused the request", ParseFailure.PROVIDER_REFUSAL)
+            }
+            if (text.isEmpty()) throw FormatError("empty model response", ParseFailure.EMPTY_RESPONSE)
+            val normalized = text.replace(Regex("<think>[\\s\\S]*?</think>"), "").trim()
+            val idx = normalized.lastIndexOf("Action:")
+            if (idx < 0) {
+                val structured = unmarkedStructuredJson(normalized)
+                    ?: throw FormatError("missing `Action:` marker and no standalone JSON action", ParseFailure.MISSING_ACTION)
+                val json = parseJsonObject(structured, stopReason, allowTrailing = false)
+                return Parsed(extractThought(normalized), fromJson(json), text)
+            }
+            var thought = normalized.substring(0, idx).trim()
             if (thought.startsWith("Thought:")) thought = thought.removePrefix("Thought:").trim()
-            val json = extractJson(text.substring(idx + "Action:".length))
-                ?: throw FormatError("the action is not a JSON object")
+            val json = parseJsonObject(normalized.substring(idx + "Action:".length), stopReason, allowTrailing = true)
             return Parsed(thought, fromJson(json), text)
+        }
+
+        private fun extractThought(text: String): String {
+            val prefix = text.substringBefore("```").trim()
+            return if (prefix.startsWith("Thought:")) prefix.removePrefix("Thought:").trim() else ""
+        }
+
+        private fun unmarkedStructuredJson(text: String): String? {
+            val noThought = if (text.startsWith("Thought:")) {
+                val newline = text.indexOf('\n')
+                if (newline < 0) return null
+                text.substring(newline + 1).trim()
+            } else text
+            if (noThought.startsWith("{")) return noThought
+            if (noThought.startsWith("```")) {
+                val firstNewline = noThought.indexOf('\n')
+                val close = noThought.lastIndexOf("```")
+                if (firstNewline < 0) return null
+                if (close <= firstNewline) return noThought.substring(firstNewline + 1).trim()
+                if (noThought.substring(close + 3).isNotBlank()) return null
+                return noThought.substring(firstNewline + 1, close).trim()
+            }
+            return null
+        }
+
+        fun isProviderRefusal(text: String, stopReason: String? = null): Boolean {
+            val reason = stopReason.orEmpty().lowercase()
+            if (reason in setOf("safety", "content_filter", "content_filter_triggered", "refusal")) return true
+            return text.lowercase().contains("the request was rejected because it was considered high risk")
+        }
+
+        private fun parseJsonObject(tail: String, stopReason: String?, allowTrailing: Boolean): JSONObject {
+            val s = tail.trim().removePrefix("```json").removePrefix("```").trim()
+            val start = s.indexOf('{')
+            if (start < 0) throw FormatError("action has no JSON object", ParseFailure.INVALID_JSON)
+            var depth = 0
+            var inString = false
+            var escaped = false
+            for (i in start until s.length) {
+                val c = s[i]
+                if (inString) {
+                    when {
+                        escaped -> escaped = false
+                        c == '\\' -> escaped = true
+                        c == '"' -> inString = false
+                    }
+                    continue
+                }
+                when (c) {
+                    '"' -> inString = true
+                    '{' -> depth++
+                    '}' -> {
+                        depth--
+                        if (depth == 0) {
+                            if (!allowTrailing && s.substring(i + 1).isNotBlank()) {
+                                throw FormatError("standalone action JSON must not include trailing text", ParseFailure.INVALID_JSON)
+                            }
+                            return try {
+                                JSONObject(s.substring(start, i + 1))
+                            } catch (_: Exception) {
+                                throw FormatError("action JSON is malformed", ParseFailure.INVALID_JSON)
+                            }
+                        }
+                    }
+                }
+            }
+            val truncated = stopReason.orEmpty().lowercase() in setOf("length", "max_tokens", "max_output_tokens")
+            throw FormatError(
+                if (truncated) "action JSON was truncated at the provider output limit" else "action JSON object is incomplete",
+                ParseFailure.TRUNCATED,
+            )
         }
 
         internal fun extractJson(tail: String): JSONObject? {
