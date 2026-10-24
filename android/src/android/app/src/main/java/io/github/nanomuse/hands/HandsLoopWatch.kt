@@ -41,11 +41,11 @@ class HandsLoopWatch(private val noteAt: Int = NOTE_AT, private val stopAt: Int 
     }
 
     companion object {
-        /** The third identical step gets a line in the history. */
-        const val NOTE_AT = 3
+        /** The second identical step gets a line in the history. */
+        const val NOTE_AT = 2
 
-        /** The sixth stops the run. */
-        const val STOP_AT = 6
+        /** The fourth identical step stops the run. */
+        const val STOP_AT = 4
 
         /** Grid units (of 1000) within which two taps are the same tap: about 3 % of the screen. */
         const val SAME_TAP = 30
@@ -58,12 +58,12 @@ class HandsLoopWatch(private val noteAt: Int = NOTE_AT, private val stopAt: Int 
 
         /** What the model says to the next turn at the third identical step. */
         const val NOTE =
-            "You have done the same thing three times and the screen has not changed. Do not repeat it: " +
+            "You repeated the same action and the screen has not changed. Do not repeat it: " +
                 "try another element, scroll, go back, or finish with goal_status infeasible and say what you found."
 
         /** The reason the run ends with at the sixth. */
         fun stopReason(action: HandsAction): String =
-            "the hands stopped: ${STOP_AT} steps in a row did the same thing (${action.describe()}) and the screen did not change"
+            "the hands stopped after ${STOP_AT} repeated actions did the same thing (${action.describe()}) and the screen did not change"
 
         /** Whether a step of [action] can be part of a loop at all. */
         fun counts(action: HandsAction): Boolean = when (action) {
@@ -86,7 +86,7 @@ class HandsLoopWatch(private val noteAt: Int = NOTE_AT, private val stopAt: Int 
             is HandsAction.TakeOver, is HandsAction.AskUser, is HandsAction.Status -> false
         }
 
-        private fun near(a: HandsAction.Point, b: HandsAction.Point): Boolean =
+        private fun sameTarget(a: String, b: String): Boolean {\n            fun normalize(value: String) = value.trim().lowercase().replace(Regex("\\\\s+"), " ")\n            val x = normalize(a)\n            val y = normalize(b)\n            val generic = setOf("button", "按钮", "icon", "图标", "click", "tap", "点击")\n            return x.isNotEmpty() && x == y && x !in generic\n        }\n\n        private fun near(a: HandsAction.Point, b: HandsAction.Point): Boolean =
             abs(a.gx - b.gx) <= SAME_TAP && abs(a.gy - b.gy) <= SAME_TAP
 
         /** Two fingerprints of the same shape whose cells mostly agree. Different shapes (a rotation) are a change. */
