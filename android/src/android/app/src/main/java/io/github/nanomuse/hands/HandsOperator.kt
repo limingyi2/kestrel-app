@@ -328,26 +328,30 @@ class HandsOperator(private val context: Context) {
                     return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
                 }
                 val turn = Turn(currentTurnText, jpeg.bytes, reply)
-                turns += turn
+                // Keep malformed model output out of future context; lastResult carries the repair hint.
                 val parsed = try {
                     HandsAction.parse(reply, modelResponse.stopReason)
                 } catch (e: HandsAction.Companion.FormatError) {
+                    val failedStep = steps
+                    // A malformed response did not perform an action and must not consume maxSteps.
+                    steps = (steps - 1).coerceAtLeast(0)
                     AppLogger.warning(TAG, "source=${if (e.failure == HandsAction.Companion.ParseFailure.PROVIDER_REFUSAL) "provider_refusal" else "response_parse_failure"} category=${e.failure} provider=${model.instance.label} model=${model.modelId} stopReason=${modelResponse.stopReason ?: "none"} chars=${reply.length}")
                     if (e.failure == HandsAction.Companion.ParseFailure.PROVIDER_REFUSAL) {
-                        trace(traceDir, steps, "", reply, "provider_refusal", lastScreen, timings)
+                        trace(traceDir, failedStep, "", reply, "provider_refusal", lastScreen, timings)
                         return finish(Outcome.Failed("the selected screen model provider refused the request"), steps, runId, lastScreen, traceDir, log, model.label)
                     }
                     formatErrors++
                     if (formatErrors >= 3) {
-                        trace(traceDir, steps, "", reply, "model_format_failed:${e.failure};stop_reason=${modelResponse.stopReason ?: "none"};reply_chars=${reply.length}", lastScreen, timings)
+                        trace(traceDir, failedStep, "", reply, "model_format_failed:${e.failure};stop_reason=${modelResponse.stopReason ?: "none"};reply_chars=${reply.length}", lastScreen, timings)
                         return finish(Outcome.Failed("the screen model returned ${e.failure.name.lowercase().replace('_', ' ')} three times (${e.message})"), steps, runId, lastScreen, traceDir, log, model.label)
                     }
                     lastResult = "your reply could not be read (${e.failure}: ${e.message}); answer with `Thought:` and one JSON `Action:` only."
-                    log += "step $steps: unreadable reply (${e.failure})"
-                    trace(traceDir, steps, "", reply, "response_parse_retry:${e.failure};stop_reason=${modelResponse.stopReason ?: "none"};reply_chars=${reply.length}", lastScreen, timings)
+                    log += "attempt $failedStep: unreadable reply (${e.failure}); no action was performed"
+                    trace(traceDir, failedStep, "", reply, "response_parse_retry:${e.failure};stop_reason=${modelResponse.stopReason ?: "none"};reply_chars=${reply.length}", lastScreen, timings)
                     continue
                 }
                 formatErrors = 0
+                turns += turn
                 val action = parsed.action
                 // Content events during observation are animations or counters, not a page
                 // switch. A tap with a live unique node acts (the executor re-resolves the
@@ -1137,11 +1141,11 @@ class HandsOperator(private val context: Context) {
         private const val MODEL_TIMEOUT_MS = 90_000L
         private const val TAKE_OVER_TIMEOUT_MS = 5 * 60_000L
         private const val MAX_RUN_MS = 30 * 60_000L
-        private const val TAP_SETTLE_MS = 900L
-        private const val SWIPE_SETTLE_MS = 1100L
-        private const val OPEN_APP_SETTLE_MS = 1800L
+        private const val TAP_SETTLE_MS = 600L
+        private const val SWIPE_SETTLE_MS = 800L
+        private const val OPEN_APP_SETTLE_MS = 1300L
         /** The ring shows this long before the finger lands, so the eye gets there first. */
-        private const val AIM_MS = 260L
+        private const val AIM_MS = 160L
         private const val LONG_PRESS_MS = 900L
         private const val SWIPE_MS = 350L
         private const val SCROLL_MS = 400L

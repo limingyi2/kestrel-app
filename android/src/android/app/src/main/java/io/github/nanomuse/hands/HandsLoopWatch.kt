@@ -4,9 +4,9 @@ import kotlin.math.abs
 
 /**
  * Notices when the hands go round in circles: the same action, again, on a screen that did
- * not change since the last one. The prompt's rule 5 asks the model to change tack after two
+ * not change since the last one. The prompt's rule 5 asks the model to change tack after one
  * tries; this is the floor under it, the same one the runtime has (docs/gui.md): a line in the
- * history at the third identical step, a stop at the sixth: one model call with a screenshot
+ * history at the second identical step, a stop at the fourth: one model call with a screenshot
  * per step is what a loop costs, for up to thirty minutes without it.
  *
  * Pure Kotlin: fed the fingerprint of each screenshot ([print], a small grid of grey levels the
@@ -41,11 +41,11 @@ class HandsLoopWatch(private val noteAt: Int = NOTE_AT, private val stopAt: Int 
     }
 
     companion object {
-        /** The third identical step gets a line in the history. */
-        const val NOTE_AT = 3
+        /** The second identical step gets a line in the history. */
+        const val NOTE_AT = 2
 
-        /** The sixth stops the run. */
-        const val STOP_AT = 6
+        /** The fourth identical step stops the run. */
+        const val STOP_AT = 4
 
         /** Grid units (of 1000) within which two taps are the same tap: about 3 % of the screen. */
         const val SAME_TAP = 30
@@ -56,14 +56,14 @@ class HandsLoopWatch(private val noteAt: Int = NOTE_AT, private val stopAt: Int 
         /** The screen counts as unchanged while at most this share of its cells changed (the clock, a cursor). */
         const val CHANGED_SHARE = 0.03
 
-        /** What the model says to the next turn at the third identical step. */
+        /** What the model says to the next turn at the second identical step. */
         const val NOTE =
-            "You have done the same thing three times and the screen has not changed. Do not repeat it: " +
+            "You repeated the same action and the screen has not changed. Do not repeat it: " +
                 "try another element, scroll, go back, or finish with goal_status infeasible and say what you found."
 
-        /** The reason the run ends with at the sixth. */
+        /** The reason the run ends with at the fourth. */
         fun stopReason(action: HandsAction): String =
-            "the hands stopped: ${STOP_AT} steps in a row did the same thing (${action.describe()}) and the screen did not change"
+            "the hands stopped after ${STOP_AT} repeated actions did the same thing (${action.describe()}) and the screen did not change"
 
         /** Whether a step of [action] can be part of a loop at all. */
         fun counts(action: HandsAction): Boolean = when (action) {
@@ -73,9 +73,9 @@ class HandsLoopWatch(private val noteAt: Int = NOTE_AT, private val stopAt: Int 
 
         /** The same action, as a person would judge it: the same tap give or take a few pixels, the same swipe, the same text. */
         fun sameAction(a: HandsAction, b: HandsAction): Boolean = when (a) {
-            is HandsAction.Click -> b is HandsAction.Click && near(a.at, b.at)
-            is HandsAction.DoubleTap -> b is HandsAction.DoubleTap && near(a.at, b.at)
-            is HandsAction.LongPress -> b is HandsAction.LongPress && near(a.at, b.at)
+            is HandsAction.Click -> b is HandsAction.Click && (sameTarget(a.target, b.target) || near(a.at, b.at))
+            is HandsAction.DoubleTap -> b is HandsAction.DoubleTap && (sameTarget(a.target, b.target) || near(a.at, b.at))
+            is HandsAction.LongPress -> b is HandsAction.LongPress && (sameTarget(a.target, b.target) || near(a.at, b.at))
             is HandsAction.Swipe -> b is HandsAction.Swipe && near(a.from, b.from) && near(a.to, b.to)
             is HandsAction.Scroll -> b is HandsAction.Scroll && a.direction == b.direction
             is HandsAction.InputText -> b is HandsAction.InputText && a.text == b.text
@@ -84,6 +84,14 @@ class HandsLoopWatch(private val noteAt: Int = NOTE_AT, private val stopAt: Int 
             is HandsAction.Wait -> b is HandsAction.Wait
             HandsAction.KeyboardEnter, HandsAction.Back, HandsAction.Home -> a === b
             is HandsAction.TakeOver, is HandsAction.AskUser, is HandsAction.Status -> false
+        }
+
+        private fun sameTarget(a: String, b: String): Boolean {
+            fun normalize(value: String) = value.trim().lowercase().replace(Regex("\\s+"), " ")
+            val x = normalize(a)
+            val y = normalize(b)
+            val generic = setOf("button", "按钮", "icon", "图标", "click", "tap", "点击")
+            return x.isNotEmpty() && x == y && x !in generic
         }
 
         private fun near(a: HandsAction.Point, b: HandsAction.Point): Boolean =
