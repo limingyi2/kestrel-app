@@ -17,7 +17,7 @@ All notable changes to nanoMuse. The format follows [Keep a Changelog](https://k
 - Added bounded semantic Hands plans with live accessibility checks, verified text entry, event-driven page transitions and visual fallback; device performance measurements remain pending.
 - Added correlated Hands startup milestones, bounded accessibility transition detection, live target reconfirmation and foreground-app reuse; device performance measurements remain pending.
 - Added read-only Hands accessibility diagnostics to distinguish a disabled system permission from a disconnected service and correlate lifecycle events with Android process exits.
-
+- Added an optional, account-only Kestrel Relay connection using the existing Hub protocol; local providers, chats, and sessions do not depend on it, and conversation/profile sync stays off.
 - Initialized the Kestrel Android name, independent application identity, external links and fork update sources while retaining the Linux sandbox contracts.
 - Removed the nanoMuse account requirement from Android startup, kept provider credentials and sessions on-device, and paused account-authenticated cross-device entry points pending Kestrel Relay/Bridge.
 - Made Android first-run provider setup optional, added a persistent skip path, and show a model-configuration prompt when chat has no configured model.

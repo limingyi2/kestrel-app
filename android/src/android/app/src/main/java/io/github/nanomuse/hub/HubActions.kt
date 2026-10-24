@@ -293,7 +293,7 @@ object HubActions {
         val senderId = call.from.optString("id")
         val conversation = running.conversationKey(senderId, call.args.optString("conversation"))
         val sessionId = runBlocking { sessionFor(app, conversation, call.senderName) }
-        if (sessionId == null) { call.fail("no_model", "the phone has no model to think with; sign in to nanoMuse Cloud there"); return }
+        if (sessionId == null) { call.fail("no_model", "the phone has no model to think with; configure a model in Kestrel first"); return }
         call.event(JSONObject().put("stage", "thinking").put("session", sessionId))
         AgentForegroundService.startService(app, sessionCount = 1, toolStatus = context.getString(R.string.nm_hub_task_from, call.senderName))
         val prompt = HubTasks.prompt(

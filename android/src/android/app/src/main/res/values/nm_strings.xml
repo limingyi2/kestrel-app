@@ -2,6 +2,19 @@
 <!-- nanoMuse: strings added on top of upstream; kept in their own file so an
      upstream pull never touches them. Other locales fall back to these. -->
 <resources>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">This optional connection lets your devices discover each other. Local chat, files, the Linux sandbox, Skills and MCP work without signing in. Model API keys stay on this device.</string>
+    <string name="nm_hub_connection_relay">Relay address</string>
+    <string name="nm_hub_connection_online">Connected</string>
+    <string name="nm_hub_connection_offline">Not connected</string>
+    <string name="nm_hub_connection_email">Email</string>
+    <string name="nm_hub_connection_code">Email code</string>
+    <string name="nm_hub_connection_sign_in">Sign in to Relay</string>
+    <string name="nm_hub_connection_send_code">Send code</string>
+    <string name="nm_hub_connection_devices">Devices on this Relay</string>
+    <string name="nm_hub_connection_sign_out">Disconnect and sign out</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · online</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · offline</string>
     <string name="nm_about_build">This build</string>
     <string name="nm_about_license">License</string>
     <string name="nm_about_upstream">Based on OpenMinis 1.13</string>

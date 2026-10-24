@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- nanoMuse: 在上游之外新增的字符串，单独成文件，上游同步不会碰到。 -->
 <resources>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">这是可选的设备互联功能。聊天、文件、Linux 沙箱、Skills 和 MCP 无需登录即可使用。模型 API Key 只保存在本机。</string>
+    <string name="nm_hub_connection_relay">Relay 地址</string>
+    <string name="nm_hub_connection_online">已连接</string>
+    <string name="nm_hub_connection_offline">未连接</string>
+    <string name="nm_hub_connection_email">邮箱</string>
+    <string name="nm_hub_connection_code">邮箱验证码</string>
+    <string name="nm_hub_connection_sign_in">登录 Relay</string>
+    <string name="nm_hub_connection_send_code">发送验证码</string>
+    <string name="nm_hub_connection_devices">此 Relay 上的设备</string>
+    <string name="nm_hub_connection_sign_out">断开并退出登录</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · 在线</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · 离线</string>
     <string name="nm_hands_return_title">任务结束后返回 Kestrel</string>
     <string name="nm_hands_return_subtitle">成功或发生错误后返回；取消或需要你操作时留在目标应用。</string>
     <string name="nm_hands_return_footer">关闭后，任务结束时留在目标应用。Kestrel 在后台时，Android 可能限制自动切换；可通过通知或桌面图标打开 Kestrel。</string>

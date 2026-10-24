@@ -688,12 +688,12 @@ fun AppNavigation(
                 onOpenProviders = { navController.safeNavigate(Routes.PROVIDER_LIST) },
             )
         }
-        // nanoMuse: keep legacy account links safe while this Android app is local-first.
+        // nanoMuse: optional account authentication is scoped to the Hub; it does not provision a model provider.
         composable(io.github.nanomuse.ui.cloud.ROUTE_CLOUD_SIGN_IN) {
-            io.github.nanomuse.ui.cloud.RelayPendingScreen(onBack = { navController.safePopBackStack() })
+            io.github.nanomuse.ui.cloud.HubConnectionScreen(onBack = { navController.safePopBackStack() })
         }
         composable(io.github.nanomuse.ui.cloud.ROUTE_CLOUD_ACCOUNT) {
-            io.github.nanomuse.ui.cloud.RelayPendingScreen(onBack = { navController.safePopBackStack() })
+            io.github.nanomuse.ui.cloud.HubConnectionScreen(onBack = { navController.safePopBackStack() })
         }
         composable(io.github.nanomuse.ui.cloud.ROUTE_DATA_CONTROLS) {
             io.github.nanomuse.ui.cloud.RelayPendingScreen(onBack = { navController.safePopBackStack() })
