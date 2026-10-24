@@ -42,7 +42,7 @@ cd android/src/android
 ./gradlew :app:assembleDebug --console=plain --no-daemon
 ```
 
-CI Debug APK 保留现有 App ID；`versionCode` 为 Android workflow run number 加 50，后续 CI 构建可以升级较早的 CI APK。GitHub hosted runner 的 Android Debug 密钥在该 runner 上生成，runner 更换后证书也会变化。要固定 CI 测试签名，请在仓库 Actions Secrets 中配置专用测试 PKCS12 keystore 对应的 `KESTREL_DEBUG_KEYSTORE_BASE64`、`KESTREL_DEBUG_KEYSTORE_PASSWORD`、`KESTREL_DEBUG_KEY_ALIAS` 和 `KESTREL_DEBUG_KEY_PASSWORD`。不得将私钥提交到仓库或用作正式发布密钥。四项密钥未全部配置时，CI 会明确报告使用 runner Debug 密钥。签名证书不同的 APK 无法覆盖安装；Android 要求先卸载旧应用，这会清除本机数据。安装升级包前请核对 CI Badging 步骤输出的证书 SHA-256。
+CI Debug APK 保留现有 App ID。可信任的 `push` 和 `workflow_dispatch` 构建使用专门的测试 PKCS12 签名密钥；密钥仅存放在仓库 Actions Secrets：`KESTREL_DEBUG_KEYSTORE_BASE64`、`KESTREL_DEBUG_KEYSTORE_PASSWORD`、`KESTREL_DEBUG_KEY_ALIAS` 和 `KESTREL_DEBUG_KEY_PASSWORD`。缺少任意一项时工作流会失败，不会静默使用 runner 临时密钥生成可安装 CI 包。Pull request 构建不会接收签名 Secrets，产物会标记为临时签名，不应用于升级安装。不得将私钥提交到仓库或用作正式发布密钥。CI `versionCode` 规则是 `50 + GITHUB_RUN_NUMBER`；同一 Android workflow 的运行编号全局递增，因此每个 CI 构建版本号更高。安装前请核对 Badging 步骤中的 App ID、版本号和证书 SHA-256。签名证书不同的 APK 无法覆盖已安装应用；卸载会清除本机数据。
 
 选择 arm64 ABI 后，Debug APK 位于 `android/src/android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk`。模拟器使用 x86_64，请在 Android 真机上测试 arm64 APK。
 
