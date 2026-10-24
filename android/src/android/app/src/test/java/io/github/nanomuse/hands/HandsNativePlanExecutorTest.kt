@@ -47,6 +47,24 @@ class HandsNativePlanExecutorTest {
         assertEquals(listOf("Network"), port.clicks)
     }
 
+    @Test fun `missing stable accessibility event hands control to a fresh visual turn`() {
+        val port = FakePort().apply {
+            visible += "Settings"
+            clickables["About phone"] = HandsNativePlanExecutor.Port.Clickable("about", "About phone", true, true)
+            stable = false
+        }
+        val plan = HandsAction.Plan(listOf(
+            HandsAction.PlanStep(HandsAction.Click(point, "About phone"), "Settings", "About phone"),
+            HandsAction.PlanStep(HandsAction.Back, "About phone", null),
+        ))
+
+        val result = HandsNativePlanExecutor(port, { false }).execute(plan)
+
+        assertEquals(HandsNativePlanExecutor.State.NEEDS_VISION, result.state)
+        assertEquals(1, result.completedActions)
+        assertTrue(port.backActions == 0)
+    }
+
     @Test fun `ambiguous target never clicks`() {
         val port = FakePort().apply {
             visible += "Settings"
@@ -145,9 +163,9 @@ class HandsNativePlanExecutorTest {
 
         override fun foregroundPackage() = packageName
         override fun hasVisibleText(text: String) = text in visible
-        override fun resolveApp(name: String) = if (name == "Settings") App("Settings", "com.android.settings") else null
-        override fun launch(app: App): Boolean { launches++; packageName = app.packageName; actions += "launch"; return true }
-        override fun findUniqueClickable(target: String): Clickable? = if (target in ambiguous) null else clickables[target]
+        override fun resolveApp(name: String) = if (name == "Settings") HandsNativePlanExecutor.Port.App("Settings", "com.android.settings") else null
+        override fun launch(app: HandsNativePlanExecutor.Port.App): Boolean { launches++; packageName = app.packageName; actions += "launch"; return true }
+        override fun findUniqueClickable(target: String): HandsNativePlanExecutor.Port.Clickable? = if (target in ambiguous) null else clickables[target]
         override fun clickIfCurrent(target: String, token: String): Boolean {
             val match = clickables[target]?.takeIf { it.token == token } ?: return false
             clicks += target
