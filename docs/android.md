@@ -51,6 +51,12 @@ visible content and no progress indicator. Missing events or nodes retain the 90
 [P1.4 diagnosis and device measurements](hands-p1.4.md). The existing model
 request timeout is 90 seconds and screenshot capture is retried once.
 
+P1.6 lets the screen model propose a bounded semantic plan. Android rechecks the foreground
+package, exact visible control, field focus and next-page label before each step. Ordinary text
+uses `ACTION_SET_TEXT` with readback, not the clipboard. Ambiguous or unstable screens return to
+the existing visual single-action flow. The paired Settings, 小黑盒 and QQ device runs and their
+P50/P95 results are pending; see [P1.6 implementation and device report](hands-p1.6.md).
+
 When the task succeeds or fails, Kestrel returns to chat by default. Turn off **Return to Kestrel
 after a task** in Hands settings to remain in the target app. A cancellation or a result requiring
 the user's attention remains in the target app. Stop cancels an in-flight model request and

@@ -12,7 +12,8 @@ class HandsPageState(private val startMs: Long) {
     fun event(type: String, nowMs: Long) {
         when (type) {
             "TYPE_WINDOW_STATE_CHANGED", "TYPE_WINDOWS_CHANGED" -> windowChanged = true
-            "TYPE_WINDOW_CONTENT_CHANGED", "TYPE_VIEW_SCROLLED", "TYPE_VIEW_TEXT_CHANGED" -> contentChanged = true
+            "TYPE_WINDOW_CONTENT_CHANGED", "TYPE_VIEW_SCROLLED", "TYPE_VIEW_TEXT_CHANGED",
+            "TYPE_VIEW_CLICKED", "TYPE_VIEW_SELECTED", "TYPE_VIEW_FOCUSED" -> contentChanged = true
             else -> return
         }
         lastChangeMs = nowMs

@@ -58,6 +58,35 @@ class HandsReportTest(unittest.TestCase):
         self.assertEqual(result["latencies"]["page_wait"]["p95_ms"], 300)
         self.assertEqual(REPORT.percentiles(list(range(1, 21)))["p95_ms"], 19)
 
+    def test_native_plan_counts_and_timings_are_reported(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "run-summary.json").write_text(
+                json.dumps(
+                    {
+                        "elapsed_ms": 100,
+                        "outcome": "done",
+                        "screenshot_count": 2,
+                        "visual_model_calls": 1,
+                        "native_plan_count": 1,
+                        "native_plan_actions_completed": 2,
+                        "native_plan_fallback_count": 0,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (root / "trace.jsonl").write_text(
+                '{"timings_ms": {"model_ms": 40, "native_node_lookup_ms": 10, '
+                '"native_action_ms": 20, "page_wait_ms": 30}}\n',
+                encoding="utf-8",
+            )
+            result = REPORT.report(root)
+        self.assertEqual(result["runs"][0]["screenshot_count"], 2)
+        self.assertEqual(result["runs"][0]["visual_model_calls"], 1)
+        self.assertEqual(result["runs"][0]["native_plan_actions_completed"], 2)
+        self.assertEqual(result["latencies"]["page_wait"]["p50_ms"], 30)
+        self.assertEqual(result["operator_stage_share"]["native_action_ms"]["total_ms"], 20)
+
     def test_legacy_summary_does_not_invent_instruction_time(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

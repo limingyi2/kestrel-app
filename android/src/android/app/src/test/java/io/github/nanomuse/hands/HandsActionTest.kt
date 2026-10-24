@@ -91,6 +91,32 @@ class HandsActionTest {
         assertEquals(2, (HandsAction.fromJson(JSONObject("""{"action_type":"wait"}""")) as HandsAction.Wait).seconds)
     }
 
+    @Test fun `semantic plan is bounded and carries live page preconditions`() {
+        val parsed = HandsAction.parse(
+            """Thought: Search the current app. Action: {"action_type":"plan","steps":[{"action_type":"open_app","app_name":"Settings","expect_after":"Settings"},{"action_type":"click","target":"About phone","when_visible":"Settings","expect_after":"About phone"},{"action_type":"click","target":"Android version","when_visible":"About phone"}]}""",
+        )
+        val plan = parsed.action as HandsAction.Plan
+        assertEquals(3, plan.steps.size)
+        assertEquals("Settings", plan.steps[1].whenVisible)
+        assertEquals("About phone", plan.steps[1].expectAfter)
+        assertEquals("verified plan (3 steps)", plan.describe())
+    }
+
+    @Test fun `semantic plans reject approvals and secret entry inside a batch`() {
+        val sensitive = """Action: {"action_type":"plan","steps":[{"action_type":"click","target":"Settings","when_visible":"Home","expect_after":"Settings"},{"action_type":"click","target":"Delete account","when_visible":"Settings"}]}"""
+        val secret = """Action: {"action_type":"plan","steps":[{"action_type":"click","target":"Password","when_visible":"Login","expect_after":"Login"},{"action_type":"input_text","field":"Password","text":"1234","when_visible":"Login"}]}"""
+        assertThrows(HandsAction.Companion.FormatError::class.java) { HandsAction.parse(sensitive) }
+        assertThrows(HandsAction.Companion.FormatError::class.java) { HandsAction.parse(secret) }
+    }
+
+    @Test fun `semantic plan rejects excessive action count`() {
+        val steps = (1..7).joinToString(",") {
+            """{"action_type":"click","target":"Item $it","when_visible":"Page","expect_after":"Page"}"""
+        }
+        val reply = """Action: {"action_type":"plan","steps":[$steps]}"""
+        assertThrows(HandsAction.Companion.FormatError::class.java) { HandsAction.parse(reply) }
+    }
+
     @Test fun `bad replies raise FormatError`() {
         assertThrows(HandsAction.Companion.FormatError::class.java) { HandsAction.parse("Thought: hmm") }
         assertThrows(HandsAction.Companion.FormatError::class.java) { HandsAction.parse("Action: click the button") }

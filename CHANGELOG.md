@@ -14,6 +14,7 @@ All notable changes to nanoMuse. The format follows [Keep a Changelog](https://k
 
 ### Android
 
+- Added bounded semantic Hands plans with live accessibility checks, verified text entry, event-driven page transitions and visual fallback; device performance measurements remain pending.
 - Added correlated Hands startup milestones, bounded accessibility transition detection, live target reconfirmation and foreground-app reuse; device performance measurements remain pending.
 - Added read-only Hands accessibility diagnostics to distinguish a disabled system permission from a disconnected service and correlate lifecycle events with Android process exits.
 
