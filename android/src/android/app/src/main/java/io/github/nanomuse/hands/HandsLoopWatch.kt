@@ -86,7 +86,15 @@ class HandsLoopWatch(private val noteAt: Int = NOTE_AT, private val stopAt: Int 
             is HandsAction.TakeOver, is HandsAction.AskUser, is HandsAction.Status -> false
         }
 
-        private fun sameTarget(a: String, b: String): Boolean {\n            fun normalize(value: String) = value.trim().lowercase().replace(Regex("\\s+"), " ")\n            val x = normalize(a)\n            val y = normalize(b)\n            val generic = setOf("button", "按钮", "icon", "图标", "click", "tap", "点击")\n            return x.isNotEmpty() && x == y && x !in generic\n        }\n\n        private fun near(a: HandsAction.Point, b: HandsAction.Point): Boolean =
+        private fun sameTarget(a: String, b: String): Boolean {
+            fun normalize(value: String) = value.trim().lowercase().replace(Regex("\\s+"), " ")
+            val x = normalize(a)
+            val y = normalize(b)
+            val generic = setOf("button", "按钮", "icon", "图标", "click", "tap", "点击")
+            return x.isNotEmpty() && x == y && x !in generic
+        }
+
+        private fun near(a: HandsAction.Point, b: HandsAction.Point): Boolean =
             abs(a.gx - b.gx) <= SAME_TAP && abs(a.gy - b.gy) <= SAME_TAP
 
         /** Two fingerprints of the same shape whose cells mostly agree. Different shapes (a rotation) are a change. */
