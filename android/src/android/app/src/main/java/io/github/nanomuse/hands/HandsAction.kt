@@ -113,7 +113,11 @@ sealed class HandsAction {
             val idx = normalized.lastIndexOf("Action:")
             if (idx < 0) {
                 val structured = unmarkedStructuredJson(normalized)
-                    ?: throw FormatError("missing `Action:` marker and no standalone JSON action", ParseFailure.MISSING_ACTION)
+                    ?: throw if (providerTruncated(stopReason)) {
+                        FormatError("provider stopped at its output limit before returning a structured action", ParseFailure.TRUNCATED)
+                    } else {
+                        FormatError("missing `Action:` marker and no standalone JSON action", ParseFailure.MISSING_ACTION)
+                    }
                 val json = parseJsonObject(structured, stopReason, allowTrailing = false)
                 return Parsed(extractThought(normalized), fromJson(json), text)
             }
@@ -155,7 +159,12 @@ sealed class HandsAction {
         private fun parseJsonObject(tail: String, stopReason: String?, allowTrailing: Boolean): JSONObject {
             val s = tail.trim().removePrefix("```json").removePrefix("```").trim()
             val start = s.indexOf('{')
-            if (start < 0) throw FormatError("action has no JSON object", ParseFailure.INVALID_JSON)
+            if (start < 0) {
+                if (providerTruncated(stopReason)) {
+                    throw FormatError("provider stopped at its output limit before returning action JSON", ParseFailure.TRUNCATED)
+                }
+                throw FormatError("action has no JSON object", ParseFailure.INVALID_JSON)
+            }
             var depth = 0
             var inString = false
             var escaped = false
@@ -187,12 +196,15 @@ sealed class HandsAction {
                     }
                 }
             }
-            val truncated = stopReason.orEmpty().lowercase() in setOf("length", "max_tokens", "max_output_tokens")
+            val truncated = providerTruncated(stopReason)
             throw FormatError(
                 if (truncated) "action JSON was truncated at the provider output limit" else "action JSON object is incomplete",
                 ParseFailure.TRUNCATED,
             )
         }
+
+        private fun providerTruncated(stopReason: String?): Boolean =
+            stopReason.orEmpty().lowercase() in setOf("length", "max_tokens", "max_output_tokens")
 
         internal fun extractJson(tail: String): JSONObject? {
             val s = tail.trim().removePrefix("```json").removePrefix("```").trim()

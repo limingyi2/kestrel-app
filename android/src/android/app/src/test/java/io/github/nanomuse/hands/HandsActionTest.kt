@@ -48,6 +48,7 @@ class HandsActionTest {
         assertEquals(HandsAction.Companion.ParseFailure.MISSING_ACTION, failure("Tap at x=420 y=180"))
         assertEquals(HandsAction.Companion.ParseFailure.INVALID_JSON, failure("Action: {not json}"))
         assertEquals(HandsAction.Companion.ParseFailure.TRUNCATED, failure("Action: {\"action_type\":\"click\"", "length"))
+        assertEquals(HandsAction.Companion.ParseFailure.TRUNCATED, failure("Only part of the reply arrived", "max_tokens"))
         assertEquals(HandsAction.Companion.ParseFailure.PROVIDER_REFUSAL, failure("The request was rejected because it was considered high risk"))
         assertEquals(HandsAction.Companion.ParseFailure.PROVIDER_REFUSAL, failure("", "content_filter"))
         assertEquals(HandsAction.Companion.ParseFailure.INVALID_JSON, failure("{\"action_type\":\"back\"} arbitrary trailing text"))
