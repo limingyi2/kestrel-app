@@ -602,8 +602,8 @@
     <string name="nm_pc_title">Computadoras</string>
     <string name="nm_pc_none_short">Ninguna</string>
     <string name="nm_pc_intro">Dilo aquí y se hace en tu computadora: un comando, un archivo, una página en su navegador, un vistazo a su pantalla o una tarea completa para el Kestrel de allí. El teléfono dirige la computadora, nunca al revés; cada aprobación se decide aquí primero.</string>
-    <string name="nm_pc_hub_title">Lo fácil: nanoMuse Desktop, misma cuenta</string>
-    <string name="nm_pc_hub_body">Instala nanoMuse Desktop en la computadora e inicia sesión con la cuenta de este teléfono; aparece en Cuenta → Dispositivos en cuestión de segundos.</string>
+    <string name="nm_pc_hub_title">Cross-device access is paused</string>
+    <string name="nm_pc_hub_body">Waiting for Kestrel Relay/Bridge. Local chat, tools, files, memory, Hands, Skills and MCP continue to work.</string>
     <string name="nm_pc_hub_download">Descargar nanoMuse Desktop</string>
     <string name="nm_pc_hub_account">Cuenta y dispositivos</string>
     <string name="nm_pc_section_paired">Computadoras en esta cuenta</string>
@@ -636,7 +636,7 @@
     <!-- nanoMuse: the first-run pages -->
     <string name="nm_welcome_tagline">Un agente personal de código abierto para todos tus dispositivos.</string>
     <string name="nm_welcome_email">Iniciar sesión (gratis)</string>
-    <string name="nm_welcome_fine_print">Una cuenta mantiene tus dispositivos juntos y trae el uso gratuito del modelo; no se cobra nada. Tu propia clave de API se puede añadir justo después.</string>
+    <string name="nm_welcome_fine_print">Your API key stays on this device and is never sent to nanoMuse Cloud.</string>
     <string name="nm_setup_source_title">¿Qué modelo responde?</string>
     <string name="nm_setup_source_sub">Tu cuenta ya trae uno. También puedes añadir tu propia clave de API y cambiar cuando quieras.</string>
     <string name="nm_setup_source_cloud">Usar el modelo de nanoMuse Cloud</string>
@@ -653,7 +653,7 @@
     <string name="nm_welcome_feat_hands_sub">Reserva el tren, pide la comida, busca algo en una app; tú miras y puedes pararlo cuando quieras</string>
     <string name="nm_welcome_feat_reach">Alcance: tus computadoras, desde aquí</string>
     <string name="nm_welcome_feat_reach_sub">Instala nanoMuse Desktop en un equipo Mac, Windows o Linux, inicia sesión con la misma cuenta y dale trabajo desde el teléfono</string>
-    <string name="nm_welcome_notice">Kestrel es un proyecto comunitario de código abierto y sin ánimo de lucro: gratuito, para siempre. El modelo viene con un saldo gratuito que paga el desarrollador; después, tu propia clave. No se vende nada; lo que guarda el relay está en la política de privacidad, y Ajustes → Control de datos es tuyo.</string>
+    <string name="nm_welcome_notice">Kestrel runs as a local agent and needs no account. It does not call nanoMuse Cloud account, allowance, profile, or conversation-sync APIs.</string>
     <string name="nm_welcome_hands_title">Deja que use tu teléfono</string>
     <string name="nm_welcome_hands_sub">Con dos permisos puede abrir apps, tocar y escribir por ti. Una cápsula con cada paso y un botón de Parar se queda en pantalla; los inicios de sesión, contraseñas y códigos siempre son tuyos.</string>
     <string name="nm_welcome_hands_turn_on">Activar</string>
@@ -1125,7 +1125,7 @@
     <string name="nm_models_cloud_off_refused">Añade primero un proveedor propio; con nanoMuse Cloud apagado, nada más podría responder.</string>
     <string name="nm_chat_no_model">Ahora mismo ningún modelo puede responder. Elige uno en Ajustes › Modelos.</string>
     <string name="nm_cloud_provider_no_delete">Este proveedor es tu cuenta de nanoMuse Cloud. Apágalo arriba para dejar de usar sus modelos; para cerrar sesión, abre Ajustes › nanoMuse Cloud.</string>
-    <string name="nm_welcome_own_key">Usar mi propia clave de API</string>
+    <string name="nm_welcome_own_key">Configure model</string>
     <string name="nm_useit_title">Usarla para</string>
     <string name="nm_useit_body_signed_out">Elige de qué debe encargarse esta clave.</string>
     <string name="nm_useit_use">Usarla</string>

@@ -688,31 +688,15 @@ fun AppNavigation(
                 onOpenProviders = { navController.safeNavigate(Routes.PROVIDER_LIST) },
             )
         }
-        // nanoMuse: nanoMuse Cloud — sign in with a phone/e-mail code for a starter allowance,
-        // and the account page (balance, sign out) behind Settings.
+        // nanoMuse: keep legacy account links safe while this Android app is local-first.
         composable(io.github.nanomuse.ui.cloud.ROUTE_CLOUD_SIGN_IN) {
-            io.github.nanomuse.ui.cloud.CloudSignInScreen(
-                onBack = { navController.safePopBackStack() },
-                onSignedIn = { navController.safePopBackStack() },
-            )
+            io.github.nanomuse.ui.cloud.RelayPendingScreen(onBack = { navController.safePopBackStack() })
         }
         composable(io.github.nanomuse.ui.cloud.ROUTE_CLOUD_ACCOUNT) {
-            io.github.nanomuse.ui.cloud.CloudAccountScreen(
-                onBack = { navController.safePopBackStack() },
-                onSignIn = { navController.safeNavigate(io.github.nanomuse.ui.cloud.ROUTE_CLOUD_SIGN_IN) },
-                onOpenProvider = { id -> navController.safeNavigate(Routes.providerDetail(id)) },
-                onOpenModelGroups = { navController.safeNavigate(Routes.MODEL_GROUPS) },
-                onOpenDataControls = { navController.safeNavigate(io.github.nanomuse.ui.cloud.ROUTE_DATA_CONTROLS) },
-                // nanoMuse: "Ask this device" — back to the chat with "@<name> " in the composer
-                onAskDevice = { name -> io.github.nanomuse.ui.home.HomeShell.prefill(navController, "@$name ") },
-            )
+            io.github.nanomuse.ui.cloud.RelayPendingScreen(onBack = { navController.safePopBackStack() })
         }
-        // nanoMuse: Settings → Data controls — the switch over what nanoMuse Cloud keeps of the chats.
         composable(io.github.nanomuse.ui.cloud.ROUTE_DATA_CONTROLS) {
-            io.github.nanomuse.ui.cloud.DataControlsScreen(
-                onBack = { navController.safePopBackStack() },
-                onSignIn = { navController.safeNavigate(io.github.nanomuse.ui.cloud.ROUTE_CLOUD_SIGN_IN) },
-            )
+            io.github.nanomuse.ui.cloud.RelayPendingScreen(onBack = { navController.safePopBackStack() })
         }
         // nanoMuse: Settings → Network — the HTTP proxy for own providers and the ChatGPT plan.
         composable(io.github.nanomuse.ui.net.ROUTE_NETWORK) {
@@ -726,12 +710,9 @@ fun AppNavigation(
                 onOpenHandsModel = { navController.safeNavigate(io.github.nanomuse.ui.models.modelPickRoute(io.github.nanomuse.models.ModelSlots.Slot.HANDS)) },
             )
         }
-        // nanoMuse: the account's computers, and how one joins.
+        // nanoMuse: retain the Reach destination while its Relay transport is paused.
         composable(io.github.nanomuse.ui.reach.ROUTE_COMPUTERS) {
-            io.github.nanomuse.ui.reach.ComputersScreen(
-                onBack = { navController.safePopBackStack() },
-                onOpenAccount = { navController.safeNavigate(io.github.nanomuse.ui.cloud.ROUTE_CLOUD_ACCOUNT) },
-            )
+            io.github.nanomuse.ui.cloud.RelayPendingScreen(onBack = { navController.safePopBackStack() })
         }
         // nanoMuse: the services the agent can be let into — the connectors catalogue, each a remote MCP server.
         composable(io.github.nanomuse.ui.connectors.ROUTE_CONNECTORS) {
@@ -740,12 +721,9 @@ fun AppNavigation(
                 onOpenMcp = { navController.safeNavigate(Routes.MCP) },
             )
         }
-        // nanoMuse: the coding agents (Cursor, Codex, Claude Code) on the account's computers.
+        // nanoMuse: keep the old destination stable while cross-device access is paused.
         composable(io.github.nanomuse.ui.coding.ROUTE_CODING) {
-            io.github.nanomuse.ui.coding.CodingScreen(
-                onBack = { navController.safePopBackStack() },
-                onOpenDevices = { navController.safeNavigate(io.github.nanomuse.ui.cloud.ROUTE_CLOUD_ACCOUNT) },
-            )
+            io.github.nanomuse.ui.cloud.RelayPendingScreen(onBack = { navController.safePopBackStack() })
         }
         // nanoMuse: the agent's page behind the face — today's activity, approvals, daily,
         // soul & memory; the pen offers "Change avatar" (back to the chat, pre-typed) and
@@ -827,12 +805,9 @@ fun AppNavigation(
                 onSystemFilesClick = { navController.safeNavigate(io.github.nanomuse.ui.sysfiles.ROUTE_SYSTEM_FILES) }, // nanoMuse
                 onAvatarClick = { navController.safeNavigate(io.github.nanomuse.ui.avatar.ROUTE_AVATAR_STUDIO) }, // nanoMuse
                 onModelsClick = { navController.safeNavigate(io.github.nanomuse.ui.models.ROUTE_MODELS) }, // nanoMuse
-                onCloudClick = { navController.safeNavigate(io.github.nanomuse.ui.cloud.ROUTE_CLOUD_ACCOUNT) }, // nanoMuse
                 onHandsClick = { navController.safeNavigate(io.github.nanomuse.ui.hands.ROUTE_HANDS) }, // nanoMuse
-                onDataControlsClick = { navController.safeNavigate(io.github.nanomuse.ui.cloud.ROUTE_DATA_CONTROLS) }, // nanoMuse
                 onNetworkClick = { navController.safeNavigate(io.github.nanomuse.ui.net.ROUTE_NETWORK) }, // nanoMuse
                 onComputersClick = { navController.safeNavigate(io.github.nanomuse.ui.reach.ROUTE_COMPUTERS) }, // nanoMuse
-                onCodingClick = { navController.safeNavigate(io.github.nanomuse.ui.coding.ROUTE_CODING) }, // nanoMuse
                 onConnectorsClick = { navController.safeNavigate(io.github.nanomuse.ui.connectors.ROUTE_CONNECTORS) }, // nanoMuse
                 onPermissionsClick = { navController.safeNavigate(Routes.PERMISSIONS) },
                 onUsageClick = { navController.safeNavigate(Routes.USAGE_STATS) },

@@ -608,8 +608,8 @@
     <string name="nm_pc_title">Компьютеры</string>
     <string name="nm_pc_none_short">Нет</string>
     <string name="nm_pc_intro">Скажите здесь, и это сделано на вашем компьютере: команда, файл, страница в его браузере, взгляд на его экран или целая задача для тамошнего Kestrel. Телефон управляет компьютером, никогда наоборот; каждое подтверждение сначала решается здесь.</string>
-    <string name="nm_pc_hub_title">Простой путь: nanoMuse Desktop, тот же аккаунт</string>
-    <string name="nm_pc_hub_body">Установите nanoMuse Desktop на компьютер и войдите с аккаунтом этого телефона; он появится в Аккаунт → Устройства за несколько секунд.</string>
+    <string name="nm_pc_hub_title">Cross-device access is paused</string>
+    <string name="nm_pc_hub_body">Waiting for Kestrel Relay/Bridge. Local chat, tools, files, memory, Hands, Skills and MCP continue to work.</string>
     <string name="nm_pc_hub_download">Скачать nanoMuse Desktop</string>
     <string name="nm_pc_hub_account">Аккаунт и устройства</string>
     <string name="nm_pc_section_paired">Компьютеры на этом аккаунте</string>
@@ -642,7 +642,7 @@
     <!-- nanoMuse: the first-run pages -->
     <string name="nm_welcome_tagline">Личный агент с открытым кодом для каждого вашего устройства.</string>
     <string name="nm_welcome_email">Войти (бесплатно)</string>
-    <string name="nm_welcome_fine_print">Один аккаунт связывает ваши устройства и несёт бесплатное использование модели; ничего не списывается. Свой API-ключ можно добавить сразу после.</string>
+    <string name="nm_welcome_fine_print">Your API key stays on this device and is never sent to nanoMuse Cloud.</string>
     <string name="nm_setup_source_title">Какая модель отвечает?</string>
     <string name="nm_setup_source_sub">Ваш аккаунт уже даёт одну. Можно добавить и свой API-ключ и переключаться в любой момент.</string>
     <string name="nm_setup_source_cloud">Использовать модель nanoMuse Cloud</string>
@@ -659,7 +659,7 @@
     <string name="nm_welcome_feat_hands_sub">Берёт билет на поезд, заказывает еду, ищет что-то в приложении; вы смотрите и можете остановить в любой момент</string>
     <string name="nm_welcome_feat_reach">Связь: ваши компьютеры, отсюда</string>
     <string name="nm_welcome_feat_reach_sub">Установите nanoMuse Desktop на Mac, Windows или Linux, войдите с той же учётной записью и давайте ему работу с телефона</string>
-    <string name="nm_welcome_notice">Kestrel является некоммерческим проектом сообщества с открытым кодом, бесплатным навсегда. Модель идёт с бесплатным лимитом, который оплачивает разработчик; дальше нужен ваш собственный ключ. Ничего не продаётся; что хранит релей, написано в политике конфиденциальности, а Настройки → Управление данными в ваших руках.</string>
+    <string name="nm_welcome_notice">Kestrel runs as a local agent and needs no account. It does not call nanoMuse Cloud account, allowance, profile, or conversation-sync APIs.</string>
     <string name="nm_welcome_hands_title">Разрешите ему пользоваться телефоном</string>
     <string name="nm_welcome_hands_sub">С двумя разрешениями он может открывать приложения, нажимать и печатать за вас. Капсула с каждым шагом и кнопкой «Стоп» остаётся на экране; входы, пароли и коды всегда за вами.</string>
     <string name="nm_welcome_hands_turn_on">Включить</string>
@@ -1133,7 +1133,7 @@
     <string name="nm_models_cloud_off_refused">Сначала добавьте собственного провайдера; с выключенным nanoMuse Cloud отвечать было бы нечему.</string>
     <string name="nm_chat_no_model">Сейчас ни одна модель не может ответить. Выберите одну в Настройки › Модели.</string>
     <string name="nm_cloud_provider_no_delete">Этот провайдер и есть ваш аккаунт nanoMuse Cloud. Выключите его выше, чтобы не использовать его модели; чтобы выйти, откройте Настройки › nanoMuse Cloud.</string>
-    <string name="nm_welcome_own_key">Использовать свой ключ API</string>
+    <string name="nm_welcome_own_key">Configure model</string>
     <string name="nm_useit_title">Для чего использовать</string>
     <string name="nm_useit_body_signed_out">Выберите, чем будет заниматься этот ключ.</string>
     <string name="nm_useit_use">Использовать</string>

@@ -38,13 +38,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.Accessibility
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
-import androidx.compose.material.icons.outlined.CloudQueue
 import androidx.compose.material.icons.outlined.Computer
-import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material.icons.outlined.Key
-import androidx.compose.material.icons.outlined.Visibility
-import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material.icons.outlined.Layers
+import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.TouchApp
 import androidx.compose.material3.Button
@@ -52,13 +48,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -71,34 +65,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.Lifecycle
-import kotlinx.coroutines.launch
-import androidx.lifecycle.LifecycleEventObserver
 import com.openminis.app.R
-import io.github.nanomuse.cloud.NanoMuseCloud
 import io.github.nanomuse.hands.Hands
 import io.github.nanomuse.ui.avatar.AgentAvatarDisc
 import io.github.nanomuse.ui.avatar.AgentMood
 import io.github.nanomuse.ui.home.MuseTones
 
 /**
- * nanoMuse's first run: a few full pages in Muse's shape, one blue pill each.
+ * Kestrel's first run: optionally configure a local provider and models, review optional Hands
+ * access, then open the first conversation. Provider setup can always be completed later.
  *
- * 1. **Welcome** — the face, what it is, and the notice that matters most: free, open-source,
- *    non-profit, and what signing in gives. *Sign in — free* (a phone number or an e-mail) is the door most people take
- *    ([io.github.nanomuse.cloud.NanoMuseCloud], the relay becomes a provider with a default
- *    model in one go); *I have my own API key* is the other, OpenMinis' provider screen.
- * 2. **Models** — only on the own-key path, when the provider has no model group yet
- *    (`OnboardingModelSelectionScreen`); skippable.
+ * 1. **Welcome** — configure a provider and API key, or skip setup. Credentials stay on-device.
+ * 2. **Models** — choose models for chat and tools; skippable.
  * 3. **Hands** — the two permissions the phone needs before the agent can use its apps
  *    (accessibility, drawing over other apps). Asked once, up front, and skippable: everything
  *    else works without them, and *Settings → Hands* has them later.
@@ -111,7 +98,6 @@ object FirstRunSetup {
     private const val PREFS = "nanomuse"
     private const val KEY_DONE = "setup.done"
     private const val KEY_HANDS_SEEN = "setup.hands_seen"
-    private const val KEY_SOURCE = "setup.source_chosen"
 
     fun isDone(context: Context): Boolean = prefs(context).getBoolean(KEY_DONE, false)
     fun markDone(context: Context) { prefs(context).edit().putBoolean(KEY_DONE, true).apply() }
@@ -120,84 +106,56 @@ object FirstRunSetup {
     fun handsGuideSeen(context: Context): Boolean = prefs(context).getBoolean(KEY_HANDS_SEEN, false)
     fun markHandsGuideSeen(context: Context) { prefs(context).edit().putBoolean(KEY_HANDS_SEEN, true).apply() }
 
-    /** Whether the "which model answers" page has been answered (Cloud model or own key). */
-    fun sourceChosen(context: Context): Boolean = prefs(context).getBoolean(KEY_SOURCE, false)
-    fun markSourceChosen(context: Context) { prefs(context).edit().putBoolean(KEY_SOURCE, true).apply() }
-
     private fun prefs(context: Context) = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     /**
-     * Whether the home should show the setup instead of the chat. The setup comes back when
-     * nothing could answer: no account *and* no provider of the person's own with a key
-     * ([hasProviders]). An account is one way in, a key of one's own is the other; the sign-in
-     * stays an invitation (sync, the devices, the free allowance), never a wall, so a phone
-     * with its own key works signed out. Otherwise the setup stays only for a brand-new
-     * install, no conversation yet, until *Start* has been tapped, so the last page is a real
-     * step and the hand-off into the first conversation is deliberate.
+     * Show the walkthrough only for a new, empty install until it is completed. Provider setup is
+     * optional, and an existing session remains reachable even if its provider was removed.
      */
-    fun needed(signedIn: Boolean, hasProviders: Boolean, hasSessions: Boolean, done: Boolean): Boolean =
-        (!signedIn && !hasProviders) || (!hasSessions && !done)
+    fun needed(hasSessions: Boolean, done: Boolean): Boolean = !hasSessions && !done
 
-    enum class Stage { WELCOME, PASSWORD, SOURCE, MODELS, HANDS, MEET }
+    enum class Stage { WELCOME, MODELS, HANDS, MEET }
 
     /**
-     * The page to show, from what the app has. A sign-in that *created* the account
-     * ([fresh]) is followed by one short, skippable page — a password, so the next device
-     * signs in without a code; it can be set under Account later. Signed out with a
-     * provider of one's own ([hasProviders]), the account pages (password, which model
-     * answers) are skipped: the source is the key already there.
+     * The page to show from the local provider configuration.
      */
     fun stage(
-        signedIn: Boolean,
         hasGroups: Boolean,
-        sourceChosen: Boolean,
         modelsSkipped: Boolean,
         handsSeen: Boolean,
         handsPossible: Boolean = Build.VERSION.SDK_INT >= Hands.MIN_SDK,
-        fresh: Boolean = false,
-        passwordAnswered: Boolean = true,
-        hasProviders: Boolean = signedIn,
+        hasProviders: Boolean = false,
     ): Stage = when {
-        !signedIn && !hasProviders -> Stage.WELCOME
-        signedIn && fresh && !passwordAnswered -> Stage.PASSWORD
-        signedIn && !sourceChosen -> Stage.SOURCE
+        !hasProviders -> Stage.WELCOME
         !hasGroups && !modelsSkipped -> Stage.MODELS
         !handsSeen && handsPossible -> Stage.HANDS
         else -> Stage.MEET
     }
 
-    /** The dot that lights for a stage: account · phone · meet (the model pages fold into the first). */
+    /** The dot that lights for setup, phone permissions, or the first conversation. */
     fun dot(stage: Stage): Int = when (stage) {
-        Stage.WELCOME, Stage.PASSWORD, Stage.SOURCE, Stage.MODELS -> 0
+        Stage.WELCOME, Stage.MODELS -> 0
         Stage.HANDS -> 1
         Stage.MEET -> 2
     }
 }
 
-private const val PRIVACY_URL = NanoMuseCloud.PRIVACY_URL
-
 @Composable
 fun FirstRunSetupScreen(
     agentName: String,
-    signedIn: Boolean,
     hasGroups: Boolean,
-    onSignIn: () -> Unit,
     onAddProvider: () -> Unit,
     onSelectModels: () -> Unit,
     onStart: () -> Unit,
+    onSkip: () -> Unit,
     onSettings: () -> Unit,
-    hasProviders: Boolean = signedIn,
+    hasProviders: Boolean,
 ) {
     val context = LocalContext.current
     var modelsSkipped by remember { mutableStateOf(false) }
     var handsSeen by remember { mutableStateOf(FirstRunSetup.handsGuideSeen(context)) }
-    var sourceChosen by remember { mutableStateOf(FirstRunSetup.sourceChosen(context)) }
-    // a sign-in that created the account owes the password page; answered (or skipped) once
-    var fresh by remember(signedIn) { mutableStateOf(signedIn && NanoMuseCloud.freshAccount(context)) }
-    var passwordAnswered by remember { mutableStateOf(false) }
     val stage = FirstRunSetup.stage(
-        signedIn, hasGroups, sourceChosen, modelsSkipped, handsSeen,
-        fresh = fresh, passwordAnswered = passwordAnswered, hasProviders = hasProviders,
+        hasGroups, modelsSkipped, handsSeen, hasProviders = hasProviders,
     )
     val onSurface = MaterialTheme.colorScheme.onSurface
 
@@ -208,8 +166,7 @@ fun FirstRunSetupScreen(
                 .statusBarsPadding()
                 .navigationBarsPadding(),
         ) {
-            // Muse keeps a gear at the top right of its welcome screen; ours opens Settings,
-            // where every OpenMinis page (providers, groups, appearance) is reachable anyway.
+            // Settings remain reachable while the user configures a model.
             Box(modifier = Modifier.fillMaxWidth().height(56.dp)) {
                 Dots(current = FirstRunSetup.dot(stage), total = 3, modifier = Modifier.align(Alignment.Center))
                 IconButton(onClick = onSettings, modifier = Modifier.align(Alignment.CenterEnd).padding(end = 8.dp)) {
@@ -228,15 +185,8 @@ fun FirstRunSetupScreen(
             ) { current ->
                 when (current) {
                     FirstRunSetup.Stage.WELCOME -> WelcomePage(
-                        onSignIn = onSignIn,
-                        onOwnKey = { FirstRunSetup.markSourceChosen(context); sourceChosen = true; onAddProvider() },
-                    )
-                    FirstRunSetup.Stage.PASSWORD -> PasswordPage(
-                        onDone = { NanoMuseCloud.clearFreshAccount(context); passwordAnswered = true; fresh = false },
-                    )
-                    FirstRunSetup.Stage.SOURCE -> SourcePage(
-                        onCloud = { FirstRunSetup.markSourceChosen(context); sourceChosen = true },
-                        onOwnKey = { FirstRunSetup.markSourceChosen(context); sourceChosen = true; onAddProvider() },
+                        onConfigure = onAddProvider,
+                        onSkip = onSkip,
                     )
                     FirstRunSetup.Stage.MODELS -> ModelsPage(onSelectModels = onSelectModels, onSkip = { modelsSkipped = true })
                     FirstRunSetup.Stage.HANDS -> HandsPage(
@@ -251,138 +201,25 @@ fun FirstRunSetupScreen(
 
 // ── the pages ──────────────────────────────────────────────────────────────
 
-/**
- * The first page: the app's icon, one line on what it is, the notice, and two doors: the
- * account, or a key of one's own (the provider screen; the sign-in can come later).
- */
+/** The first page offers optional local provider setup and a direct skip into the app. */
 @Composable
-private fun WelcomePage(onSignIn: () -> Unit, onOwnKey: () -> Unit) {
-    val context = LocalContext.current
+private fun WelcomePage(onConfigure: () -> Unit, onSkip: () -> Unit) {
     Page(
-        hero = { io.github.nanomuse.ui.muse.NmBrandMark(size = 104.dp) }, // the face comes with the conversation, on the last page
+        hero = { io.github.nanomuse.ui.muse.NmBrandMark(size = 104.dp) },
         title = stringResource(R.string.nm_setup_title),
         subtitle = stringResource(R.string.nm_welcome_tagline),
-        primaryLabel = stringResource(R.string.nm_welcome_email),
-        onPrimary = onSignIn,
-        secondaryLabel = stringResource(R.string.nm_welcome_own_key),
-        onSecondary = onOwnKey,
+        primaryLabel = stringResource(R.string.nm_welcome_own_key),
+        onPrimary = onConfigure,
+        secondaryLabel = stringResource(R.string.nm_setup_skip_models),
+        onSecondary = onSkip,
         finePrint = stringResource(R.string.nm_welcome_fine_print),
-        onLearnMore = { runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_URL))) } },
     ) {
         FeatureRow(Icons.Outlined.ChatBubbleOutline, stringResource(R.string.nm_welcome_feat_chat), stringResource(R.string.nm_welcome_feat_chat_sub))
         Spacer(Modifier.height(10.dp))
         FeatureRow(Icons.Outlined.TouchApp, stringResource(R.string.nm_welcome_feat_hands), stringResource(R.string.nm_welcome_feat_hands_sub))
         Spacer(Modifier.height(10.dp))
-        FeatureRow(Icons.Outlined.Computer, stringResource(R.string.nm_welcome_feat_reach), stringResource(R.string.nm_welcome_feat_reach_sub))
         Spacer(Modifier.height(18.dp))
-        NoticeCard(title = stringResource(R.string.nm_cloud_notice_title), body = stringResource(R.string.nm_welcome_notice))
-    }
-}
-
-/**
- * Right after the sign-in: which model answers. The account's own (nanoMuse Cloud, already
- * set up as a provider by the sign-in) or a key of one's own — the second door leads to
- * OpenMinis' provider screen; the Cloud provider stays either way.
- */
-@Composable
-private fun SourcePage(onCloud: () -> Unit, onOwnKey: () -> Unit) {
-    Page(
-        hero = { HeroGlyph(Icons.Outlined.CloudQueue) },
-        title = stringResource(R.string.nm_setup_source_title),
-        subtitle = stringResource(R.string.nm_setup_source_sub),
-        primaryLabel = stringResource(R.string.nm_setup_source_cloud),
-        onPrimary = onCloud,
-        secondaryLabel = stringResource(R.string.nm_setup_own_key),
-        onSecondary = onOwnKey,
-        finePrint = stringResource(R.string.nm_setup_source_fine_print),
-    ) {
-        FeatureRow(Icons.Outlined.CloudQueue, stringResource(R.string.nm_setup_source_cloud), stringResource(R.string.nm_setup_source_cloud_sub))
-        Spacer(Modifier.height(10.dp))
-        FeatureRow(Icons.Outlined.Key, stringResource(R.string.nm_setup_own_key), stringResource(R.string.nm_setup_source_own_sub))
-    }
-}
-
-/**
- * Right after a sign-in that created the account: a password, so the next device signs in
- * without waiting for a code. Skippable; Account has the same form later.
- */
-@Composable
-private fun PasswordPage(onDone: () -> Unit) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    var next by remember { mutableStateOf("") }
-    var again by remember { mutableStateOf("") }
-    var show by remember { mutableStateOf(false) }
-    var busy by remember { mutableStateOf(false) }
-    var error by remember { mutableStateOf<String?>(null) }
-    val fieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = MuseTones.action,
-        cursorColor = MuseTones.action,
-        focusedLabelColor = MuseTones.action,
-    )
-    val transformation = if (show) VisualTransformation.None else PasswordVisualTransformation()
-    Page(
-        hero = { HeroGlyph(Icons.Outlined.Key) },
-        title = stringResource(R.string.nm_setup_password_title),
-        subtitle = stringResource(R.string.nm_setup_password_sub),
-        primaryLabel = stringResource(R.string.nm_setup_password_set),
-        onPrimary = {
-            if (busy) return@Page
-            if (next.length < 8) { error = context.getString(R.string.nm_cloud_err_password_short); return@Page }
-            if (next != again) { error = context.getString(R.string.nm_cloud_password_mismatch); return@Page }
-            error = null
-            busy = true
-            scope.launch {
-                try {
-                    NanoMuseCloud.setPassword(context, next, null)
-                    onDone()
-                } catch (e: Exception) {
-                    error = NanoMuseCloud.describe(context, e)
-                }
-                busy = false
-            }
-        },
-        secondaryLabel = stringResource(R.string.nm_welcome_skip),
-        onSecondary = onDone,
-        finePrint = stringResource(R.string.nm_setup_password_fine_print),
-    ) {
-        OutlinedTextField(
-            value = next,
-            onValueChange = { next = it; error = null },
-            label = { Text(stringResource(R.string.nm_cloud_password_new)) },
-            singleLine = true,
-            visualTransformation = transformation,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            colors = fieldColors,
-            trailingIcon = {
-                IconButton(onClick = { show = !show }) {
-                    Icon(
-                        if (show) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-                        contentDescription = stringResource(if (show) R.string.nm_a11y_hide_password else R.string.nm_a11y_show_password),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            },
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Spacer(Modifier.height(10.dp))
-        OutlinedTextField(
-            value = again,
-            onValueChange = { again = it; error = null },
-            label = { Text(stringResource(R.string.nm_cloud_password_confirm)) },
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true,
-            visualTransformation = transformation,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            colors = fieldColors,
-            isError = again.isNotEmpty() && again != next,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        error?.let {
-            Spacer(Modifier.height(8.dp))
-            Text(it, fontSize = 12.5.sp, color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center)
-        }
+        NoticeCard(title = stringResource(R.string.nm_setup_title), body = stringResource(R.string.nm_welcome_notice))
     }
 }
 

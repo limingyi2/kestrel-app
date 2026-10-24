@@ -602,8 +602,8 @@
     <string name="nm_pc_title">Mga computer</string>
     <string name="nm_pc_none_short">Wala</string>
     <string name="nm_pc_intro">Sabihin dito, gagawin sa computer mo: isang command, isang file, isang pahina sa browser nito, isang tingin sa screen nito, o isang buong gawain para sa Kestrel doon. Ang telepono ang nagpapatakbo sa computer, hindi kailanman kabaligtaran; bawat pag-apruba ay dito muna pinagpapasyahan.</string>
-    <string name="nm_pc_hub_title">Ang madaling paraan: nanoMuse Desktop, parehong account</string>
-    <string name="nm_pc_hub_body">I-install ang nanoMuse Desktop sa computer at mag-sign in gamit ang account ng teleponong ito; lalabas ito sa ilalim ng Account → Mga device sa loob ng ilang segundo.</string>
+    <string name="nm_pc_hub_title">Cross-device access is paused</string>
+    <string name="nm_pc_hub_body">Waiting for Kestrel Relay/Bridge. Local chat, tools, files, memory, Hands, Skills and MCP continue to work.</string>
     <string name="nm_pc_hub_download">Kunin ang nanoMuse Desktop</string>
     <string name="nm_pc_hub_account">Account at mga device</string>
     <string name="nm_pc_section_paired">Mga computer sa account na ito</string>
@@ -636,7 +636,7 @@
     <!-- nanoMuse: the first-run pages -->
     <string name="nm_welcome_tagline">Isang open-source na personal na agent para sa bawat device na pag-aari mo.</string>
     <string name="nm_welcome_email">Mag-sign in (libre)</string>
-    <string name="nm_welcome_fine_print">Isang account ang nagsasama-sama sa mga device mo at nagdadala ng libreng paggamit ng modelo; walang sinisingil. Maidaragdag ang sarili mong API key kaagad pagkatapos.</string>
+    <string name="nm_welcome_fine_print">Your API key stays on this device and is never sent to nanoMuse Cloud.</string>
     <string name="nm_setup_source_title">Aling modelo ang sasagot?</string>
     <string name="nm_setup_source_sub">May dala nang isa ang account mo. Maaari ka ring magdagdag ng sarili mong API key at lumipat anumang oras.</string>
     <string name="nm_setup_source_cloud">Gamitin ang modelo ng nanoMuse Cloud</string>
@@ -653,7 +653,7 @@
     <string name="nm_welcome_feat_hands_sub">Nagbu-book ng tren, umoorder ng pagkain, naghahanap ng isang bagay sa isang app; nanonood ka, at maaari mo itong itigil anumang oras</string>
     <string name="nm_welcome_feat_reach">Abot: ang mga computer mo, mula rito</string>
     <string name="nm_welcome_feat_reach_sub">I-install ang nanoMuse Desktop sa isang Mac, Windows o Linux machine, mag-sign in gamit ang parehong account, at bigyan ito ng trabaho mula sa telepono</string>
-    <string name="nm_welcome_notice">Ang Kestrel ay isang non-profit na open-source na proyekto ng komunidad: libre, habang-buhay. May kasamang libreng allowance ang modelo na binabayaran ng developer; pagkatapos niyon, ang sarili mong key. Walang ibinebenta; nasa patakaran sa privacy kung ano ang itinatago ng relay, at sa iyo ang Mga setting → Mga kontrol sa data.</string>
+    <string name="nm_welcome_notice">Kestrel runs as a local agent and needs no account. It does not call nanoMuse Cloud account, allowance, profile, or conversation-sync APIs.</string>
     <string name="nm_welcome_hands_title">Hayaan itong gamitin ang telepono mo</string>
     <string name="nm_welcome_hands_sub">Sa dalawang pahintulot, kaya nitong magbukas ng mga app, mag-tap at mag-type para sa iyo. Nananatili sa screen ang isang capsule na may bawat hakbang at isang button na Itigil; laging sa iyo ang mga login, password at code.</string>
     <string name="nm_welcome_hands_turn_on">I-on</string>
@@ -1125,7 +1125,7 @@
     <string name="nm_models_cloud_off_refused">Magdagdag muna ng sarili mong provider; kapag naka-off ang nanoMuse Cloud, wala nang ibang makakasagot.</string>
     <string name="nm_chat_no_model">Walang modelong makakasagot ngayon. Pumili ng isa sa Mga Setting › Mga Modelo.</string>
     <string name="nm_cloud_provider_no_delete">Ang provider na ito ay ang iyong nanoMuse Cloud account. I-off ito sa itaas para hindi na gamitin ang mga modelo nito; para mag-sign out, buksan ang Mga Setting › nanoMuse Cloud.</string>
-    <string name="nm_welcome_own_key">Gamitin na lang ang sariling API key</string>
+    <string name="nm_welcome_own_key">Configure model</string>
     <string name="nm_useit_title">Gamitin ito para sa</string>
     <string name="nm_useit_body_signed_out">Piliin kung ano ang dapat asikasuhin ng key na ito.</string>
     <string name="nm_useit_use">Gamitin</string>

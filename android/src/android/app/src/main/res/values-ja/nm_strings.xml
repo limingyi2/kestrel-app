@@ -599,8 +599,8 @@
     <string name="nm_pc_title">コンピューター</string>
     <string name="nm_pc_none_short">なし</string>
     <string name="nm_pc_intro">ここで言えば、コンピューターで実行されます: コマンド、ファイル、そのブラウザーのページ、画面の確認、あるいはそこにある Kestrel へのタスク全体。スマートフォンがコンピューターを動かし、その逆はありません。承認はすべてまずここで決まります。</string>
-    <string name="nm_pc_hub_title">簡単な方法: 同じアカウントで nanoMuse Desktop</string>
-    <string name="nm_pc_hub_body">コンピューターに nanoMuse Desktop をインストールし、この端末のアカウントでサインインしてください。数秒でアカウント → デバイスに表示されます。</string>
+    <string name="nm_pc_hub_title">Cross-device access is paused</string>
+    <string name="nm_pc_hub_body">Waiting for Kestrel Relay/Bridge. Local chat, tools, files, memory, Hands, Skills and MCP continue to work.</string>
     <string name="nm_pc_hub_download">nanoMuse Desktop を入手</string>
     <string name="nm_pc_hub_account">アカウントとデバイス</string>
     <string name="nm_pc_section_paired">このアカウントのコンピューター</string>
@@ -633,7 +633,7 @@
     <!-- nanoMuse: the first-run pages -->
     <string name="nm_welcome_tagline">あなたのすべてのデバイスのための、オープンソースのパーソナルエージェント。</string>
     <string name="nm_welcome_email">サインイン（無料）</string>
-    <string name="nm_welcome_fine_print">1 つのアカウントでデバイスがつながり、無料のモデル利用も付いてきます。料金はかかりません。自分の API キーはすぐあとで追加できます。</string>
+    <string name="nm_welcome_fine_print">Your API key stays on this device and is never sent to nanoMuse Cloud.</string>
     <string name="nm_setup_source_title">どのモデルが答えますか？</string>
     <string name="nm_setup_source_sub">アカウントにはすでにモデルが付いています。自分の API キーも追加でき、いつでも切り替えられます。</string>
     <string name="nm_setup_source_cloud">nanoMuse Cloud のモデルを使う</string>
@@ -650,7 +650,7 @@
     <string name="nm_welcome_feat_hands_sub">列車の予約、食事の注文、アプリ内での調べもの。あなたは見守り、いつでも止められます</string>
     <string name="nm_welcome_feat_reach">リーチ: ここからコンピューターへ</string>
     <string name="nm_welcome_feat_reach_sub">Mac、Windows、Linux のマシンに nanoMuse Desktop を入れて同じアカウントでサインインすれば、スマートフォンから仕事を任せられます</string>
-    <string name="nm_welcome_notice">Kestrel は非営利のオープンソースコミュニティプロジェクトです：ずっと無料です。モデルには開発者が負担する無料枠が付き、その後は自分のキーを使います。何も売りません。リレーが保持するものはプライバシーポリシーに書かれ、設定 → データ管理はあなたのものです。</string>
+    <string name="nm_welcome_notice">Kestrel runs as a local agent and needs no account. It does not call nanoMuse Cloud account, allowance, profile, or conversation-sync APIs.</string>
     <string name="nm_welcome_hands_title">スマートフォンを使わせる</string>
     <string name="nm_welcome_hands_sub">2 つの権限で、アプリを開き、タップし、入力を代わりに行えます。各ステップと停止ボタンの付いたカプセルが画面に残ります。ログイン、パスワード、コードは常にあなたのものです。</string>
     <string name="nm_welcome_hands_turn_on">オンにする</string>
@@ -1121,7 +1121,7 @@
     <string name="nm_models_cloud_off_refused">先に自分のプロバイダーを追加してください。nanoMuse Cloud をオフにすると、ほかに答えられるものがありません。</string>
     <string name="nm_chat_no_model">いま答えられるモデルがありません。設定 › モデルで一つ選んでください。</string>
     <string name="nm_cloud_provider_no_delete">このプロバイダーは nanoMuse Cloud のアカウントそのものです。モデルを使わないようにするには上のスイッチをオフにし、サインアウトするには「設定 › nanoMuse Cloud」を開いてください。</string>
-    <string name="nm_welcome_own_key">自分の API キーを使う</string>
+    <string name="nm_welcome_own_key">Configure model</string>
     <string name="nm_useit_title">何に使うか</string>
     <string name="nm_useit_body_signed_out">このキーに任せることを選んでください。</string>
     <string name="nm_useit_use">使う</string>

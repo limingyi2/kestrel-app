@@ -251,6 +251,18 @@ object NanoMuseCloud {
     private fun prefs(context: Context) = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     /**
+     * Kestrel local-first migration. Remove the legacy relay provider and its account token
+     * without contacting the relay. User-created provider credentials are left untouched.
+     */
+    fun disableAccountRuntime(context: Context) {
+        val ctx = context.applicationContext
+        val legacyId = prefs(ctx).getString(KEY_INSTANCE, null)
+        if (!legacyId.isNullOrBlank()) runCatching { repo(ctx)?.removeInstance(legacyId) }
+        clear(ctx)
+        io.github.nanomuse.hub.Hub.stop(ctx)
+    }
+
+    /**
      * The relay this phone talks to: nanoMuse Cloud, or the one the person named on the
      * sign-in screen ("Use a different server" — people who run their own, 0.1.38). Kept
      * across launches; the hub, the console links and the media models all read it from here.
@@ -1085,7 +1097,7 @@ object NanoMuseCloud {
     private fun clear(context: Context) {
         _signedIn.value = false
         prefs(context).edit()
-            .remove(KEY_INSTANCE).remove(KEY_CHANNEL).remove(KEY_HINT)
+            .remove(KEY_BASE).remove(KEY_INSTANCE).remove(KEY_CHANNEL).remove(KEY_HINT)
             .remove(KEY_GRANTED).remove(KEY_USED).remove(KEY_USED_TODAY).remove(KEY_DAILY_CAP).remove(KEY_UNLIMITED).remove(KEY_CHECKED_AT)
             .remove(KEY_MEMBER).remove(KEY_SPENT_TODAY).remove(KEY_SPENT_TOTAL).remove(KEY_USD_CNY)
             .remove(KEY_GRANT).remove(KEY_LEFT).remove(KEY_WARN).remove(KEY_ALLOWANCE).remove(KEY_INVITEE_BONUS)
