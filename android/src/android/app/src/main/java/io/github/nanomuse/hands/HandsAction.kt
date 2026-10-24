@@ -4,10 +4,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /**
- * What the screen model can do on the phone — one action per turn, in the shape of the
- * `mobile_use` action space of MemGUI-Bench (MIT) and Open-AutoGLM: coordinates on a 0–999
- * grid over the screenshot, so the same reply works on any screen size, and a `target` on
- * every tap saying what is under the finger, which is what the approval card reads.
+ * What the screen model can do on the phone, compatible with the `mobile_use` action space
+ * of MemGUI-Bench (MIT) and Open-AutoGLM. Visual actions use a 0–999 screenshot grid; a plan
+ * uses bounded semantic targets and is revalidated against the live accessibility tree.
  */
 sealed class HandsAction {
     /** A point on the 0–999 grid of the screenshot. */
@@ -34,6 +33,15 @@ sealed class HandsAction {
     /** The model needs something only the user knows; the task pauses and the chat asks. */
     data class AskUser(val question: String) : HandsAction()
     data class Status(val complete: Boolean, val answer: String) : HandsAction()
+    /** A bounded series of semantic steps. The local executor validates each step on live UI. */
+    data class Plan(val steps: List<PlanStep>) : HandsAction()
+    data class PlanStep(
+        val action: HandsAction,
+        /** Exact visible label that must still be present before this step. */
+        val whenVisible: String = "",
+        /** Exact visible label expected before the next planned step. */
+        val expectAfter: String? = null,
+    )
 
     /** The label the guard reads, for taps; null for everything else. */
     val tapTarget: String?
@@ -60,6 +68,7 @@ sealed class HandsAction {
         is TakeOver -> "your turn"
         is AskUser -> "question for you"
         is Status -> if (complete) "done" else "cannot finish"
+        is Plan -> "verified plan (${steps.size} steps)"
     }
 
     companion object {
@@ -85,6 +94,7 @@ sealed class HandsAction {
             "take_over" to "take_over", "takeover" to "take_over", "handoff" to "take_over", "hand_over" to "take_over",
             "ask_user" to "ask_user", "ask" to "ask_user",
             "status" to "status", "answer" to "status", "finish" to "status", "done" to "status", "complete" to "status", "terminate" to "status",
+            "plan" to "plan", "sequence" to "plan",
         )
 
         /**
@@ -179,8 +189,67 @@ sealed class HandsAction {
                         (status.isBlank() && rawType in setOf("answer", "finish", "done", "complete"))
                     Status(complete, answer)
                 }
+                "plan" -> parsePlan(o)
                 else -> throw FormatError("unknown action_type “$rawType”")
             }
+        }
+
+        private fun parsePlan(o: JSONObject): Plan {
+            val array = o.optJSONArray("steps") ?: throw FormatError("plan is missing steps")
+            if (array.length() !in MIN_PLAN_STEPS..MAX_PLAN_STEPS) {
+                throw FormatError("plan must contain $MIN_PLAN_STEPS to $MAX_PLAN_STEPS steps")
+            }
+            val steps = (0 until array.length()).map { index ->
+                val item = array.optJSONObject(index) ?: throw FormatError("plan step ${index + 1} is not an object")
+                val actionObject = JSONObject(item.toString())
+                val stepType = actionObject.optString("action_type").ifBlank { actionObject.optString("action") }
+                    .trim().lowercase().replace(' ', '_')
+                if (aliases[stepType] !in PLAN_ACTIONS) {
+                    throw FormatError("plan step ${index + 1} is not a supported native action")
+                }
+                if (aliases[stepType] == "click" && !actionObject.has("coordinate") &&
+                    !actionObject.has("element") && !actionObject.has("coordinates")) {
+                    actionObject.put("coordinate", JSONArray().put(0).put(0))
+                }
+                val action = fromJson(actionObject)
+                if (action is Plan || action !is Click && action !is InputText && action !is OpenApp &&
+                    action !is Scroll && action !is Back && action !is Home && action !is KeyboardEnter) {
+                    throw FormatError("plan step ${index + 1} is not a supported native action")
+                }
+                if (action is InputText && io.github.nanomuse.guard.TapWords.looksSecret(action.field)) {
+                    throw FormatError("secret fields must stay in the single-action handoff flow")
+                }
+                val whenVisible = item.optString("when_visible").trim()
+                if (action !is OpenApp && whenVisible.length < 2) {
+                    throw FormatError("plan step ${index + 1} needs a visible precondition")
+                }
+                if (whenVisible.length > MAX_PLAN_LABEL_CHARS || action.tapTarget.orEmpty().length > MAX_PLAN_LABEL_CHARS ||
+                    (action is InputText && action.field.length > MAX_PLAN_LABEL_CHARS) ||
+                    (action is OpenApp && action.appName.length > MAX_PLAN_LABEL_CHARS)) {
+                    throw FormatError("plan step ${index + 1} contains an oversized target label")
+                }
+                val expectAfter = item.optString("expect_after").trim().takeIf { it.isNotEmpty() }
+                if (expectAfter != null && expectAfter.length > MAX_PLAN_LABEL_CHARS) {
+                    throw FormatError("plan step ${index + 1} contains an oversized expected label")
+                }
+                if (index < array.length() - 1 && expectAfter == null) {
+                    throw FormatError("plan step ${index + 1} needs an expected next-page label")
+                }
+                PlanStep(action, whenVisible, expectAfter)
+            }
+            // Multi-step plans may not carry a send, payment, delete, or install through
+            // an approval boundary. Such an action remains available in the ordinary loop.
+            val sensitive = steps.filter { step ->
+                val action = step.action
+                action is KeyboardEnter || action is Click && (
+                    io.github.nanomuse.guard.TapWords.classify(action.target) != null ||
+                        INSTALL_WORDS.containsMatchIn(action.target)
+                    )
+            }
+            if (sensitive.isNotEmpty()) {
+                throw FormatError("sensitive actions must use the existing single-action approval flow")
+            }
+            return Plan(steps)
         }
 
         private fun clampGrid(v: Double): Int {
@@ -190,5 +259,11 @@ sealed class HandsAction {
             val n = if (v > 0 && v <= 1.0) v * GRID else v
             return n.toInt().coerceIn(0, GRID - 1)
         }
+
+        const val MIN_PLAN_STEPS = 2
+        const val MAX_PLAN_STEPS = 6
+        const val MAX_PLAN_LABEL_CHARS = 120
+        private val PLAN_ACTIONS = setOf("click", "input_text", "open_app", "scroll", "navigate_back", "navigate_home")
+        private val INSTALL_WORDS = Regex("install|download|安装|下载", RegexOption.IGNORE_CASE)
     }
 }

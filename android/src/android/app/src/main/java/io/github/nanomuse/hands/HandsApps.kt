@@ -49,6 +49,19 @@ object HandsApps {
             ?: alias(lower)?.let { pkgs -> apps.firstOrNull { it.packageName in pkgs } }
     }
 
+    /** Exact names only for a local multi-step plan; fuzzy matches must go back to vision. */
+    fun resolveUnique(context: Context, name: String): App? {
+        val query = name.trim()
+        if (query.isEmpty()) return null
+        val lower = query.lowercase()
+        val apps = launchable(context)
+        val exact = apps.filter { it.label.equals(query, ignoreCase = true) || it.packageName.equals(query, ignoreCase = true) }
+        if (exact.size == 1) return exact.single()
+        if (exact.size > 1) return null
+        val aliased = alias(lower) ?: return null
+        return apps.filter { it.packageName in aliased }.singleOrNull()
+    }
+
     /** A few names people use that are not the label on the icon. */
     private fun alias(lower: String): Set<String>? = when (lower) {
         "wechat", "weixin", "微信" -> setOf("com.tencent.mm")

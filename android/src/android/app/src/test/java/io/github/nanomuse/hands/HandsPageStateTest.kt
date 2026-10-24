@@ -30,4 +30,14 @@ class HandsPageStateTest {
         assertFalse(state.ready(500, true, false))
         assertTrue(state.ready(740, true, false))
     }
+
+    @Test fun `click and focus events trigger a fresh page readiness check`() {
+        val state = HandsPageState(0)
+        state.event("TYPE_VIEW_CLICKED", 200)
+        assertTrue(state.contentChanged)
+        assertFalse(state.ready(449, true, false))
+        state.event("TYPE_VIEW_FOCUSED", 450)
+        assertFalse(state.ready(699, true, false))
+        assertTrue(state.ready(700, true, false))
+    }
 }

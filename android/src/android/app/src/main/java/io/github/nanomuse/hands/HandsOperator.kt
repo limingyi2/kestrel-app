@@ -42,8 +42,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
 /**
- * One task on the phone's screen, start to finish: screenshot → screen model → one action →
- * again, until the model says it is done, the user says stop, or the step budget runs out.
+ * One task on the phone's screen, start to finish. The screen model may propose a bounded
+ * semantic plan; the live accessibility state validates each local action, with the existing
+ * one-action visual loop as fallback.
  *
  * The model perceives screenshots. For a tap, a uniquely matching visible clickable node in the
  * foreground app may ground the model's named target; ambiguous labels fall back to model
@@ -102,6 +103,18 @@ class HandsOperator(private val context: Context) {
     private var pageObserver: HandsPageObserver? = null
     private var timeline = HandsTimeline()
     private var actionCount = 0
+    private var screenshotCount = 0
+    private var modelCallCount = 0
+    private var nativePlanCount = 0
+    private var nativePlanFallbackCount = 0
+    private var nativePlanActionCount = 0
+    private var nativeNodeLookupMs = 0L
+    private var nativeActionMs = 0L
+    private var nativePageWaitMs = 0L
+    private var modelTotalMs = 0L
+    private var screenshotTotalMs = 0L
+    private var pageWaitTotalMs = 0L
+    private var accessibilityLookupTotalMs = 0L
     @Volatile private var runStartedElapsedMs: Long = 0L
 
     /** The session this run's approval cards are filed under; see [ownPendingRequest]. */
@@ -149,6 +162,18 @@ class HandsOperator(private val context: Context) {
         val started = System.currentTimeMillis()
         val startedElapsed = SystemClock.elapsedRealtime()
         runStartedElapsedMs = startedElapsed
+        screenshotCount = 0
+        modelCallCount = 0
+        nativePlanCount = 0
+        nativePlanFallbackCount = 0
+        nativePlanActionCount = 0
+        nativeNodeLookupMs = 0L
+        nativeActionMs = 0L
+        nativePageWaitMs = 0L
+        modelTotalMs = 0L
+        screenshotTotalMs = 0L
+        pageWaitTotalMs = 0L
+        accessibilityLookupTotalMs = 0L
         try {
             val svc = MinisAccessibilityService.getInstance()
                 ?: return finish(Outcome.Failed("the accessibility service is not running"), steps, runId, lastScreen, traceDir, log, model?.label)
@@ -209,7 +234,11 @@ class HandsOperator(private val context: Context) {
                 val screenH: Int
                 run {
                     val capture = screenshot(svc)
-                    if (capture?.bitmap != null) timeline.mark("first_screenshot_complete")
+                    screenshotCount++
+                    screenshotTotalMs += (capture?.captureMs ?: 0L) + (capture?.retryWaitMs ?: 0L)
+                    if (capture?.bitmap != null) {
+                        timeline.mark("first_screenshot_complete")
+                    }
                     timings["screenshot_capture_ms"] = capture?.captureMs ?: 0L
                     timings["screenshot_retry_wait_ms"] = capture?.retryWaitMs ?: 0L
                     val shot = capture?.bitmap ?: run {
@@ -226,6 +255,8 @@ class HandsOperator(private val context: Context) {
                     val saveStarted = SystemClock.elapsedRealtime()
                     lastScreen = save(traceDir, steps, jpeg, runId)
                     timings["screenshot_save_ms"] = SystemClock.elapsedRealtime() - saveStarted
+                    screenshotTotalMs += timings["screenshot_encode_ms"] ?: 0L
+                    screenshotTotalMs += timings["screenshot_save_ms"] ?: 0L
                 }
                 if (jpeg.black) {
                     blackScreens++
@@ -239,8 +270,13 @@ class HandsOperator(private val context: Context) {
                 blackScreens = 0
 
                 // ── think ──
-                val messages = buildMessages(turns, HandsPrompt.turnText(steps, lastResult), jpeg.bytes)
+                val controlsStarted = SystemClock.elapsedRealtime()
+                val controls = ScreenWords.visibleControls(svc)
+                timings["accessibility_controls_ms"] = SystemClock.elapsedRealtime() - controlsStarted
+                val currentTurnText = HandsPrompt.turnText(steps, lastResult, controls)
+                val messages = buildMessages(turns, currentTurnText, jpeg.bytes)
                 val modelStarted = SystemClock.elapsedRealtime()
+                modelCallCount++
                 val reply = try {
                     runBlocking {
                         val callJob = currentCoroutineContext()[Job]
@@ -255,6 +291,7 @@ class HandsOperator(private val context: Context) {
                     }
                 } catch (t: Throwable) {
                     timings["model_ms"] = SystemClock.elapsedRealtime() - modelStarted
+                    modelTotalMs += timings["model_ms"] ?: 0L
                     if (stop.get()) {
                         trace(traceDir, steps, "", "", "model_cancelled", lastScreen, timings)
                         return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
@@ -273,12 +310,13 @@ class HandsOperator(private val context: Context) {
                     continue
                 }
                 timings["model_ms"] = SystemClock.elapsedRealtime() - modelStarted
+                modelTotalMs += timings["model_ms"] ?: 0L
                 timeline.mark("first_visual_response")
                 if (stop.get()) {
                     trace(traceDir, steps, "", "", "stopped_after_model", lastScreen, timings)
                     return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
                 }
-                val turn = Turn(HandsPrompt.turnText(steps, lastResult), jpeg.bytes, reply)
+                val turn = Turn(currentTurnText, jpeg.bytes, reply)
                 turns += turn
                 val parsed = try {
                     HandsAction.parse(reply)
@@ -325,7 +363,9 @@ class HandsOperator(private val context: Context) {
 
                 // ── act ──
                 val actionStarted = SystemClock.elapsedRealtime()
-                pageObserver = HandsPageObserver(svc, context.packageName) { timeline.mark("page_change_detected") }
+                if (action !is HandsAction.Plan) {
+                    pageObserver = HandsPageObserver(svc, context.packageName) { timeline.mark("page_change_detected") }
+                }
                 try { when (action) {
                     is HandsAction.Status -> {
                         log += "step $steps timing: " + timings.entries.joinToString { "${it.key}=${it.value}ms" }
@@ -496,6 +536,40 @@ class HandsOperator(private val context: Context) {
                             "no installed app matches “${action.appName}”. Installed: " + apps.take(40).joinToString(", ") { it.label } + ". Open it from the home screen if you must."
                         }
                     }
+                    is HandsAction.Plan -> {
+                        nativePlanCount++
+                        capsule.stage.say(context.getString(com.openminis.app.R.string.nm_hands_looking))
+                        val nativePort = HandsAndroidNativePort(
+                            context = context,
+                            service = svc,
+                            onAction = { recordAction() },
+                            onPageChange = { timeline.mark("page_change_detected") },
+                        )
+                        val result = try {
+                            HandsNativePlanExecutor(nativePort, stopped = { stop.get() }).execute(action)
+                        } finally {
+                            nativePort.close()
+                        }
+                        nativePlanActionCount += result.completedActions
+                        nativeNodeLookupMs += result.nodeLookupMs
+                        nativeActionMs += result.actionMs
+                        nativePageWaitMs += result.pageWaitMs
+                        timings["native_node_lookup_ms"] = result.nodeLookupMs
+                        timings["native_action_ms"] = result.actionMs
+                        timings["page_wait_ms"] = result.pageWaitMs
+                        timings["native_actions_completed"] = result.completedActions.toLong()
+                        timings["native_event_stable_transitions"] = result.eventStableTransitions.toLong()
+                        when (result.state) {
+                            HandsNativePlanExecutor.State.COMPLETE -> lastResult = "${result.reason}; take a fresh screenshot before the next decision."
+                            HandsNativePlanExecutor.State.NEEDS_VISION -> {
+                                nativePlanFallbackCount++
+                                lastResult = "The semantic plan stopped after ${result.completedActions} completed actions because ${result.reason}. Those actions were not repeated; inspect the current screen and continue with a fresh visual action."
+                            }
+                            HandsNativePlanExecutor.State.STOPPED -> {
+                                return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
+                            }
+                        }
+                    }
                     HandsAction.Back -> {
                         capsule.stage.say(fxLabel(action))
                         val actionTime = SystemClock.elapsedRealtime()
@@ -528,6 +602,8 @@ class HandsOperator(private val context: Context) {
                     pageObserver?.close()
                     pageObserver = null
                     timings["action_and_wait_ms"] = SystemClock.elapsedRealtime() - actionStarted
+                    pageWaitTotalMs += timings["settle_wait_ms"] ?: timings["page_wait_ms"] ?: 0L
+                    accessibilityLookupTotalMs += timings["accessibility_lookup_ms"] ?: timings["native_node_lookup_ms"] ?: 0L
                 }
                 loopNote?.let { note -> lastResult = listOfNotNull(lastResult, note).joinToString(" ") }
                 log += "step $steps timing: " + timings.entries.joinToString { "${it.key}=${it.value}ms" }
@@ -579,6 +655,18 @@ class HandsOperator(private val context: Context) {
                             .put("milestones_ms", JSONObject(timeline.snapshot()))
                             .put("accessibility_health", HandsAccessibilityHealth.snapshot(context))
                             .put("android_action_attempts", actionCount)
+                            .put("screenshot_count", screenshotCount)
+                            .put("visual_model_calls", modelCallCount)
+                            .put("native_plan_count", nativePlanCount)
+                            .put("native_plan_fallback_count", nativePlanFallbackCount)
+                            .put("native_plan_actions_completed", nativePlanActionCount)
+                            .put("native_node_lookup_total_ms", nativeNodeLookupMs)
+                            .put("accessibility_lookup_total_ms", accessibilityLookupTotalMs)
+                            .put("native_action_total_ms", nativeActionMs)
+                            .put("native_page_wait_total_ms", nativePageWaitMs)
+                            .put("visual_model_total_ms", modelTotalMs)
+                            .put("screenshot_total_ms", screenshotTotalMs)
+                            .put("page_wait_total_ms", pageWaitTotalMs)
                             .put("return_requested", shouldReturn)
                             .put("launch_attempted", returnAttempt.launchAttempted)
                             .put("launch_accepted", returnAttempt.launchAccepted)
@@ -780,12 +868,15 @@ class HandsOperator(private val context: Context) {
     /** Types into the field with the cursor; [HANDOFF] when that field is a secret. */
     private fun typeText(svc: MinisAccessibilityService, action: HandsAction.InputText): String {
         if (TapWords.looksSecret(action.field)) return HANDOFF
-        val node = focusedField(svc) ?: return "no text field has the cursor; tap the field first, then type in the next turn."
-        if (node.isPassword) return HANDOFF
-        val hint = listOfNotNull(node.hintText?.toString(), node.contentDescription?.toString()).joinToString(" ")
-        if (hint.isNotBlank() && TapWords.looksSecret(hint)) return HANDOFF
-        val ok = svc.setNodeText(node, action.text)
-        return if (ok) "typed “${action.text.take(60)}” into the field." else "the field did not accept text (ACTION_SET_TEXT failed); tap it and try again."
+        val expectedPackage = svc.foregroundPackage().first?.takeIf { it.isNotBlank() }
+            ?: return "there is no foreground app to verify; inspect the screen before typing."
+        val field = ScreenWords.uniqueEditableInfo(svc, action.field)
+            ?: return "no unique visible editable field matches “${action.field.take(40)}”; inspect the screen before typing."
+        if (field.password || TapWords.looksSecret(field.label)) return HANDOFF
+        if (!field.focused) return "the unique field is not focused; tap it first, then type in the next turn."
+        val ok = ScreenWords.setTextUnique(svc, action.field, field.center, action.text, expectedPackage)
+        return if (ok) "typed and verified the requested text in the unique focused field."
+        else "the unique focused field did not accept the exact text (ACTION_SET_TEXT or value verification failed); inspect the screen before trying again."
     }
 
     private fun pressEnter(svc: MinisAccessibilityService): String {

@@ -27,13 +27,17 @@ LEAVES = (
     "screenshot_retry_wait_ms",
     "screenshot_encode_ms",
     "screenshot_save_ms",
+    "accessibility_controls_ms",
     "model_ms",
     "accessibility_lookup_ms",
+    "native_node_lookup_ms",
+    "native_action_ms",
     "risk_approval_ms",
     "freshness_check_ms",
     "aim_wait_ms",
     "android_action_ms",
     "settle_wait_ms",
+    "page_wait_ms",
     "explicit_wait_ms",
 )
 
@@ -76,9 +80,11 @@ def report(root: Path) -> dict[str, Any]:
             for key in LEAVES:
                 totals[key] += times.get(key, 0)
                 run_totals[key] += times.get(key, 0)
-            for name, field in (("model_call", "model_ms"), ("page_wait", "settle_wait_ms")):
-                if field in times:
-                    distributions[name].append(times[field])
+            if "model_ms" in times:
+                distributions["model_call"].append(times["model_ms"])
+            page_wait = times.get("page_wait_ms", times.get("settle_wait_ms"))
+            if page_wait is not None:
+                distributions["page_wait"].append(page_wait)
             rows.append({"step": row.get("step"), "timings_ms": times})
         if all(
             key in milestones
@@ -101,6 +107,14 @@ def report(root: Path) -> dict[str, Any]:
                 "run": path.parent.name,
                 "outcome": summary.get("outcome"),
                 "android_action_attempts": summary.get("android_action_attempts"),
+                "screenshot_count": summary.get("screenshot_count"),
+                "visual_model_calls": summary.get("visual_model_calls"),
+                "native_plan_count": summary.get("native_plan_count"),
+                "native_plan_actions_completed": summary.get("native_plan_actions_completed"),
+                "native_plan_fallback_count": summary.get("native_plan_fallback_count"),
+                "native_node_lookup_total_ms": summary.get("native_node_lookup_total_ms"),
+                "native_action_total_ms": summary.get("native_action_total_ms"),
+                "page_wait_total_ms": summary.get("page_wait_total_ms"),
                 "foreground_confirmed": summary.get("foreground_confirmed"),
                 "return_requested": summary.get("return_requested"),
                 "mistaps_or_duplicate_taps": "requires_device_observer_annotation",

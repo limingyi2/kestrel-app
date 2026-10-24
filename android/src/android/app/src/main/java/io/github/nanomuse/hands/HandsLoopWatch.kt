@@ -80,6 +80,7 @@ class HandsLoopWatch(private val noteAt: Int = NOTE_AT, private val stopAt: Int 
             is HandsAction.Scroll -> b is HandsAction.Scroll && a.direction == b.direction
             is HandsAction.InputText -> b is HandsAction.InputText && a.text == b.text
             is HandsAction.OpenApp -> b is HandsAction.OpenApp && a.appName.equals(b.appName, ignoreCase = true)
+            is HandsAction.Plan -> b is HandsAction.Plan && a.steps == b.steps
             is HandsAction.Wait -> b is HandsAction.Wait
             HandsAction.KeyboardEnter, HandsAction.Back, HandsAction.Home -> a === b
             is HandsAction.TakeOver, is HandsAction.AskUser, is HandsAction.Status -> false
