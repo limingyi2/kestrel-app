@@ -563,7 +563,11 @@
     <string name="nm_hands_rule_screenshots">每一步的截图随对话保存，只发给你自己的模型。</string>
     <!-- the capsule -->
     <string name="nm_hands_step">第 %1$d 步</string>
-    <string name="nm_hands_looking">正在看屏幕…</string>
+    <string name="nm_hands_looking">正在观察屏幕…</string>
+    <string name="nm_hands_deciding">正在判断下一步…</string>
+    <string name="nm_hands_acting">正在执行操作…</string>
+    <string name="nm_hands_waiting_page">正在等待页面响应…</string>
+    <string name="nm_hands_verifying">正在验证操作结果…</string>
     <string name="nm_hands_stop">停止</string>
     <string name="nm_hands_continue">继续</string>
     <string name="nm_hands_open">打开</string>

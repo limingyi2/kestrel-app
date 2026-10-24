@@ -565,6 +565,10 @@
     <!-- the capsule -->
     <string name="nm_hands_step">Adım %1$d</string>
     <string name="nm_hands_looking">Ekrana bakıyor…</string>
+    <string name="nm_hands_deciding">Sonraki adıma karar veriliyor…</string>
+    <string name="nm_hands_acting">İşlem yapılıyor…</string>
+    <string name="nm_hands_waiting_page">Sayfadan yanıt bekleniyor…</string>
+    <string name="nm_hands_verifying">Sonuç doğrulanıyor…</string>
     <string name="nm_hands_stop">Durdur</string>
     <string name="nm_hands_continue">Devam et</string>
     <string name="nm_hands_open">Aç</string>

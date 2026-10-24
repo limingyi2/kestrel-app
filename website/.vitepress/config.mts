@@ -108,6 +108,7 @@ const runIt: DefaultTheme.SidebarItem[] = [
 const understandIt: DefaultTheme.SidebarItem[] = [
   { text: 'Kestrel architecture', link: '/kestrel-architecture' },
   { text: 'Hands P1.6 implementation and device report', link: '/hands-p1.6' },
+  { text: 'Hands: single-model vision decisions', link: '/hands-vision-decision' },
   { text: 'Kestrel initialization', link: '/kestrel-initialization' },
   { text: 'Architecture', link: '/architecture' },
   { text: 'Sentinel', link: '/sentinel' },
@@ -169,6 +170,7 @@ const zhRunIt: DefaultTheme.SidebarItem[] = [
 const zhUnderstandIt: DefaultTheme.SidebarItem[] = [
   { text: 'Kestrel 架构', link: '/zh/kestrel-architecture' },
   { text: 'Hands P1.6 实现与真机报告', link: '/zh/hands-p1.6' },
+  { text: 'Hands：单模型视觉决策与连续操作', link: '/zh/hands-vision-decision' },
   { text: 'Kestrel 初始化', link: '/zh/kestrel-initialization' },
   { text: '架构', link: '/zh/architecture' },
   { text: '哨兵（Sentinel）', link: '/zh/sentinel' },

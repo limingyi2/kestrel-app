@@ -571,6 +571,10 @@
     <!-- the capsule -->
     <string name="nm_hands_step">Шаг %1$d</string>
     <string name="nm_hands_looking">Смотрит на экран…</string>
+    <string name="nm_hands_deciding">Выбираем следующий шаг…</string>
+    <string name="nm_hands_acting">Выполняем действие…</string>
+    <string name="nm_hands_waiting_page">Ждём отклика страницы…</string>
+    <string name="nm_hands_verifying">Проверяем результат…</string>
     <string name="nm_hands_stop">Стоп</string>
     <string name="nm_hands_continue">Продолжить</string>
     <string name="nm_hands_open">Открыть</string>

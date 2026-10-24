@@ -82,13 +82,15 @@ class HandsCapsule(private val context: Context) {
 
     private fun dp(v: Int): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), context.resources.displayMetrics).toInt()
 
-    /** Shows (or updates) the working state. */
+    /** Shows (or updates) the working state. [step] 0 means "between steps" — no step number is shown. */
     fun working(step: Int, detail: String) = onMain {
         ensure()
         stage.mood(HandsStage.Mood.WORKING)
         ring?.turning(true)
         bars?.visibility = View.VISIBLE
-        titleView?.text = context.getString(R.string.nm_hands_step, step)
+        titleView?.text =
+            if (step > 0) context.getString(R.string.nm_hands_step, step)
+            else context.getString(R.string.nm_hands_status_working)
         detailView?.text = detail
         continueBtn?.visibility = View.GONE
         openBtn?.visibility = View.GONE

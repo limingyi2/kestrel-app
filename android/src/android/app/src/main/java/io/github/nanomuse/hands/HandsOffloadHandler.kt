@@ -108,6 +108,9 @@ class HandsOffloadHandler(private val context: Context) : NativeOffloadHandler {
                 .put("elapsed_ms", attempt.elapsedMs)
                 .put("failure_reason", attempt.failureReason ?: JSONObject.NULL))
         }
+        if (result.lastScreen != null) {
+            body.put("last_screen_note", "show it inline with ![screen](<last_screen>) if useful; do not call read_image on it — the result text above is authoritative")
+        }
         when (val o = result.outcome) {
             is HandsOperator.Outcome.Done -> body.put("answer", o.answer)
             is HandsOperator.Outcome.Infeasible -> body.put("message", o.message)

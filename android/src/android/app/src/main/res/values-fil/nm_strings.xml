@@ -565,6 +565,10 @@
     <!-- the capsule -->
     <string name="nm_hands_step">Hakbang %1$d</string>
     <string name="nm_hands_looking">Tinitingnan ang screen…</string>
+    <string name="nm_hands_deciding">Nagtatanto ng susunod na hakbang…</string>
+    <string name="nm_hands_acting">Ginagawa ang aksyon…</string>
+    <string name="nm_hands_waiting_page">Hinihintay ang pahina…</string>
+    <string name="nm_hands_verifying">Tinitingnan ang resulta…</string>
     <string name="nm_hands_stop">Itigil</string>
     <string name="nm_hands_continue">Magpatuloy</string>
     <string name="nm_hands_open">Buksan</string>
