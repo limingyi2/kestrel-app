@@ -83,16 +83,16 @@ cd android/src/android
 ./gradlew :app:assembleDebug --console=plain --no-daemon
 ```
 
-CI Debug APKs keep the existing application id. Their `versionCode` is `50 +` the Android
-workflow run number, so later workflow runs can update earlier CI APKs. A hosted runner's default
-Android Debug key is generated on that runner; its certificate changes when the runner is replaced.
-For a stable CI test signature, configure the repository Actions secrets
+CI Debug APKs keep the existing application id. Trusted `push` and `workflow_dispatch` builds use
+the dedicated test-only PKCS12 signing key stored in repository Actions secrets
 `KESTREL_DEBUG_KEYSTORE_BASE64`, `KESTREL_DEBUG_KEYSTORE_PASSWORD`, `KESTREL_DEBUG_KEY_ALIAS`, and
-`KESTREL_DEBUG_KEY_PASSWORD` with a dedicated test-only PKCS12 keystore. The private key must not
-be committed or reused as a release key. Until all four secrets are configured, CI reports that it
-is using the runner Debug key. An APK signed with a different certificate cannot update an
-existing install in place; Android requires uninstalling that install first, which removes its
-local data. Check the certificate SHA-256 in the CI Badging step before installing an update.
+`KESTREL_DEBUG_KEY_PASSWORD`. The workflow fails if any secret is missing; it never silently falls
+back to a runner key for an installable CI artifact. Pull-request builds do not receive signing
+secrets and their artifact is marked ephemeral. Never commit the private key or reuse it as a
+release key. CI `versionCode` is `50 + GITHUB_RUN_NUMBER`; the Android workflow run number is
+global to that workflow, so each CI build receives a larger code. Check the application id, version
+code, and certificate SHA-256 in the Badging step before installing. A different signing
+certificate cannot update an installed app, and uninstalling clears its local data.
 
 The debug APK is `android/src/android/app/build/outputs/apk/debug/app-debug.apk`; the build
 configuration selects arm64-v8a by default. The emulator is x86_64; test the arm64 APK on an
