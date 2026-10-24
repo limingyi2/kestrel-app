@@ -10159,13 +10159,6 @@ class ChatViewModel(
                 if (result.exitCode != 0 || bashism.hasSilent) "$redactedOut\n\n$rem" else redactedOut
             } ?: redactedOut
 
-            // nanoMuse (hands re-read audit): a completed Hands run already judged its
-            // last_screen with the hands model and answered in text. Registering it here
-            // makes even the agent's *first* read_image of that picture this turn a note
-            // instead of a duplicate read; failed or stopped runs are not registered, and a
-            // new user message reopens the gate.
-            nmHandsReadDedup.noteFromRunResult(withReminder)
-
             ToolExecutionResult(
                 output = nmNotice?.let { "$withReminder\n\n$it" } ?: withReminder, // nanoMuse: install notice
                 success = result.exitCode == 0,

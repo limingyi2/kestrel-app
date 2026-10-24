@@ -1,25 +1,23 @@
 package io.github.nanomuse.hands
 
 /**
- * Behavior-level guard against re-reading a Hands screenshot the hands model already saw.
+ * Behavior-level guard against re-reading a Hands screenshot within one user turn.
  *
- * A completed Hands run (`outcome: done`) judged its `last_screen` with the hands model and
- * reported the result as text; a chat-agent `read_image` of that same picture re-decodes a
- * JPEG for an answer that is already on the table. Two gates, both scoped to one user turn:
+ * The prompt asks the chat agent to show a run's `last_screen` inline and never call
+ * `read_image` on it; models do not always comply. A *second* `read_image` of the same
+ * Hands run screenshot in the same turn is answered with a note instead of the pixels,
+ * which were already attached by the first call and are still in the model's context.
  *
- * - [noteFromRunResult] registers the `last_screen` of a completed run, so even the *first*
- *   `read_image` of that picture this turn is answered with a note instead of pixels.
- *   Failed, stopped and needs-user runs are not registered — there the agent may genuinely
- *   need to look.
- * - [shouldAttach] also allows one read per turn of a Hands screenshot that no completed
- *   run produced, and answers repeats with the note.
+ * The **first** read of a Hands screenshot is deliberately never blocked (P0 regression
+ * fix): the chat model's context is independent of the hands model's — the pixels went to
+ * the hands model only — so the chat agent may genuinely need `read_image` to see a run's
+ * final screen itself. Blocking that first read stranded the outer agent with an answer it
+ * could not look at, and it kept calling tools instead of replying.
  *
  * Scope, deliberately narrow:
  * - Only Hands run screenshots (`…/hands/<run>/step-N.jpg`) are gated; charts, downloads,
  *   attachments and every other image read exactly as before.
- * - A new user message is new evidence: [onUserTurn] reopens both gates, so "look at this
- *   screenshot" after the user asks works normally. For fresh visual analysis of the same
- *   screen the hands can simply be run again.
+ * - A new user message is new evidence: [onUserTurn] reopens the gate.
  * - The Vision Group routing (a text-only main model querying through `prompt`) is not
  *   gated by the caller: a focused question about an image is a legitimate new query.
  *
@@ -27,40 +25,24 @@ package io.github.nanomuse.hands
  */
 class ReadImageDedup {
     private val readThisTurn = mutableSetOf<String>()
-    private val completedRuns = mutableSetOf<String>()
 
     /** True when [path] points at a Hands run screenshot (`/hands/<run>/step-N.jpg`). */
     fun isHandsScreen(path: String): Boolean =
         HANDS_SCREEN.containsMatchIn(path.replace('\\', '/'))
 
     /**
-     * Registers the `last_screen` of a Hands run result, as printed by `nanomuse-hands run`.
-     * Only a completed run (`"outcome": "done"`) is registered: its result text is
-     * authoritative and its final screenshot needs no second opinion this turn.
-     */
-    fun noteFromRunResult(runResultText: String) {
-        if (!DONE_RUN.containsMatchIn(runResultText)) return
-        val screen = LAST_SCREEN.find(runResultText)?.groupValues?.get(1)?.trim().takeUnless { it.isNullOrEmpty() } ?: return
-        if (isHandsScreen(screen)) completedRuns.add(canonical(screen))
-    }
-
-    /**
-     * False when the caller should answer with a note instead of pixels: the picture is the
-     * `last_screen` of a Hands run that completed this turn, or it was already attached
-     * earlier this turn. True otherwise, and always true for anything that is not a Hands
-     * run screenshot.
+     * False when this exact Hands screenshot was already returned earlier in this turn and
+     * the caller should answer with a note instead of pixels; true otherwise — including
+     * the first read — and always true for anything that is not a Hands run screenshot.
      */
     fun shouldAttach(path: String): Boolean {
         if (!isHandsScreen(path)) return true
-        val key = canonical(path)
-        if (key in completedRuns) return false
-        return readThisTurn.add(key)
+        return readThisTurn.add(canonical(path))
     }
 
-    /** A new user message may ask about the same picture again: clear both gates. */
+    /** A new user message may ask about the same picture again: clear the gate. */
     fun onUserTurn() {
         readThisTurn.clear()
-        completedRuns.clear()
     }
 
     companion object {
@@ -68,8 +50,6 @@ class ReadImageDedup {
         // (/var/minis/attachments/hands/… or a session-scoped attachments dir) or the
         // minis:// URL the result JSON carries — matching the tail covers both.
         private val HANDS_SCREEN = Regex("/hands/\\d{8}-\\d{6}-\\d{3}/step-\\d+\\.jpg$")
-        private val DONE_RUN = Regex("\"outcome\"\\s*:\\s*\"done\"")
-        private val LAST_SCREEN = Regex("\"last_screen\"\\s*:\\s*\"([^\"]+)\"")
 
         /**
          * One picture, one key: the result JSON carries `minis://attachments/hands/…`, while

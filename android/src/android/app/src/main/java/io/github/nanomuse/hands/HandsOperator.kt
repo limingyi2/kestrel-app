@@ -109,7 +109,7 @@ class HandsOperator(private val context: Context) {
     private var nativePlanFallbackCount = 0
     private var nativePlanActionCount = 0
     private var staleObservationSkips = 0
-    private var coordinateVerifyFails = 0
+    private var staleRejections = 0
     private var nativeNodeLookupMs = 0L
     private var nativeActionMs = 0L
     private var nativePageWaitMs = 0L
@@ -170,7 +170,7 @@ class HandsOperator(private val context: Context) {
         nativePlanFallbackCount = 0
         nativePlanActionCount = 0
         staleObservationSkips = 0
-        coordinateVerifyFails = 0
+        staleRejections = 0
         nativeNodeLookupMs = 0L
         nativeActionMs = 0L
         nativePageWaitMs = 0L
@@ -340,17 +340,19 @@ class HandsOperator(private val context: Context) {
                 val action = parsed.action
                 // Content events during observation are animations or counters, not a page
                 // switch. A tap with a live unique node acts (the executor re-resolves the
-                // node); a coordinate-fallback tap must first prove the screen still matches;
-                // a window switch — including one under a status verdict — takes a fresh look.
+                // node); a coordinate-fallback tap must produce fresh local evidence before
+                // it taps; a window switch — including one under a status verdict — takes a
+                // fresh look. Every rejection is counted against one shared budget, reset
+                // only when an action actually executes: nothing can loop the run without
+                // either acting or ending with the reason on the table.
+                val rejectionStarted = SystemClock.elapsedRealtime()
                 val contentChanged = observationObserver?.changed() == true
                 val actsOnScreen = action !is HandsAction.Wait &&
                     action !is HandsAction.TakeOver && action !is HandsAction.AskUser
                 val tapGrounded = if (contentChanged) {
                     action.tapTarget?.let { ScreenWords.uniqueClickableCenter(svc, it) != null }
                 } else null
-                // The retry budget below is for one target at one spot: a model that changes
-                // tack, or a real page switch, starts it over.
-                if (tapGrounded != false) coordinateVerifyFails = 0
+                timings["tap_reground_lookup_ms"] = SystemClock.elapsedRealtime() - rejectionStarted
                 when (HandsStalePolicy.afterDecision(
                     windowChanged = observationObserver?.windowChanged() == true,
                     contentChanged = contentChanged,
@@ -359,57 +361,55 @@ class HandsOperator(private val context: Context) {
                 )) {
                     HandsStalePolicy.Verdict.REOBSERVE -> {
                         staleObservationSkips++
-                        coordinateVerifyFails = 0
+                        staleRejections++
                         lastResult = "the page changed during observation; inspect the current screen before acting or reporting completion."
                         trace(traceDir, steps, parsed.thought, reply, "stale_observation_skipped", lastScreen, timings)
+                        if (HandsStalePolicy.rejectionsExhausted(staleRejections)) {
+                            return finishStaleExhausted(steps, runId, lastScreen, traceDir, log, model.label, "a window switch")
+                        }
                         continue
                     }
                     HandsStalePolicy.Verdict.VERIFY -> {
-                        // The tap has no unique node to re-ground on: only pixels or a live
-                        // label can prove the coordinate still points at what the model named.
+                        // The tap has no unique node to re-ground on: fresh local evidence —
+                        // the region of the screenshot around the point, or a live label —
+                        // must confirm the coordinate still points at what the model named.
                         capsule.working(steps, context.getString(com.openminis.app.R.string.nm_hands_verifying))
+                        val (fx, fy) = when (action) {
+                            is HandsAction.Click -> action.at.toPixels(screenW, screenH)
+                            is HandsAction.DoubleTap -> action.at.toPixels(screenW, screenH)
+                            is HandsAction.LongPress -> action.at.toPixels(screenW, screenH)
+                            else -> -1 to -1
+                        }
                         val verifyStarted = SystemClock.elapsedRealtime()
-                        val fresh = screenshot(svc)?.bitmap
-                        val unchanged = fresh?.let {
-                            try { it.width == screenW && it.height == screenH && encode(it).bytes.contentEquals(jpeg.bytes) }
-                            finally { it.recycle() }
-                        } == true
+                        val freshPrint = screenshot(svc)?.bitmap?.let { fresh ->
+                            try { encode(fresh).print } finally { fresh.recycle() }
+                        }
                         timings["coordinate_freshness_ms"] = SystemClock.elapsedRealtime() - verifyStarted
-                        if (unchanged) {
-                            coordinateVerifyFails = 0
+                        // A payment-or-send tap is never rescued by a label: its own
+                        // approval-time check still demands the byte-identical screen.
+                        val onPoint = ScreenWords.at(svc, fx, fy)
+                        val dangerous = onPoint != null && TapWords.classify(action.tapTarget.orEmpty(), onPoint) != null
+                        val labelProof = !dangerous && HandsStalePolicy.labelMatchesTarget(action.tapTarget.orEmpty(), onPoint.orEmpty())
+                        val regionOk = freshPrint != null && HandsStalePolicy.regionUnchanged(
+                            jpeg.print, freshPrint, fx.toDouble() / screenW, fy.toDouble() / screenH,
+                        )
+                        // The budget is NOT cleared here: the action has not executed yet.
+                        // Only a completed step (end of the when below) restarts it, so a
+                        // verification pass that is then refused before the gesture still
+                        // counts toward the limit.
+                        if (regionOk || labelProof) {
+                            if (!regionOk && labelProof) {
+                                log += "step $steps: the screen moved, but the live label at the coordinate still names “${action.tapTarget.orEmpty().take(40)}” — tapping it."
+                            }
                         } else {
-                            val (fx, fy) = when (action) {
-                                is HandsAction.Click -> action.at.toPixels(screenW, screenH)
-                                is HandsAction.DoubleTap -> action.at.toPixels(screenW, screenH)
-                                is HandsAction.LongPress -> action.at.toPixels(screenW, screenH)
-                                else -> -1 to -1
+                            staleObservationSkips++
+                            staleRejections++
+                            lastResult = "the screen changed after the screenshot and the coordinate could not be re-verified; inspect the current page before tapping."
+                            trace(traceDir, steps, parsed.thought, reply, "stale_coordinate_rejected", lastScreen, timings)
+                            if (HandsStalePolicy.rejectionsExhausted(staleRejections)) {
+                                return finishStaleExhausted(steps, runId, lastScreen, traceDir, log, model.label, "an unprovable coordinate")
                             }
-                            val onPoint = ScreenWords.at(svc, fx, fy)
-                            // A payment-or-send tap is never rescued by a label: its own
-                            // approval-time check still demands the byte-identical screen.
-                            val dangerous = onPoint != null && TapWords.classify(action.tapTarget.orEmpty(), onPoint) != null
-                            val labelProof = !dangerous && HandsStalePolicy.labelMatchesTarget(action.tapTarget.orEmpty(), onPoint.orEmpty())
-                            coordinateVerifyFails++
-                            when (HandsStalePolicy.afterFreshnessFailure(labelProof, coordinateVerifyFails)) {
-                                HandsStalePolicy.CoordinateFallback.ACT_ON_LABEL -> {
-                                    coordinateVerifyFails = 0
-                                    log += "step $steps: the screen moved, but the live label at the coordinate still names “${action.tapTarget.orEmpty().take(40)}” — tapping it."
-                                }
-                                HandsStalePolicy.CoordinateFallback.REOBSERVE -> {
-                                    staleObservationSkips++
-                                    lastResult = "the screen changed after the screenshot and the coordinate could not be re-verified; inspect the current page before tapping."
-                                    trace(traceDir, steps, parsed.thought, reply, "stale_coordinate_rejected", lastScreen, timings)
-                                    continue
-                                }
-                                HandsStalePolicy.CoordinateFallback.EXHAUSTED -> {
-                                    val why = "the screen keeps changing faster than a coordinate tap can be verified " +
-                                        "(${HandsStalePolicy.MAX_COORDINATE_VERIFY_FAILS} attempts); nothing was tapped. " +
-                                        "Stop the page's motion or do the tap yourself, then run the task again."
-                                    log += "step $steps: $why"
-                                    trace(traceDir, steps, parsed.thought, reply, "coordinate_verify_exhausted", lastScreen, timings)
-                                    return finish(Outcome.Failed(why), steps, runId, lastScreen, traceDir, log, model.label)
-                                }
-                            }
+                            continue
                         }
                     }
                     HandsStalePolicy.Verdict.ACT -> {}
@@ -497,8 +497,13 @@ class HandsOperator(private val context: Context) {
                             } == true
                             timings["freshness_check_ms"] = SystemClock.elapsedRealtime() - freshStarted
                             if (!unchanged) {
+                                staleObservationSkips++
+                                staleRejections++
                                 lastResult = "the current screen could not confirm the approved coordinate; observe again."
                                 trace(traceDir, steps, parsed.thought, reply, "coordinate_reconfirmation_failed", lastScreen, timings)
+                                if (HandsStalePolicy.rejectionsExhausted(staleRejections)) {
+                                    return finishStaleExhausted(steps, runId, lastScreen, traceDir, log, model.label, "an approval-time change")
+                                }
                                 continue
                             }
                         }
@@ -516,8 +521,13 @@ class HandsOperator(private val context: Context) {
                                 nodeMoved = nodeNow != nodePoint,
                             ) == HandsStalePolicy.Verdict.REOBSERVE
                         ) {
+                            staleObservationSkips++
+                            staleRejections++
                             lastResult = "the page or target changed during approval; observe again before tapping."
                             trace(traceDir, steps, parsed.thought, reply, "target_reconfirmation_failed", lastScreen, timings)
+                            if (HandsStalePolicy.rejectionsExhausted(staleRejections)) {
+                                return finishStaleExhausted(steps, runId, lastScreen, traceDir, log, model.label, "a moved target")
+                            }
                             continue
                         }
                         val gestureStarted = SystemClock.elapsedRealtime()
@@ -685,6 +695,9 @@ class HandsOperator(private val context: Context) {
                 loopNote?.let { note -> lastResult = listOfNotNull(lastResult, note).joinToString(" ") }
                 log += "step $steps timing: " + timings.entries.joinToString { "${it.key}=${it.value}ms" }
                 trace(traceDir, steps, parsed.thought, reply, lastResult ?: "", lastScreen, timings)
+                // The step acted (every path through the when either returned or performed
+                // its action): real work happened, so the shared rejection budget restarts.
+                staleRejections = 0
             }
             return finish(Outcome.Infeasible("the step limit (${opts.maxSteps}) was reached before the task was done"), steps, runId, lastScreen, traceDir, log, model.label)
         } catch (t: Throwable) {
@@ -735,7 +748,7 @@ class HandsOperator(private val context: Context) {
                             .put("screenshot_count", screenshotCount)
                             .put("visual_model_calls", modelCallCount)
                             .put("stale_observation_skips", staleObservationSkips)
-                            .put("coordinate_verify_failures", coordinateVerifyFails)
+                            .put("stale_rejections", staleRejections)
                             .put("native_plan_count", nativePlanCount)
                             .put("native_plan_fallback_count", nativePlanFallbackCount)
                             .put("native_plan_actions_completed", nativePlanActionCount)
@@ -789,6 +802,21 @@ class HandsOperator(private val context: Context) {
         )
         terminalResult = result
         return result
+    }
+
+    /**
+     * Ends the run after [HandsStalePolicy.MAX_STALE_REJECTIONS] decided steps were refused
+     * without a single action executing in between. [lastRefusal] names what kept being
+     * rejected, so the user knows why the hands stopped instead of watching them think.
+     */
+    private fun finishStaleExhausted(
+        steps: Int, runId: String, lastScreen: String?, traceDir: File?, log: MutableList<String>, model: String?, lastRefusal: String,
+    ): Result {
+        val why = "the hands stopped after ${HandsStalePolicy.MAX_STALE_REJECTIONS} decided steps were refused without acting " +
+            "(the last refusal was $lastRefusal); nothing was tapped. Stop the page's motion or do the step yourself, then run the task again."
+        log += "step $steps: $why"
+        trace(traceDir, steps, "", "", "stale_rejections_exhausted", lastScreen, emptyMap())
+        return finish(Outcome.Failed(why), steps, runId, lastScreen, traceDir, log, model)
     }
 
     // ── the user's turn ────────────────────────────────────────────────────

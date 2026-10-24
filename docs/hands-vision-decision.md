@@ -89,6 +89,39 @@ does not itself trigger another model call.
   always pays the full minimum. Left as is — the event path already implements
   target-condition waiting, and shortening the floor risks tapping mid-transition.
 
+## P0 restore: acting again on animated pages
+
+Device feedback after the first PR landed: Hands kept "thinking" and never tapped. Code
+audit of every gate between a model decision and an executed action found three defects,
+fixed together on `p0/hands-action-restore`:
+
+1. **The window-switch re-observation was unbounded.** A decided step refused because a
+   window event fired during observation never reached the loop watch (the rejection
+   `continue`s before it), so a page that keeps emitting window events looped
+   screenshot → model call → discard until the 30-minute run limit: "keeps thinking,
+   never taps". Now **every rejection counts against one shared budget**
+   (`MAX_STALE_REJECTIONS = 3`), whatever refused the step (stale window switch,
+   unprovable coordinate, moved node); the budget resets only when an action actually
+   executes, so alternating rejections cannot restart it. When it is spent, the run ends
+   with `stale_rejections_exhausted` and the last refusal named in the answer.
+2. **The coordinate freshness check was a whole-image byte compare**, which a page with
+   any animation anywhere fails forever. Replaced with **local evidence**: the grey
+   fingerprint cells *around the tap point* (±2 columns, ±3 rows of the 12-column grid,
+   ≤ 10 % changed cells) must still match what the model saw — an animated banner elsewhere
+   no longer blocks an honest tap, while a changed target region still rejects it. The
+   live-label proof remains as the alternate evidence; payment/send taps are never rescued
+   by it. A coordinate with no proof is still never tapped.
+3. **The completed-run `read_image` gate blocked a necessary first read.** The chat
+   model's context is independent of the hands model's — the pixels went to the hands
+   model only — so blocking the agent's first `read_image` of a run's `last_screen`
+   stranded it with an answer it could not look at. The gate is reverted to PR #6
+   behavior: the first read always passes; only a *duplicate* read of the same screenshot
+   within one user turn is answered with a note. The prompt guidance is unchanged.
+
+The gate timings are in the step trace (`tap_reground_lookup_ms`,
+`coordinate_freshness_ms`, plus the existing model/action/settle timings), and the run
+summary carries `stale_rejections`.
+
 ## Fixes
 
 - **F1 — act on live targets; verify coordinates before they tap (R2).** What happens after
