@@ -15,6 +15,14 @@ class HandsPromptTest {
         assertTrue(prompt.contains("拼多多"))
     }
 
+    @Test fun `the task prompt prefers a visible recent chat and verifies typed text`() {
+        val prompt = HandsPrompt.system("message Zhang Changxin", emptyList(), "Kestrel", "Chinese")
+        assertTrue(prompt.contains("desired outcome, not a rigid click script"))
+        assertTrue(prompt.contains("visible recent-conversation list first"))
+        assertTrue(prompt.contains("search only if it is absent"))
+        assertTrue(prompt.contains("verify on the next screen that the intended text actually appeared"))
+    }
+
     @Test fun `the system prompt still offers plans and keeps secrets out of them`() {
         val prompt = HandsPrompt.system("task", emptyList(), "Kestrel", "English")
         assertTrue(prompt.contains("\"action_type\":\"plan\""))
