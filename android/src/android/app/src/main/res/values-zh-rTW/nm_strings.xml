@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- nanoMuse: 在上游之外新增的字串，單獨成檔，上游同步不會碰到。 -->
 <resources>
+    <string name="nm_hands_return_title">任務結束後返回 Kestrel</string>
+    <string name="nm_hands_return_subtitle">成功或發生錯誤後返回；取消或需要你操作時留在目標應用程式。</string>
+    <string name="nm_hands_return_footer">關閉後，任務結束時留在目標應用程式。Kestrel 在背景時，Android 可能限制自動切換；可透過通知或桌面圖示開啟 Kestrel。</string>
     <string name="nm_about_build">這個版本</string>
     <string name="nm_about_license">授權條款</string>
     <string name="nm_about_upstream">基於 OpenMinis 1.13</string>

@@ -22,6 +22,14 @@ val appCustomization = Properties().apply {
 fun customizationValue(key: String): String =
     (appCustomization.getProperty(key) ?: "").replace("\"", "\\\"")
 
+// nanoMuse: CI may provide a repository Actions secret for a stable test-only debug certificate.
+val ciVersionCode = providers.gradleProperty("kestrel.ciVersionCode").orNull?.toIntOrNull()
+val ciVersionName = providers.gradleProperty("kestrel.ciVersionName").orNull
+val ciKeystorePath = System.getenv("KESTREL_DEBUG_KEYSTORE_PATH")
+val ciKeystorePassword = System.getenv("KESTREL_DEBUG_KEYSTORE_PASSWORD")
+val ciKeyAlias = System.getenv("KESTREL_DEBUG_KEY_ALIAS")
+val ciKeyPassword = System.getenv("KESTREL_DEBUG_KEY_PASSWORD")
+
 android {
     namespace = "com.openminis.app"
     // [T-android-dynamic-island] Bumped 35→36 so the Android 16 (Baklava)
@@ -40,6 +48,16 @@ android {
     // keyPassword; git-ignored) and fall back to the debug key otherwise, so a
     // release APK can be built by anyone. One key for every version.
     signingConfigs {
+        if (!ciKeystorePath.isNullOrBlank() && !ciKeystorePassword.isNullOrBlank() &&
+            !ciKeyAlias.isNullOrBlank() && !ciKeyPassword.isNullOrBlank()
+        ) {
+            create("ciDebug") {
+                storeFile = file(ciKeystorePath)
+                storePassword = ciKeystorePassword
+                keyAlias = ciKeyAlias
+                keyPassword = ciKeyPassword
+            }
+        }
         val keystoreProperties = rootProject.file("../../keystore.properties")
         if (keystoreProperties.isFile) {
             val props = Properties()
@@ -57,8 +75,8 @@ android {
         applicationId = "io.github.limingyi2.kestrel" // nanoMuse: Kestrel install identity
         minSdk = 26
         targetSdk = 35
-        versionCode = 49
-        versionName = "1.0.6"
+        versionCode = ciVersionCode ?: 49
+        versionName = ciVersionName ?: "1.0.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -92,6 +110,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            // nanoMuse: CI installs can update in place when the repository test keystore secret is configured.
+            signingConfig = signingConfigs.findByName("ciDebug") ?: signingConfigs.getByName("debug")
+        }
         release {
             isMinifyEnabled = true
             proguardFiles(

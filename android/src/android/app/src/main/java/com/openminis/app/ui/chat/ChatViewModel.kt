@@ -6444,28 +6444,10 @@ class ChatViewModel(
         }
     }
 
-    // nanoMuse: StarPrompt counts a task only for a turn the person started (composer, idea or
-    // goal card) after the first conversation was over. The screens mark that just before
-    // sendMessage; routines, the feed and goal checks (HeadlessChatRunner) never do, and the
-    // screen takes the flag back when the stream ends.
-    @Volatile private var nmCountableTurn = false
-
-    fun nmMarkPersonTurn() {
-        val fc = nmFirstConversation
-        val sid = realSessionId.ifEmpty { sessionId }
-        nmCountableTurn = io.github.nanomuse.community.StarPrompt.Gate.countsAsTask(
-            personStarted = true,
-            firstConversationOver = !fc.isBoundTo(sid) || fc.phase == io.github.nanomuse.onboarding.Phase.DONE,
-        )
-    }
-
-    /** Whether the turn that just ended was one of the person's; reading it clears it. */
-    fun nmTakeCountableTurn(): Boolean = nmCountableTurn.also { nmCountableTurn = false }
-
     fun sendMessage(text: String) {
         // nanoMuse: "change your avatar to …" (and a pick while the options are
         // up) is handled in the app, not by the model.
-        if (nmInterceptAvatar(text)) { nmCountableTurn = false; return }
+        if (nmInterceptAvatar(text)) return
         // nanoMuse: "@Mac …" opens a turn for that device — the mention comes out of the text,
         // a one-turn note sends the work there through nanomuse-pc (contract C7, rule 8).
         val nmText = io.github.nanomuse.sync.DeviceMention.apply(context, realSessionId.ifEmpty { sessionId }, text)

@@ -2,6 +2,9 @@
 <!-- nanoMuse: strings added on top of upstream; kept in their own file so an
      upstream pull never touches them. Anything missing here falls back to English. -->
 <resources>
+    <string name="nm_hands_return_title">กลับไปยัง Kestrel หลังทำงานเสร็จ</string>
+    <string name="nm_hands_return_subtitle">กลับหลังทำสำเร็จหรือเกิดข้อผิดพลาด หากยกเลิกหรือต้องการให้คุณดำเนินการ ให้คงอยู่ในแอปเป้าหมาย</string>
+    <string name="nm_hands_return_footer">ปิดตัวเลือกนี้เพื่อคงอยู่ในแอปเป้าหมายหลังจบงาน Android อาจจำกัดการสลับแอปอัตโนมัติเมื่อ Kestrel อยู่เบื้องหลัง เปิด Kestrel จากการแจ้งเตือนหรือรายการแอป</string>
     <string name="nm_about_build">บิลด์นี้</string>
     <string name="nm_about_license">สัญญาอนุญาต</string>
     <string name="nm_about_upstream">พัฒนาต่อจาก OpenMinis 1.13</string>

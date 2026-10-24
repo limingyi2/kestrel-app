@@ -132,20 +132,6 @@ fun NanoMuseHome(
 
     val isMainChat = chatSessionId?.let { MainChat.isMain(context, it) } ?: true
 
-    // Each time the home comes to the foreground: one more distinct day for the star asks'
-    // day counter (StarPrompt), and the relay's nudges policy re-read when a day has passed.
-    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
-    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
-        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
-            if (event == androidx.lifecycle.Lifecycle.Event.ON_START) {
-                io.github.nanomuse.community.Nudges.refreshIfStale(context)
-                io.github.nanomuse.community.StarPrompt.dayOpened(context)
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
-    }
-
     fun showSession(id: String) {
         focusManager.clearFocus(force = true)
         chatSessionId = id
@@ -262,7 +248,6 @@ fun NanoMuseHome(
             return
         }
         showMain()
-        vm.nmMarkPersonTurn() // an idea or goal card the person tapped: a task for StarPrompt's count
         vm.sendMessage(text)
     }
 

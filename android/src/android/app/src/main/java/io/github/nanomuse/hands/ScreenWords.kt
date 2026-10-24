@@ -1,6 +1,7 @@
 package io.github.nanomuse.hands
 
 import android.graphics.Rect
+import android.graphics.Point
 import android.view.accessibility.AccessibilityNodeInfo
 import com.openminis.app.accessibility.MinisAccessibilityService
 
@@ -13,6 +14,52 @@ import com.openminis.app.accessibility.MinisAccessibilityService
  */
 object ScreenWords {
     private const val MAX_UP = 3
+    private const val MAX_NODES = 2500
+
+    /** A coordinate hint is only replaced when one visible clickable control matches exactly. */
+    fun uniqueClickableCenter(svc: MinisAccessibilityService, target: String): Point? {
+        val wanted = normalize(target)
+        if (wanted.length < 2) return null
+        val foregroundPackage = svc.foregroundPackage().first?.takeIf { it.isNotBlank() } ?: return null
+        val matches = mutableListOf<Rect>()
+        var visited = 0
+        fun visit(node: AccessibilityNodeInfo, depth: Int) {
+            if (depth > 60 || visited++ >= MAX_NODES) return
+            val nodeLabel = normalize(label(node).orEmpty())
+            if (node.isVisibleToUser && nodeLabel == wanted) {
+                var clickable: AccessibilityNodeInfo? = node
+                var up = 0
+                while (clickable != null && up <= MAX_UP && !clickable.isClickable) {
+                    val parent = clickable.parent
+                    if (clickable !== node) clickable.recycle()
+                    clickable = parent
+                    up++
+                }
+                if (clickable?.isClickable == true) {
+                    val bounds = Rect()
+                    clickable.getBoundsInScreen(bounds)
+                    if (!bounds.isEmpty) matches += bounds
+                }
+                if (clickable != null && clickable !== node) clickable.recycle()
+            }
+            for (i in 0 until node.childCount) {
+                val child = node.getChild(i) ?: continue
+                try { visit(child, depth + 1) } finally { child.recycle() }
+            }
+        }
+        return try {
+            svc.rootNodes().forEach { root ->
+                try {
+                    if (root.packageName?.toString() == foregroundPackage) visit(root, 0)
+                } finally {
+                    root.recycle()
+                }
+            }
+            if (visited >= MAX_NODES || matches.size != 1) null else matches.single().let { Point(it.centerX(), it.centerY()) }
+        } catch (_: Throwable) {
+            null
+        }
+    }
 
     fun at(svc: MinisAccessibilityService, x: Int, y: Int): String? {
         val words = LinkedHashSet<String>()
@@ -40,6 +87,8 @@ object ScreenWords {
         val desc = node.contentDescription?.toString()?.trim().orEmpty()
         return listOf(text, desc).filter { it.isNotEmpty() }.joinToString(" ").ifBlank { null }
     }
+
+    private fun normalize(value: String): String = value.trim().replace(Regex("\\s+"), " ").lowercase()
 
     private fun deepestAt(node: AccessibilityNodeInfo, x: Int, y: Int, depth: Int): AccessibilityNodeInfo? {
         if (depth > 60) return null

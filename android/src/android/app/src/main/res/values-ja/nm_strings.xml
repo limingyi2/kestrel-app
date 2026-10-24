@@ -2,6 +2,9 @@
 <!-- nanoMuse: strings added on top of upstream; kept in their own file so an
      upstream pull never touches them. Anything missing here falls back to English. -->
 <resources>
+    <string name="nm_hands_return_title">タスク終了後に Kestrel に戻る</string>
+    <string name="nm_hands_return_subtitle">成功またはエラー後に戻ります。キャンセル時やユーザーの操作が必要な場合は対象アプリにとどまります。</string>
+    <string name="nm_hands_return_footer">オフにすると、タスク終了後も対象アプリにとどまります。Kestrel がバックグラウンドにある場合、Android が自動切り替えを制限することがあります。通知またはランチャーから Kestrel を開いてください。</string>
     <string name="nm_about_build">このビルド</string>
     <string name="nm_about_license">ライセンス</string>
     <string name="nm_about_upstream">OpenMinis 1.13 をベースにしています</string>

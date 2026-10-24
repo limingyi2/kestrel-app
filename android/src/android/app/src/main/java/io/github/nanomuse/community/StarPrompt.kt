@@ -165,8 +165,8 @@ object StarPrompt {
         )
     }
 
-    /** Still worth asking this now. */
-    fun due(context: Context, ask: Ask): Boolean = Gate.due(policy(context), ledger(context), ask, System.currentTimeMillis())
+    /** Kestrel Android does not prompt people to star the repository. */
+    fun due(context: Context, ask: Ask): Boolean = false
 
     fun due(context: Context, moment: Moment): Boolean = due(context, Ask(moment))
 
@@ -237,7 +237,7 @@ object StarPrompt {
 
     /** Hold [ask] for its screen when it is due now; the screen re-checks and marks it on show. */
     fun offer(context: Context, ask: Ask) {
-        if (due(context, ask)) _pending.value = ask
+        clearPending(ask)
     }
 
     fun offer(context: Context, moment: Moment) = offer(context, Ask(moment))

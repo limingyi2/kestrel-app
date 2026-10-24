@@ -16,6 +16,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -28,6 +29,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.compose.ui.graphics.asAndroidBitmap
 import com.openminis.app.R
+import com.openminis.app.accessibility.MinisAccessibilityService
 import com.openminis.app.logging.AppLogger
 import io.github.nanomuse.avatar.AvatarStore
 import io.github.nanomuse.ui.avatar.AgentMood
@@ -235,6 +237,15 @@ class HandsCapsule(private val context: Context) {
         if (Looper.myLooper() == Looper.getMainLooper()) runCatching(block).onFailure { AppLogger.warning(TAG, "capsule: ${it.message}") }
         else main.post { runCatching(block).onFailure { AppLogger.warning(TAG, "capsule: ${it.message}") } }
     }
+
+    data class ReturnAttempt(
+        val returnRequested: Boolean,
+        val launchAttempted: Boolean,
+        val launchAccepted: Boolean,
+        val foregroundConfirmed: Boolean,
+        val elapsedMs: Long,
+        val failureReason: String?,
+    )
 
     private fun ensure() {
         if (root != null) return
@@ -471,20 +482,77 @@ class HandsCapsule(private val context: Context) {
     }
 
     /** Brings nanoMuse's chat back to the front. */
-    fun bringAppToFront(sessionId: String?) {
+    fun bringAppToFront(sessionId: String?): Boolean {
         try {
-            val intent = Intent(context, Class.forName("com.openminis.app.MainActivity")).apply {
-                if (!sessionId.isNullOrBlank()) data = android.net.Uri.parse("minis://session/$sessionId")
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-            }
-            context.startActivity(intent)
+            context.startActivity(returnIntent(sessionId))
+            return true
         } catch (t: Throwable) {
-            AppLogger.warning(TAG, "bring to front failed: ${t.message}")
+            AppLogger.warning(TAG, "bring to front failed: ${t.javaClass.simpleName}: ${t.message}")
+            return false
         }
+    }
+
+    /** A startActivity return is only a request; wait for MainActivity to resume before reporting success. */
+    fun requestAppReturn(sessionId: String?, timeoutMs: Long = RETURN_CONFIRM_TIMEOUT_MS): ReturnAttempt {
+        val startedAt = SystemClock.elapsedRealtime()
+        val accessibility = MinisAccessibilityService.getInstance()
+        if (HandsForegroundTracker.isResumed() && accessibility?.foregroundPackage()?.first == KESTREL_APPLICATION_ID) {
+            AppLogger.info(TAG, "return foreground_confirmed=true launch_attempted=false reason=already_foreground")
+            return ReturnAttempt(true, false, false, true, 0L, null)
+        }
+        AppLogger.info(TAG, "return launch_attempted=true thread=${Thread.currentThread().name} main_thread=${Looper.myLooper() == Looper.getMainLooper()}")
+        var accepted = false
+        var failure: String? = null
+        try {
+            context.startActivity(returnIntent(sessionId))
+            accepted = true
+            AppLogger.info(TAG, "return launch_accepted=true")
+        } catch (t: Throwable) {
+            failure = "${t.javaClass.simpleName}: ${t.message ?: "activity launch failed"}"
+        }
+        var resumed = false
+        var foregroundPackage: String? = null
+        val deadline = startedAt + timeoutMs
+        if (accepted) {
+            while (SystemClock.elapsedRealtime() < deadline) {
+                resumed = HandsForegroundTracker.isResumed()
+                foregroundPackage = accessibility?.foregroundPackage()?.first
+                if (resumed && foregroundPackage == KESTREL_APPLICATION_ID) break
+                try {
+                    Thread.sleep(100L)
+                } catch (_: InterruptedException) {
+                    Thread.currentThread().interrupt()
+                    failure = "interrupted_while_waiting_for_foreground"
+                    break
+                }
+            }
+        }
+        val confirmed = accepted && resumed && foregroundPackage == KESTREL_APPLICATION_ID
+        if (accepted && !confirmed && failure == null) {
+            failure = when {
+                !resumed -> "main_activity_not_resumed_within_timeout"
+                foregroundPackage == null -> "foreground_package_unavailable"
+                else -> "foreground_package_mismatch:$foregroundPackage"
+            }
+        }
+        val elapsed = SystemClock.elapsedRealtime() - startedAt
+        if (confirmed) {
+            AppLogger.info(TAG, "return foreground_confirmed elapsed_ms=$elapsed")
+        } else {
+            AppLogger.warning(TAG, "return foreground_confirmed=false launch_attempted=true launch_accepted=$accepted reason=$failure elapsed_ms=$elapsed")
+        }
+        return ReturnAttempt(true, true, accepted, confirmed, elapsed, failure)
+    }
+
+    private fun returnIntent(sessionId: String?) = Intent(context, com.openminis.app.MainActivity::class.java).apply {
+        if (!sessionId.isNullOrBlank()) data = android.net.Uri.parse("minis://session/$sessionId")
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
     }
 
     companion object {
         private const val TAG = "HandsCapsule"
+        private const val KESTREL_APPLICATION_ID = "io.github.limingyi2.kestrel"
+        private const val RETURN_CONFIRM_TIMEOUT_MS = 5_000L
         /** The stage's three hues (HandsStage, the desktop stage's --accent / --violet / --cyan). */
         private const val ACCENT = 0xFF0A66E4.toInt()
         private const val VIOLET = 0xFF7C5CFF.toInt()

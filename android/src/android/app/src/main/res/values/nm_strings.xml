@@ -509,6 +509,9 @@
 
     <!-- Hands (0.1.12): the phone's screen as a hand -->
     <string name="nm_hands_title">Hands</string>
+    <string name="nm_hands_return_title">Return to Kestrel after a task</string>
+    <string name="nm_hands_return_subtitle">Return after success or an error. Cancelled and user-action tasks stay in the target app.</string>
+    <string name="nm_hands_return_footer">Turn off to stay in the target app after a task. Android may block automatic app switching while Kestrel is in the background; use the notification or launcher to return.</string>
     <string name="nm_hands_on">On</string>
     <string name="nm_hands_off">Off</string>
     <string name="nm_hands_this_phone">this phone</string>

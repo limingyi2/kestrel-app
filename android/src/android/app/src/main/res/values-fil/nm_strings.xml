@@ -2,6 +2,9 @@
 <!-- nanoMuse: strings added on top of upstream; kept in their own file so an
      upstream pull never touches them. Anything missing here falls back to English. -->
 <resources>
+    <string name="nm_hands_return_title">Bumalik sa Kestrel pagkatapos ng gawain</string>
+    <string name="nm_hands_return_subtitle">Bumalik kapag matagumpay o may error. Manatili sa target app kapag kinansela o kailangan ang iyong aksyon.</string>
+    <string name="nm_hands_return_footer">I-off ito para manatili sa target app pagkatapos ng gawain. Maaaring pigilan ng Android ang awtomatikong paglipat kapag nasa background ang Kestrel. Buksan ang Kestrel mula sa notification o launcher.</string>
     <string name="nm_about_build">Ang build na ito</string>
     <string name="nm_about_license">Lisensya</string>
     <string name="nm_about_upstream">Batay sa OpenMinis 1.13</string>

@@ -95,6 +95,15 @@ class HandsOffloadHandler(private val context: Context) : NativeOffloadHandler {
             .put("last_screen", result.lastScreen ?: JSONObject.NULL)
             .put("trace", result.tracePath ?: JSONObject.NULL)
             .put("log", JSONArray(result.log))
+        result.returnAttempt?.let { attempt ->
+            body.put("return", JSONObject()
+                .put("return_requested", attempt.returnRequested)
+                .put("launch_attempted", attempt.launchAttempted)
+                .put("launch_accepted", attempt.launchAccepted)
+                .put("foreground_confirmed", attempt.foregroundConfirmed)
+                .put("elapsed_ms", attempt.elapsedMs)
+                .put("failure_reason", attempt.failureReason ?: JSONObject.NULL))
+        }
         when (val o = result.outcome) {
             is HandsOperator.Outcome.Done -> body.put("answer", o.answer)
             is HandsOperator.Outcome.Infeasible -> body.put("message", o.message)

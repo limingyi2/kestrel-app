@@ -23,14 +23,15 @@ import kotlinx.coroutines.flow.asStateFlow
  * prerequisites hold, the agent gets `nanomuse-hands` — a screenshot-driven operator that taps,
  * types and swipes in the apps that have no API — as the last rung of the ladder.
  *
- * The eyes are the screenshot alone: no accessibility tree is read for perception. The
- * accessibility service is the hand (gestures, the screenshot itself, the focused field to
- * type into) and nothing more.
+ * The screen model reads screenshots. For tap grounding, Hands may use one uniquely matching
+ * visible clickable node in the foreground app; it does not send the accessibility tree to a
+ * model. The service also performs gestures and exposes the focused field for safe typing.
  */
 object Hands {
     private const val PREFS = "nanomuse"
     private const val KEY_ENABLED = "hands.enabled"
     private const val KEY_MODEL = "hands.model_entry"
+    private const val KEY_RETURN_TO_CHAT = "hands.return_to_chat"
     const val DEEP_LINK = "minis://settings/hands"
     const val MIN_SDK = Build.VERSION_CODES.R
 
@@ -38,6 +39,10 @@ object Hands {
 
     fun enabled(context: Context): Boolean = prefs(context).getBoolean(KEY_ENABLED, false)
     fun setEnabled(context: Context, on: Boolean) { prefs(context).edit().putBoolean(KEY_ENABLED, on).apply() }
+
+    /** Return to chat after a completed Hands run; enabled by default for local-first use. */
+    fun returnToChat(context: Context): Boolean = prefs(context).getBoolean(KEY_RETURN_TO_CHAT, true)
+    fun setReturnToChat(context: Context, on: Boolean) { prefs(context).edit().putBoolean(KEY_RETURN_TO_CHAT, on).apply() }
 
     /** The switch as a flow: the current value, then every change, wherever it is made. */
     fun enabledFlow(context: Context): Flow<Boolean> = callbackFlow {

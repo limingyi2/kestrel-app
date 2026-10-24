@@ -19,6 +19,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -101,6 +102,21 @@ fun HandsScreen(onBack: () -> Unit, onOpenProviders: () -> Unit, onOpenHandsMode
                     titleColor = MaterialTheme.colorScheme.error,
                 )
             }
+        }
+
+        var returnToChat by remember(context) { mutableStateOf(Hands.returnToChat(context)) }
+        SettingsSection(footer = stringResource(R.string.nm_hands_return_footer)) {
+            SettingsSwitchRow(
+                title = stringResource(R.string.nm_hands_return_title),
+                subtitle = stringResource(R.string.nm_hands_return_subtitle),
+                checked = returnToChat,
+                onCheckedChange = {
+                    returnToChat = it
+                    Hands.setReturnToChat(context, it)
+                },
+                icon = Icons.Outlined.PhoneAndroid,
+                showDivider = false,
+            )
         }
 
         // ── what it needs ──

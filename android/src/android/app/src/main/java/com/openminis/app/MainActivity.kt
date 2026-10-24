@@ -51,6 +51,7 @@ import com.openminis.app.ui.settings.getAppearancePrefs
 import com.openminis.app.ui.settings.fontScaleForLevel
 import com.openminis.app.ui.settings.keepScreenAwakeEnabled
 import com.openminis.app.ui.theme.MinisTheme
+import io.github.nanomuse.hands.HandsForegroundTracker
 
 private const val KEY_CURRENT_CHAT_SESSION_ID = "minis.current_chat_session_id"
 
@@ -656,6 +657,18 @@ class MainActivity : ComponentActivity() {
         nav.safeNavigate(newRoute) {
             popUpTo(Routes.SESSION_LIST) { inclusive = false }
         }
+    }
+
+    // nanoMuse: report the real Activity foreground lifecycle to Hands; a successful startActivity call alone is not proof of a return.
+    override fun onResume() {
+        super.onResume()
+        HandsForegroundTracker.onResumed()
+    }
+
+    // nanoMuse: clear foreground confirmation when Android moves Kestrel out of the resumed state.
+    override fun onPause() {
+        HandsForegroundTracker.onPaused()
+        super.onPause()
     }
 
     /**
