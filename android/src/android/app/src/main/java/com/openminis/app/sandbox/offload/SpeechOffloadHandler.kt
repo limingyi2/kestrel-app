@@ -1,3 +1,4 @@
+// nanoMuse: Kestrel display-name overlay; runtime identifiers are preserved.
 package com.openminis.app.sandbox.offload
 
 import android.Manifest
@@ -265,7 +266,7 @@ class SpeechOffloadHandler(private val context: Context) : NativeOffloadHandler 
                     OffloadPermissionManager.SettingsGateRequest(
                         id = Manifest.permission.RECORD_AUDIO,
                         title = "Microphone permission needed",
-                        message = "nanoMuse needs microphone permission to transcribe speech. Open Settings to allow it.",
+                        message = "Kestrel needs microphone permission to transcribe speech. Open Settings to allow it.",
                         settingsAction = android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                         requiresPackageUri = true,
                         positiveLabel = "Open Settings",

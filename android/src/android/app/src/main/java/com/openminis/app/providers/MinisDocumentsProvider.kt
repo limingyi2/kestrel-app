@@ -1,3 +1,4 @@
+// nanoMuse: Kestrel display-name overlay; runtime identifiers are preserved.
 package com.openminis.app.providers
 
 import android.database.Cursor
@@ -123,7 +124,7 @@ class MinisDocumentsProvider : DocumentsProvider() {
         cursor.newRow()
             .add(Root.COLUMN_ROOT_ID, ROOT_ID)
             .add(Root.COLUMN_FLAGS, Root.FLAG_LOCAL_ONLY or Root.FLAG_SUPPORTS_IS_CHILD)
-            .add(Root.COLUMN_TITLE, "nanoMuse")
+            .add(Root.COLUMN_TITLE, "Kestrel")
             .add(Root.COLUMN_DOCUMENT_ID, ROOT_DOC_ID)
             .add(Root.COLUMN_MIME_TYPES, "*/*")
             .add(Root.COLUMN_ICON, 0)
@@ -133,7 +134,7 @@ class MinisDocumentsProvider : DocumentsProvider() {
     override fun queryDocument(documentId: String, projection: Array<String>?): Cursor {
         val cursor = MatrixCursor(projection ?: DOCUMENT_PROJECTION)
         val file = resolveDoc(documentId)
-        val displayName = if (documentId.isEmpty()) "nanoMuse" else file.name
+        val displayName = if (documentId.isEmpty()) "Kestrel" else file.name
         cursor.newRow()
             .add(Document.COLUMN_DOCUMENT_ID, documentId)
             .add(Document.COLUMN_DISPLAY_NAME, displayName)

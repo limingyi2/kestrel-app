@@ -1,3 +1,4 @@
+// nanoMuse: Kestrel display-name overlay; runtime identifiers are preserved.
 package com.openminis.app.backup
 
 import com.openminis.app.logging.AppLogger
@@ -49,7 +50,7 @@ class BackupPackageReader(private val root: File) {
             "/" + manifest.format.substringAfter('/', "").substringBefore('.')
         if (major != BackupFormat.CURRENT) {
             throw BackupException(
-                "This backup was created by a newer version of nanoMuse (${manifest.format}). Please update the app."
+                "This backup was created by a newer version of Kestrel (${manifest.format}). Please update the app."
             )
         }
         return manifest
