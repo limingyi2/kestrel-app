@@ -83,7 +83,8 @@ cd android/src/android
 ./gradlew :app:assembleDebug --console=plain --no-daemon
 ```
 
-CI Debug APKs keep the existing application id. Trusted `push` and `workflow_dispatch` builds use
+CI Debug APKs keep the existing application id. Trusted `main`-branch `push` and
+`workflow_dispatch` builds use
 the dedicated test-only PKCS12 signing key stored in repository Actions secrets
 `KESTREL_DEBUG_KEYSTORE_BASE64`, `KESTREL_DEBUG_KEYSTORE_PASSWORD`, `KESTREL_DEBUG_KEY_ALIAS`, and
 `KESTREL_DEBUG_KEY_PASSWORD`. The workflow fails if any secret is missing; it never silently falls
@@ -105,3 +106,4 @@ Android device.
 - [Provider keys](own-key.md)
 - [Permissions and privacy](privacy.md)
 - [Build the Android app](../android/BUILDING.md)
+
