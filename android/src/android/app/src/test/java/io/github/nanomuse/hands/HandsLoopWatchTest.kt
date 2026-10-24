@@ -6,7 +6,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** The hands stop going round in circles: a note at the third identical step, a stop at the sixth. */
+/** The hands stop going round in circles: a note at the second identical step, a stop at the fourth. */
 class HandsLoopWatchTest {
     private fun screen(seed: Int): IntArray = IntArray(240) { (it * 7 + seed) % 256 }
     private fun tap(x: Int, y: Int, label: String = "OK") = HandsAction.Click(HandsAction.Point(x, y), label)
@@ -23,7 +23,17 @@ class HandsLoopWatchTest {
         assertEquals(6, w.streak)
     }
 
-\n    @Test fun `same named target at drifting coordinates is still a repeated action`() {\n        val w = HandsLoopWatch()\n        val s = screen(0)\n        assertEquals(Verdict.FINE, w.step(s, tap(100, 100, "Plus")))\n        assertEquals(Verdict.NOTE, w.step(s, tap(170, 100, "Plus")))\n        assertEquals(Verdict.NOTE, w.step(s, tap(240, 100, "Plus")))\n        assertEquals(Verdict.STOP, w.step(s, tap(310, 100, "Plus")))\n    }\n\n    @Test fun `a screen that changed breaks the streak`() {
+
+    @Test fun `same named target at drifting coordinates is still a repeated action`() {
+        val w = HandsLoopWatch()
+        val s = screen(0)
+        assertEquals(Verdict.FINE, w.step(s, tap(100, 100, "Plus")))
+        assertEquals(Verdict.NOTE, w.step(s, tap(170, 100, "Plus")))
+        assertEquals(Verdict.NOTE, w.step(s, tap(240, 100, "Plus")))
+        assertEquals(Verdict.STOP, w.step(s, tap(310, 100, "Plus")))
+    }
+
+    @Test fun `a screen that changed breaks the streak`() {
         val w = HandsLoopWatch()
         w.step(screen(0), tap(500, 500))
         w.step(screen(0), tap(500, 500))
