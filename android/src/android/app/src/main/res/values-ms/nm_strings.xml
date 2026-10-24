@@ -1165,4 +1165,17 @@
     <string name="nm_font_scale_medium">Sederhana</string>
     <string name="nm_font_scale_large">Besar</string>
     <string name="nm_font_scale_extra_large">Sangat besar</string>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">Sambungan pilihan ini membolehkan peranti anda mencari satu sama lain. Sembang setempat, fail, sandbox Linux, Skills dan MCP boleh digunakan tanpa log masuk. Kunci API model kekal pada peranti ini.</string>
+    <string name="nm_hub_connection_relay">Alamat Relay</string>
+    <string name="nm_hub_connection_online">Disambungkan</string>
+    <string name="nm_hub_connection_offline">Tidak disambungkan</string>
+    <string name="nm_hub_connection_email">E-mel</string>
+    <string name="nm_hub_connection_code">Kod e-mel</string>
+    <string name="nm_hub_connection_sign_in">Log masuk ke Relay</string>
+    <string name="nm_hub_connection_send_code">Hantar kod</string>
+    <string name="nm_hub_connection_devices">Peranti pada Relay ini</string>
+    <string name="nm_hub_connection_sign_out">Putuskan sambungan dan log keluar</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · dalam talian</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · luar talian</string>
 </resources>

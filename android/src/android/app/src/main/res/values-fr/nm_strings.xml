@@ -1170,4 +1170,17 @@
     <string name="nm_font_scale_medium">Moyen</string>
     <string name="nm_font_scale_large">Grand</string>
     <string name="nm_font_scale_extra_large">Très grand</string>
+    <string name="nm_hub_connection_title">Kestrel Relay</string>
+    <string name="nm_hub_connection_local_note">Cette connexion facultative permet à vos appareils de se trouver. Le chat local, les fichiers, le bac à sable Linux, Skills et MCP fonctionnent sans connexion. Les clés API des modèles restent sur cet appareil.</string>
+    <string name="nm_hub_connection_relay">Adresse du Relay</string>
+    <string name="nm_hub_connection_online">Connecté</string>
+    <string name="nm_hub_connection_offline">Non connecté</string>
+    <string name="nm_hub_connection_email">E-mail</string>
+    <string name="nm_hub_connection_code">Code par e-mail</string>
+    <string name="nm_hub_connection_sign_in">Se connecter au Relay</string>
+    <string name="nm_hub_connection_send_code">Envoyer le code</string>
+    <string name="nm_hub_connection_devices">Appareils sur ce Relay</string>
+    <string name="nm_hub_connection_sign_out">Déconnecter et se déconnecter</string>
+    <string name="nm_hub_device_online">%1$s · %2$s · en ligne</string>
+    <string name="nm_hub_device_offline">%1$s · %2$s · hors ligne</string>
 </resources>

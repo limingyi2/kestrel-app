@@ -49,8 +49,9 @@ class ReachOffloadHandler(private val context: Context) : NativeOffloadHandler {
                 "no_computer",
                 when {
                     Computers.all(context).isEmpty() && !io.github.nanomuse.hub.Hub.isConnected ->
-                        "No other device is connected. Computers join by running nanoMuse Desktop signed in to the same nanoMuse Cloud account; this phone is not signed in to nanoMuse Cloud yet."
-                    Computers.all(context).isEmpty() -> "No other device is online right now. Computers join by running nanoMuse Desktop signed in to the same nanoMuse Cloud account."
+                        // nanoMuse: account authentication is now an optional Kestrel Relay Hub setting.
+                        "No other device is connected. Sign in to the same Kestrel Relay account on another device; local features do not need an account."
+                    Computers.all(context).isEmpty() -> "No other device is online right now. Sign in to the same Kestrel Relay account on the other device."
                     else -> "No connected device matches “${args.get("on")}”. Connected: " + Computers.all(context).joinToString(", ") { it.name } + "."
                 },
             )
@@ -284,7 +285,7 @@ Usage:
   nanomuse-pc task "<what to do, in words>" --on <device>   the Muse on that device does it and answers
 
 Commands are judged like the phone's own shell and wait for the approval card on this phone before they are sent;
-a task's own approvals show here too. Devices join by signing in to the same nanoMuse Cloud account (any network).
+a task's own approvals show here too. Devices join by signing in to the same Kestrel Relay account (any network).
 Exit codes: 0 ok · 1 failed · 2 usage · 3 no device / refused · 4 the user said no.
 """
     }

@@ -11,7 +11,7 @@ import java.io.IOException
 /**
  * The other devices of the account, as the phone's `nanomuse-pc` sees them, and the calls to
  * them. Everything travels through the hub: a computer joins by running nanoMuse Desktop
- * signed in to the same nanoMuse Cloud account, on any network, and answers the actions
+ * signed in to the same optional Kestrel Relay account, on any network, and answers the actions
  * itself. (Until 0.1.23 a computer could also be paired over the local network with a
  * stand-alone host script; that path is gone — one way in, the same on every network.)
  *
@@ -159,9 +159,10 @@ object Computers {
         return buildString {
             append("## Your devices (nanoMuse)\n")
             if (all.isEmpty()) {
-                append("No other device is connected right now. The way to add a computer: install nanoMuse Desktop there (https://nanomuse.cn/#download) and sign in with the same nanoMuse Cloud account as this phone — it appears under [Devices](${Hub.DEEP_LINK}) within seconds, on any network. ")
+                // nanoMuse: Kestrel Bridge uses the same Hub account and stays read-only in this phase.
+                append("No other device is connected right now. Sign in to the same Kestrel Relay account on the computer with the Vigil Bridge enabled. It appears under [Devices](${Hub.DEEP_LINK}) when online. ")
                 append("When the user wants something done on their PC or Mac, say so in one line and point to the desktop app. ")
-                if (!onHub) append("This phone is not on the hub itself; signing in to nanoMuse Cloud puts it there. ")
+                if (!onHub) append("This phone is not connected to the Kestrel Relay; sign in under Devices to connect it. ")
             } else {
                 append("Connected: ").append(all.joinToString("; ") { "${it.name} (${it.kind}, ${it.os}, via the hub — any network)" }).append(". ")
                 append("`nanomuse-pc run \"<command>\" [--on <device>] [--cwd <dir>] [--timeout <s>]` runs a shell command there and returns exit code, stdout and stderr — the same approval rules as the phone's shell apply, decided on this phone before anything is sent; ")
