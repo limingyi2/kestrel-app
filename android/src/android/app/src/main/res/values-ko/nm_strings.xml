@@ -562,6 +562,10 @@
     <!-- the capsule -->
     <string name="nm_hands_step">%1$d단계</string>
     <string name="nm_hands_looking">화면 보는 중…</string>
+    <string name="nm_hands_deciding">다음 동작을 판단하는 중…</string>
+    <string name="nm_hands_acting">동작 수행 중…</string>
+    <string name="nm_hands_waiting_page">페이지 응답 기다리는 중…</string>
+    <string name="nm_hands_verifying">결과 확인하는 중…</string>
     <string name="nm_hands_stop">중지</string>
     <string name="nm_hands_continue">계속</string>
     <string name="nm_hands_open">열기</string>

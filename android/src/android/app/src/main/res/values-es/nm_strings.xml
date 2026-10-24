@@ -565,6 +565,10 @@
     <!-- the capsule -->
     <string name="nm_hands_step">Paso %1$d</string>
     <string name="nm_hands_looking">Mirando la pantalla…</string>
+    <string name="nm_hands_deciding">Decidiendo el siguiente paso…</string>
+    <string name="nm_hands_acting">Realizando la acción…</string>
+    <string name="nm_hands_waiting_page">Esperando la página…</string>
+    <string name="nm_hands_verifying">Verificando el resultado…</string>
     <string name="nm_hands_stop">Parar</string>
     <string name="nm_hands_continue">Continuar</string>
     <string name="nm_hands_open">Abrir</string>

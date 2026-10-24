@@ -568,6 +568,10 @@
     <!-- the capsule -->
     <string name="nm_hands_step">Pasul %1$d</string>
     <string name="nm_hands_looking">Se uită la ecran…</string>
+    <string name="nm_hands_deciding">Se decide pasul următor…</string>
+    <string name="nm_hands_acting">Se execută acțiunea…</string>
+    <string name="nm_hands_waiting_page">Se așteaptă pagina…</string>
+    <string name="nm_hands_verifying">Se verifică rezultatul…</string>
     <string name="nm_hands_stop">Stop</string>
     <string name="nm_hands_continue">Continuă</string>
     <string name="nm_hands_open">Deschide</string>

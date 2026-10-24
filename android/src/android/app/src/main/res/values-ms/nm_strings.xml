@@ -562,6 +562,10 @@
     <!-- the capsule -->
     <string name="nm_hands_step">Langkah %1$d</string>
     <string name="nm_hands_looking">Melihat skrin…</string>
+    <string name="nm_hands_deciding">Menentukan langkah seterusnya…</string>
+    <string name="nm_hands_acting">Melaksanakan tindakan…</string>
+    <string name="nm_hands_waiting_page">Menunggu halaman…</string>
+    <string name="nm_hands_verifying">Menyemak hasil…</string>
     <string name="nm_hands_stop">Berhenti</string>
     <string name="nm_hands_continue">Teruskan</string>
     <string name="nm_hands_open">Buka</string>

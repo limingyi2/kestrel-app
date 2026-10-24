@@ -6456,6 +6456,10 @@ class ChatViewModel(
     // nanoMuse: per-turn Hands latency, attached to the native call at tool dispatch.
     private var nmHandsTimeline: io.github.nanomuse.hands.HandsTimeline? = null
 
+    // nanoMuse: behavior-level guard against re-reading a Hands screenshot the hands model
+    // already saw (one attach per user turn; cleared below when a new user message starts).
+    private val nmHandsReadDedup = io.github.nanomuse.hands.ReadImageDedup()
+
     fun sendMessage(text: String) {
         // nanoMuse: "change your avatar to …" (and a pick while the options are
         // up) is handled in the app, not by the model.
@@ -6889,6 +6893,9 @@ class ChatViewModel(
         if (!skipContextCheck || nmHandsTimeline == null) {
             nmHandsTimeline = io.github.nanomuse.hands.HandsTimeline(instructionReceived = true, origin = nmReceivedAt)
         }
+        // A new user message is new evidence for the Hands screenshot read gate: after this
+        // point a re-read of the same picture answers the user's new question, not a habit.
+        nmHandsReadDedup.onUserTurn()
         // T180: allow attachments-only sends (no caption). Mirrors iOS, where
         // an empty text + non-empty attachments still produces a valid user
         // message. Without this an image-only "look at this" send dropped.
@@ -9844,6 +9851,11 @@ class ChatViewModel(
      */
     private suspend fun executeReadImageTool(argsJson: String): ToolExecutionResult {
         val base = ReadImageTool.execute(argsJson, activeSessionId, context)
+        // Diagnostic (hands re-read audit): every image read is model-initiated through this
+        // one gate, so counting it here shows whether an agent loop re-reads screenshots the
+        // Hands model already saw. The path is metadata only; no pixels are logged.
+        val requestedPath = runCatching { JSONObject(argsJson).optString("path", "") }.getOrDefault("")
+        Log.i(TAG, "read_image origin=model_tool_call path=$requestedPath success=${base.success}")
         // [T-android-vision-group / GH#182] Optional caller instruction focusing
         // what to learn from the image.
         val customPrompt = try {
@@ -9851,6 +9863,21 @@ class ChatViewModel(
         } catch (_: Exception) { null }
         // Failed decode / missing file → unchanged.
         if (!base.success || base.imageData == null) return base
+        // Behavior-level dedup (hands re-read audit): the prompt asks the agent to show a
+        // Hands last_screen inline instead of re-reading it; this enforces that for a
+        // vision-capable main model, whose context already holds the pixels from the first
+        // read this turn. Every other image — and the Vision Group routing below — is
+        // untouched, and a new user message reopens the gate.
+        if (currentModelHasNativeVision &&
+            !nmHandsReadDedup.shouldAttach(base.imageFilePath ?: requestedPath)
+        ) {
+            return base.copy(
+                output = base.output +
+                    "\n[read_image skipped: this Hands screenshot is already attached earlier in this turn — use it from your context instead of re-reading. Show it to the user with ![screen](minis://attachments/hands/…) if needed.]",
+                imageData = null,
+                imageMimeType = null,
+            )
+        }
         if (currentModelHasNativeVision) {
             // The model sees the pixels itself; a prompt adds no routing here, but
             // echo it as context so the tool block reflects the model's intent.
@@ -10131,6 +10158,13 @@ class ChatViewModel(
             val withReminder = bashReminder?.let { rem ->
                 if (result.exitCode != 0 || bashism.hasSilent) "$redactedOut\n\n$rem" else redactedOut
             } ?: redactedOut
+
+            // nanoMuse (hands re-read audit): a completed Hands run already judged its
+            // last_screen with the hands model and answered in text. Registering it here
+            // makes even the agent's *first* read_image of that picture this turn a note
+            // instead of a duplicate read; failed or stopped runs are not registered, and a
+            // new user message reopens the gate.
+            nmHandsReadDedup.noteFromRunResult(withReminder)
 
             ToolExecutionResult(
                 output = nmNotice?.let { "$withReminder\n\n$it" } ?: withReminder, // nanoMuse: install notice

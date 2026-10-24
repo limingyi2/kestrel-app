@@ -56,4 +56,14 @@ object HandsPrompt {
     }
 
     const val OLDER_SCREEN = "(An earlier screen — not shown again.)"
+
+    /**
+     * What the chat agent is told about a run's `last_screen`. The hands model has already
+     * seen those pixels and the result text is authoritative, so re-reading the picture with
+     * `read_image` would only re-decode a JPEG and spend another model turn; inline display
+     * needs no tool call at all.
+     */
+    const val LAST_SCREEN_RULE =
+        "`last_screen` is the final screen. The result text (`answer`/`message`) already reports what the task found — " +
+            "show it inline with `![screen](<last_screen>)` when it helps the user, and do not call `read_image` on it."
 }

@@ -14,6 +14,9 @@ All notable changes to nanoMuse. The format follows [Keep a Changelog](https://k
 
 ### Android
 
+- Made Hands judge a decided step by grounding after content events: a tap on a live unique node acts, a coordinate fallback must first pass a byte-identical freshness check (with a live-label proof as the bounded fallback on constantly animated pages, and a clear failure after three unprovable attempts instead of an endless loop), and a status verdict is never accepted about a window that already switched.
+- Split the Hands capsule status into observing, deciding, performing, waiting-for-the-page and verifying, show the generic working title instead of "Step 0" between steps, so a slow model call no longer reads as “Looking at the screen…” for minutes.
+- Enforced the no-re-read rule for Hands screenshots behaviorally: the last_screen of a completed run is not read at all in its turn (even the first read_image answers with a note), any other Hands screenshot reads once per turn, while ordinary images, the Vision Group routing, failed runs and reads after a new user message are untouched; every `read_image` call is logged with its origin.
 - Added bounded semantic Hands plans with live accessibility checks, verified text entry, event-driven page transitions and visual fallback; device performance measurements remain pending.
 - Added correlated Hands startup milestones, bounded accessibility transition detection, live target reconfirmation and foreground-app reuse; device performance measurements remain pending.
 - Added read-only Hands accessibility diagnostics to distinguish a disabled system permission from a disconnected service and correlate lifecycle events with Android process exits.
