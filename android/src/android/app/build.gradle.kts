@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 4562)
-Total output lines: 379
-
 import java.util.Properties
 
 plugins {
@@ -185,7 +182,47 @@ android {
 // [T-android-downgrade-compat] Room needs an explicit output directory once
 // `exportSchema = true`. The generated JSON is COMMITTED: it is what
 // MigrationTestHelper replays to prove every upgrade — and every no-op
-// downgrade — st…562 tokens truncated…)
+// downgrade — still produces the schema the entities expect. Without it the
+// migration chain has no automated check and only a real device install can
+// catch a break.
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
+// [T-bash-on-demand] Keep the shared bashism rule table / test vectors as a
+// SINGLE source of truth (src/shared/bashism) — copy into assets at build
+// time instead of committing duplicate JSON. iOS references the same files as
+// bundle resources. Runs before every asset merge so debug/release stay fresh.
+val copyBashismRules by tasks.registering(Copy::class) {
+    from(rootProject.file("../shared/bashism")) {
+        include("bashism_rules.json", "bashism_test_vectors.json")
+    }
+    into(layout.projectDirectory.dir("src/main/assets/bashism"))
+}
+tasks.matching { it.name.startsWith("merge") && it.name.endsWith("Assets") }
+    .configureEach { dependsOn(copyBashismRules) }
+tasks.named("preBuild") { dependsOn(copyBashismRules) }
+
+// [T-android-debugserver-skill] Stage the debug-server skill + an Android
+// reference client into the DEBUG-ONLY asset source set, so the debug server
+// can serve them over GET /skill (mirrors the iOS "Generate Debug Skill" build
+// phase). Single source of truth stays .claude/skills/debug-server/.
+//
+// Wired to DEBUG asset merges only: src/debug/assets never reaches a release
+// APK, so the tooling docs can't ship to users. `assets` is also declared as an
+// output so Gradle re-runs this when the skill changes but skips it otherwise.
+val stageDebugSkillAssets by tasks.registering(Exec::class) {
+    val script = rootProject.file("../../scripts/gen_debug_skill_android.sh")
+    val skillDir = rootProject.file("../../.claude/skills/debug-server")
+    onlyIf { script.exists() }
+    // Declare the inputs only when they exist. `.optional()` covers an unset
+    // property, not a path that is absent: Gradle validates inputs before it
+    // consults onlyIf, so a missing skill dir fails the build outright. The
+    // public mirror has neither the script nor .claude/skills, and must still
+    // build.
+    if (skillDir.isDirectory) inputs.dir(skillDir)
+    if (script.isFile) inputs.file(script)
+    outputs.dir(layout.projectDirectory.dir("src/debug/assets/debug-skill"))
     commandLine("bash", script.absolutePath)
 }
 tasks.matching { it.name.startsWith("merge") && it.name.endsWith("Assets") && it.name.contains("Debug") }
