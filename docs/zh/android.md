@@ -24,7 +24,7 @@ App 保留上游 `com.openminis.app` Kotlin 包名和 Linux 沙箱约定。Kestr
 
 ### Hands 耗时与任务结束
 
-Hands 会把每一步的耗时写入现有 JSONL trace，包括截图采集、图像编码和保存、屏幕模型请求、无障碍节点查找、风险审批、Android 动作，以及稳定等待或模型指定的等待。`run-summary.json` 会记录结束状态和端到端耗时。点击后的等待下限仍为现有的 900 毫秒，滑动后为 1,100 毫秒。达到下限后，如果无障碍事件仍表明屏幕正在变化，最多再等待一秒。设备实测数据尚未采集前，不会猜测缩短等待。模型请求超时为 90 秒，截图失败最多重试一次。
+Hands 会把每一步的耗时写入现有 JSONL trace，包括截图采集、图像编码和保存、屏幕模型请求、无障碍节点查找、风险审批、Android 动作，以及稳定等待或模型指定的等待。`run-summary.json` 会记录结束状态和端到端耗时。P1.4 在动作前订阅窗口与内容变化事件，变化后安静 250 毫秒且有可见内容、没有进度条时即可重新截图；事件或节点不足时仍保留点击 900 毫秒、滑动 1,100 毫秒的回退，持续变化最多额外等待一秒。详见 [P1.4 诊断与真机测量](hands-p1.4.md)。模型请求超时为 90 秒，截图失败最多重试一次。
 
 任务成功或发生错误后，默认返回 Kestrel 聊天。可在 Hands 设置关闭「任务结束后返回 Kestrel」，让界面留在目标应用。用户取消或任务需要用户继续处理时也会留在目标应用。点击停止会取消正在进行的模型请求，并打断模型要求的等待。风险审批被拒绝时任务会停止，不会绕过审批。如果 Android 阻止应用切换，Kestrel 不会绕过系统限制，可通过前台通知或桌面图标重新打开。每次运行都会在 `run-summary.json` 和 Hands 工具结果中记录 `return_requested`、`launch_attempted`、`launch_accepted`、`foreground_confirmed` 及失败原因。`launch_accepted` 只表示 `startActivity()` 已返回；只有 `MainActivity` 恢复后才报告前台返回成功。Android 可能在不抛异常的情况下阻止后台启动。
 
@@ -42,7 +42,7 @@ cd android/src/android
 ./gradlew :app:assembleDebug --console=plain --no-daemon
 ```
 
-CI Debug APK 保留现有 App ID；`versionCode` 为 Android workflow run number 加 50，后续 CI 构建可以升级较早的 CI APK。GitHub hosted runner 的 Android Debug 密钥在该 runner 上生成，runner 更换后证书也会变化。要固定 CI 测试签名，请在仓库 Actions Secrets 中配置专用测试 PKCS12 keystore 对应的 `KESTREL_DEBUG_KEYSTORE_BASE64`、`KESTREL_DEBUG_KEYSTORE_PASSWORD`、`KESTREL_DEBUG_KEY_ALIAS` 和 `KESTREL_DEBUG_KEY_PASSWORD`。不得将私钥提交到仓库或用作正式发布密钥。四项密钥未全部配置时，CI 会明确报告使用 runner Debug 密钥。签名证书不同的 APK 无法覆盖安装；Android 要求先卸载旧应用，这会清除本机数据。安装升级包前请核对 CI Badging 步骤输出的证书 SHA-256。
+CI Debug APK 保留现有 App ID。可信任的 `main` 分支 `push` 和 `workflow_dispatch` 构建使用专门的测试 PKCS12 签名密钥；密钥仅存放在仓库 Actions Secrets：`KESTREL_DEBUG_KEYSTORE_BASE64`、`KESTREL_DEBUG_KEYSTORE_PASSWORD`、`KESTREL_DEBUG_KEY_ALIAS` 和 `KESTREL_DEBUG_KEY_PASSWORD`。缺少任意一项时工作流会失败，不会静默使用 runner 临时密钥生成可安装 CI 包。Pull request 构建不会接收签名 Secrets，产物会标记为临时签名，不应用于升级安装。不得将私钥提交到仓库或用作正式发布密钥。CI `versionCode` 规则是 `50 + GITHUB_RUN_NUMBER`；同一 Android workflow 的运行编号全局递增，因此每个 CI 构建版本号更高。安装前请核对 Badging 步骤中的 App ID、版本号和证书 SHA-256。签名证书不同的 APK 无法覆盖已安装应用；卸载会清除本机数据。
 
 选择 arm64 ABI 后，Debug APK 位于 `android/src/android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk`。模拟器使用 x86_64，请在 Android 真机上测试 arm64 APK。
 
@@ -53,3 +53,4 @@ CI Debug APK 保留现有 App ID；`versionCode` 为 Android workflow run number
 - [服务商 key](own-key.md)
 - [权限和隐私](privacy.md)
 - [构建 Android App](../../android/BUILDING.md)
+

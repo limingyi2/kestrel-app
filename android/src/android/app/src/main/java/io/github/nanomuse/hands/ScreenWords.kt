@@ -18,10 +18,26 @@ object ScreenWords {
 
     /** A coordinate hint is only replaced when one visible clickable control matches exactly. */
     fun uniqueClickableCenter(svc: MinisAccessibilityService, target: String): Point? {
+        val node = uniqueClickableNode(svc, target) ?: return null
+        return try { Rect().also { node.getBoundsInScreen(it) }.let { Point(it.centerX(), it.centerY()) } }
+        finally { node.recycle() }
+    }
+
+    /** Reacquire the unique live node after approval. A changed bound requires a fresh observation. */
+    fun clickUnique(svc: MinisAccessibilityService, target: String, expected: Point): Boolean {
+        val node = uniqueClickableNode(svc, target) ?: return false
+        return try {
+            val bounds = Rect().also { node.getBoundsInScreen(it) }
+            bounds.centerX() == expected.x && bounds.centerY() == expected.y &&
+                node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+        } finally { node.recycle() }
+    }
+
+    private fun uniqueClickableNode(svc: MinisAccessibilityService, target: String): AccessibilityNodeInfo? {
         val wanted = normalize(target)
         if (wanted.length < 2) return null
         val foregroundPackage = svc.foregroundPackage().first?.takeIf { it.isNotBlank() } ?: return null
-        val matches = mutableListOf<Rect>()
+        val matches = mutableListOf<AccessibilityNodeInfo>()
         var visited = 0
         fun visit(node: AccessibilityNodeInfo, depth: Int) {
             if (depth > 60 || visited++ >= MAX_NODES) return
@@ -35,10 +51,10 @@ object ScreenWords {
                     clickable = parent
                     up++
                 }
-                if (clickable?.isClickable == true) {
+                if (clickable?.isClickable == true && clickable.isEnabled && clickable.isVisibleToUser && !clickable.isPassword) {
                     val bounds = Rect()
                     clickable.getBoundsInScreen(bounds)
-                    if (!bounds.isEmpty) matches += bounds
+                    if (!bounds.isEmpty) matches += AccessibilityNodeInfo.obtain(clickable)
                 }
                 if (clickable != null && clickable !== node) clickable.recycle()
             }
@@ -55,8 +71,11 @@ object ScreenWords {
                     root.recycle()
                 }
             }
-            if (visited >= MAX_NODES || matches.size != 1) null else matches.single().let { Point(it.centerX(), it.centerY()) }
+            if (visited >= MAX_NODES || matches.size != 1) {
+                matches.forEach { it.recycle() }; null
+            } else matches.single()
         } catch (_: Throwable) {
+            matches.forEach { it.recycle() }
             null
         }
     }

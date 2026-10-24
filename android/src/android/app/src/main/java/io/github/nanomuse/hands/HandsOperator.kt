@@ -57,6 +57,7 @@ class HandsOperator(private val context: Context) {
 
     data class Options(
         val task: String,
+        val timeline: HandsTimeline = HandsTimeline(),
         val appHint: String? = null,
         /** A cap on steps for callers that want one; 0 (the default) means the run goes on until the task is done, the person stops it, or the time limit. */
         val maxSteps: Int = DEFAULT_MAX_STEPS,
@@ -97,6 +98,10 @@ class HandsOperator(private val context: Context) {
     private val capsule = HandsCapsule(context)
     @Volatile private var terminalOutcome: Outcome? = null
     @Volatile private var terminalResult: Result? = null
+    private var observationObserver: HandsPageObserver? = null
+    private var pageObserver: HandsPageObserver? = null
+    private var timeline = HandsTimeline()
+    private var actionCount = 0
     @Volatile private var runStartedElapsedMs: Long = 0L
 
     /** The session this run's approval cards are filed under; see [ownPendingRequest]. */
@@ -122,7 +127,9 @@ class HandsOperator(private val context: Context) {
     }
 
     fun run(opts: Options): Result {
-        val runId = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())
+        timeline = opts.timeline
+        timeline.mark("hands_started")
+        val runId = SimpleDateFormat("yyyyMMdd-HHmmss-SSS", Locale.US).format(Date())
         val log = mutableListOf<String>()
         val traceDir = traceDir(opts.sessionId, runId)
         var lastScreen: String? = null
@@ -157,7 +164,6 @@ class HandsOperator(private val context: Context) {
             var formatErrors = 0
             var blackScreens = 0
             var modelErrors = 0
-            var retryObservation: Triple<Jpeg, Int, Int>? = null
             // the same action on an unchanged screen: a note at the third, a stop at the sixth
             val watch = HandsLoopWatch()
             var loopNote: String? = null
@@ -166,9 +172,22 @@ class HandsOperator(private val context: Context) {
             opts.appHint?.takeIf { it.isNotBlank() }?.let { hint ->
                 val appOpenStarted = SystemClock.elapsedRealtime()
                 val app = HandsApps.resolve(context, hint)
-                lastResult = if (app != null && HandsApps.open(context, app)) {
-                    Thread.sleep(OPEN_APP_SETTLE_MS); "opened ${app.label}."
-                } else "no installed app matches “$hint”; open the one you need yourself."
+                lastResult = if (app != null && svc.foregroundPackage().first == app.packageName) {
+                    "already in "+app.label+"."
+                } else if (app != null) {
+                    HandsPageObserver(svc, context.packageName, { timeline.mark("page_change_detected") }).use { observer ->
+                        pageObserver = observer
+                        recordAction()
+                        val opened = HandsApps.open(context, app)
+                        if (opened) {
+                            val openTimings = linkedMapOf<String, Long>()
+                            settleAfterAction(svc, openTimings, OPEN_APP_SETTLE_MS)
+                            trace(traceDir, 0, "", "", "app_hint_open", null, openTimings)
+                        }
+                        pageObserver = null
+                        if (opened) "opened "+app.label+"." else "could not open "+app.label+"."
+                    }
+                } else "no installed app matches the app hint."
                 log += "open $hint → $lastResult (${SystemClock.elapsedRealtime() - appOpenStarted}ms including settle)"
             }
 
@@ -177,28 +196,25 @@ class HandsOperator(private val context: Context) {
                 if (System.currentTimeMillis() - started > MAX_RUN_MS) {
                     return finish(Outcome.Failed("the run hit its 30-minute time limit"), steps, runId, lastScreen, traceDir, log, model.label)
                 }
+                observationObserver?.close()
+                observationObserver = HandsPageObserver(svc, context.packageName)
                 steps++
                 val timings = linkedMapOf<String, Long>()
                 KeepAwake.a11yTouched()
                 capsule.working(steps, context.getString(com.openminis.app.R.string.nm_hands_looking))
 
                 // ── look ──
-                val cachedObservation = retryObservation
                 val jpeg: Jpeg
                 val screenW: Int
                 val screenH: Int
-                if (cachedObservation != null) {
-                    retryObservation = null
-                    jpeg = cachedObservation.first
-                    screenW = cachedObservation.second
-                    screenH = cachedObservation.third
-                    timings["screenshot_reused_for_model_retry"] = 1L
-                } else {
+                run {
                     val capture = screenshot(svc)
+                    if (capture?.bitmap != null) timeline.mark("first_screenshot_complete")
                     timings["screenshot_capture_ms"] = capture?.captureMs ?: 0L
                     timings["screenshot_retry_wait_ms"] = capture?.retryWaitMs ?: 0L
                     val shot = capture?.bitmap ?: run {
                         log += "step $steps timing: screenshot_capture_ms=${timings["screenshot_capture_ms"]}ms (failed)"
+                        trace(traceDir, steps, "", "", "screenshot_failed", lastScreen, timings)
                         return finish(Outcome.Failed("could not take a screenshot"), steps, runId, lastScreen, traceDir, log, model.label)
                     }
                     screenW = shot.width
@@ -239,7 +255,10 @@ class HandsOperator(private val context: Context) {
                     }
                 } catch (t: Throwable) {
                     timings["model_ms"] = SystemClock.elapsedRealtime() - modelStarted
-                    if (stop.get()) return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
+                    if (stop.get()) {
+                        trace(traceDir, steps, "", "", "model_cancelled", lastScreen, timings)
+                        return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
+                    }
                     log += "step $steps timing: model=${timings["model_ms"]}ms (failed)"
                     modelErrors++
                     AppLogger.warning(TAG, "model call failed: ${t.message}")
@@ -248,20 +267,27 @@ class HandsOperator(private val context: Context) {
                         trace(traceDir, steps, "", "", message, lastScreen, timings)
                         return finish(Outcome.Failed(message), steps, runId, lastScreen, traceDir, log, model.label)
                     }
-                    retryObservation = Triple(jpeg, screenW, screenH)
+                    trace(traceDir, steps, "", "", "model_retry", lastScreen, timings)
                     steps--
                     Thread.sleep(1500)
                     continue
                 }
                 timings["model_ms"] = SystemClock.elapsedRealtime() - modelStarted
-                if (stop.get()) return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
+                timeline.mark("first_visual_response")
+                if (stop.get()) {
+                    trace(traceDir, steps, "", "", "stopped_after_model", lastScreen, timings)
+                    return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
+                }
                 val turn = Turn(HandsPrompt.turnText(steps, lastResult), jpeg.bytes, reply)
                 turns += turn
                 val parsed = try {
                     HandsAction.parse(reply)
                 } catch (e: HandsAction.Companion.FormatError) {
                     formatErrors++
-                    if (formatErrors >= 3) return finish(Outcome.Failed("the screen model did not answer in the action format (${e.message})"), steps, runId, lastScreen, traceDir, log, model.label)
+                    if (formatErrors >= 3) {
+                        trace(traceDir, steps, "", reply, "model_format_failed", lastScreen, timings)
+                        return finish(Outcome.Failed("the screen model did not answer in the action format (${e.message})"), steps, runId, lastScreen, traceDir, log, model.label)
+                    }
                     lastResult = "your reply could not be read (${e.message}); answer with `Thought:` and one JSON `Action:` only."
                     log += "step $steps: unreadable reply"
                     trace(traceDir, steps, "", reply, lastResult, lastScreen, timings)
@@ -269,6 +295,16 @@ class HandsOperator(private val context: Context) {
                 }
                 formatErrors = 0
                 val action = parsed.action
+                // Content events can be animations or counters. A simple click can be
+                // grounded again on a live unique node, but a window switch invalidates it.
+                val canReground = observationObserver?.changed() == true && action is HandsAction.Click && observationObserver?.windowChanged() != true &&
+                    ScreenWords.uniqueClickableCenter(svc, action.target) != null
+                if (observationObserver?.changed() == true && action !is HandsAction.Wait &&
+                    action !is HandsAction.TakeOver && action !is HandsAction.AskUser && !canReground) {
+                    lastResult = "the page changed during observation; inspect the current screen before acting or reporting completion."
+                    trace(traceDir, steps, parsed.thought, reply, "stale_observation_skipped", lastScreen, timings)
+                    continue
+                }
                 capsule.working(steps, parsed.thought.ifBlank { action.describe() }.take(140))
                 log += "step $steps: ${action.describe()}" + (parsed.thought.takeIf { it.isNotBlank() }?.let { " — ${it.take(100)}" } ?: "")
 
@@ -277,7 +313,7 @@ class HandsOperator(private val context: Context) {
                     HandsLoopWatch.Verdict.STOP -> {
                         val why = HandsLoopWatch.stopReason(action)
                         log += "step $steps: $why"
-                        trace(traceDir, steps, parsed.thought, reply, why, lastScreen)
+                        trace(traceDir, steps, parsed.thought, reply, why, lastScreen, timings)
                         return finish(Outcome.Infeasible(why), steps, runId, lastScreen, traceDir, log, model.label)
                     }
                     HandsLoopWatch.Verdict.NOTE -> {
@@ -289,6 +325,7 @@ class HandsOperator(private val context: Context) {
 
                 // ── act ──
                 val actionStarted = SystemClock.elapsedRealtime()
+                pageObserver = HandsPageObserver(svc, context.packageName) { timeline.mark("page_change_detected") }
                 try { when (action) {
                     is HandsAction.Status -> {
                         log += "step $steps timing: " + timings.entries.joinToString { "${it.key}=${it.value}ms" }
@@ -318,6 +355,7 @@ class HandsOperator(private val context: Context) {
                         val nodeLookupStarted = SystemClock.elapsedRealtime()
                         val nodePoint = action.tapTarget?.let { ScreenWords.uniqueClickableCenter(svc, it) }
                         timings["accessibility_lookup_ms"] = SystemClock.elapsedRealtime() - nodeLookupStarted
+                        timings["target_unique_visible"] = if (nodePoint != null) 1L else 0L
                         val px = nodePoint?.x ?: modelX
                         val py = nodePoint?.y ?: modelY
                         // the label the model gave, read next to what the screen itself says is there
@@ -334,6 +372,23 @@ class HandsOperator(private val context: Context) {
                         // sees it in the log and tells the user where it lives.
                         gate.notice?.let { log += it }
                         if (stop.get()) return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
+                        // An event-less app can change while approval is pending. Dangerous
+                        // taps require a fresh identical image as well as a live target.
+                        // A failed check never falls through to a tap.
+                        if (TapWords.classify(target, ScreenWords.at(svc, px, py)) != null) {
+                            val freshStarted = SystemClock.elapsedRealtime()
+                            val fresh = screenshot(svc)?.bitmap
+                            val unchanged = fresh?.let {
+                                try { it.width == screenW && it.height == screenH && encode(it).bytes.contentEquals(jpeg.bytes) }
+                                finally { it.recycle() }
+                            } == true
+                            timings["freshness_check_ms"] = SystemClock.elapsedRealtime() - freshStarted
+                            if (!unchanged) {
+                                lastResult = "the current screen could not confirm the approved coordinate; observe again."
+                                trace(traceDir, steps, parsed.thought, reply, "coordinate_reconfirmation_failed", lastScreen, timings)
+                                continue
+                            }
+                        }
                         // The ring first, where the finger is about to land; the capsule steps
                         // aside when it is in the way and lets the touch through while it lands.
                         capsule.dodge(px, py)
@@ -341,12 +396,20 @@ class HandsOperator(private val context: Context) {
                         val aimStarted = SystemClock.elapsedRealtime()
                         Thread.sleep(AIM_MS)
                         timings["aim_wait_ms"] = SystemClock.elapsedRealtime() - aimStarted
+                        if (stop.get() || observationObserver?.windowChanged() == true ||
+                            (observationObserver?.changed() == true && (nodePoint == null || action !is HandsAction.Click)) ||
+                            (nodePoint != null && ScreenWords.uniqueClickableCenter(svc, target) != nodePoint)) {
+                            lastResult = "the page or target changed during approval; observe again before tapping."
+                            trace(traceDir, steps, parsed.thought, reply, "target_reconfirmation_failed", lastScreen, timings)
+                            continue
+                        }
                         val gestureStarted = SystemClock.elapsedRealtime()
+                        recordAction()
                         val ok = capsule.passThrough {
                             when (action) {
                                 is HandsAction.LongPress -> { capsule.stage.hold(LONG_PRESS_MS); tap(svc, px, py, LONG_PRESS_MS) }
                                 is HandsAction.DoubleTap -> tap(svc, px, py, 50).also { capsule.stage.ripple(px, py); Thread.sleep(90) } && tap(svc, px, py, 50)
-                                else -> tap(svc, px, py, 60)
+                                else -> if (nodePoint != null) ScreenWords.clickUnique(svc, target, nodePoint) else tap(svc, px, py, 60)
                             }
                         }
                         timings["android_action_ms"] = SystemClock.elapsedRealtime() - gestureStarted
@@ -359,6 +422,7 @@ class HandsOperator(private val context: Context) {
                         val (x1, y1) = action.from.toPixels(screenW, screenH)
                         val (x2, y2) = action.to.toPixels(screenW, screenH)
                         val gestureStarted = SystemClock.elapsedRealtime()
+                        recordAction()
                         val ok = sweep(svc, x1, y1, x2, y2, SWIPE_MS, fxLabel(action))
                         timings["android_action_ms"] = SystemClock.elapsedRealtime() - gestureStarted
                         lastResult = if (ok) "swiped from ($x1, $y1) to ($x2, $y2)." else "the swipe was rejected by the system."
@@ -376,6 +440,7 @@ class HandsOperator(private val context: Context) {
                             else -> (cx - dx to cy) to (cx + dx to cy)
                         }
                         val gestureStarted = SystemClock.elapsedRealtime()
+                        recordAction()
                         val ok = sweep(svc, from.first, from.second, to.first, to.second, SCROLL_MS, fxLabel(action))
                         timings["android_action_ms"] = SystemClock.elapsedRealtime() - gestureStarted
                         lastResult = if (ok) "scrolled ${action.direction}." else "the scroll was rejected by the system."
@@ -384,6 +449,7 @@ class HandsOperator(private val context: Context) {
                     is HandsAction.InputText -> {
                         if (!TapWords.looksSecret(action.field)) capsule.stage.say(fxLabel(action))
                         val actionTime = SystemClock.elapsedRealtime()
+                        recordAction()
                         lastResult = typeText(svc, action)
                         timings["android_action_ms"] = SystemClock.elapsedRealtime() - actionTime
                         if (lastResult == HANDOFF) {
@@ -407,18 +473,24 @@ class HandsOperator(private val context: Context) {
                         if (stop.get()) return finish(Outcome.Stopped(stopReason.get() ?: "stopped"), steps, runId, lastScreen, traceDir, log, model.label)
                         capsule.stage.say(fxLabel(action))
                         val actionTime = SystemClock.elapsedRealtime()
-                        lastResult = pressEnter(svc)
+                        if (observationObserver?.changed() == true) {
+                            lastResult = "page changed during approval; observe again before Enter."
+                        } else {
+                            recordAction()
+                            lastResult = pressEnter(svc)
+                        }
                         timings["android_action_ms"] = SystemClock.elapsedRealtime() - actionTime
                         settleAfterAction(svc, timings, TAP_SETTLE_MS)
                     }
                     is HandsAction.OpenApp -> {
                         val app = HandsApps.resolve(context, action.appName)
                         val actionTime = SystemClock.elapsedRealtime()
-                        val openedApp = app?.takeIf { HandsApps.open(context, it) }
+                        val alreadyOpen = app != null && svc.foregroundPackage().first == app.packageName
+                        val openedApp = app?.takeIf { alreadyOpen || run { recordAction(); HandsApps.open(context, it) } }
                         timings["android_action_ms"] = SystemClock.elapsedRealtime() - actionTime
                         lastResult = if (openedApp != null) {
                             capsule.stage.say(context.getString(com.openminis.app.R.string.nm_hands_fx_open, openedApp.label))
-                            settleAfterAction(svc, timings, OPEN_APP_SETTLE_MS)
+                            if (!alreadyOpen) settleAfterAction(svc, timings, OPEN_APP_SETTLE_MS)
                             "opened ${openedApp.label}."
                         } else {
                             "no installed app matches “${action.appName}”. Installed: " + apps.take(40).joinToString(", ") { it.label } + ". Open it from the home screen if you must."
@@ -427,6 +499,7 @@ class HandsOperator(private val context: Context) {
                     HandsAction.Back -> {
                         capsule.stage.say(fxLabel(action))
                         val actionTime = SystemClock.elapsedRealtime()
+                        recordAction()
                         svc.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK)
                         timings["android_action_ms"] = SystemClock.elapsedRealtime() - actionTime
                         lastResult = "pressed Back."
@@ -435,6 +508,7 @@ class HandsOperator(private val context: Context) {
                     HandsAction.Home -> {
                         capsule.stage.say(fxLabel(action))
                         val actionTime = SystemClock.elapsedRealtime()
+                        recordAction()
                         svc.performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME)
                         timings["android_action_ms"] = SystemClock.elapsedRealtime() - actionTime
                         lastResult = "went to the home screen."
@@ -450,7 +524,11 @@ class HandsOperator(private val context: Context) {
                         timings["explicit_wait_ms"] = SystemClock.elapsedRealtime() - waitStarted
                         lastResult = "waited ${action.seconds}s."
                     }
-                } } finally { timings["action_and_wait_ms"] = SystemClock.elapsedRealtime() - actionStarted }
+                } } finally {
+                    pageObserver?.close()
+                    pageObserver = null
+                    timings["action_and_wait_ms"] = SystemClock.elapsedRealtime() - actionStarted
+                }
                 loopNote?.let { note -> lastResult = listOfNotNull(lastResult, note).joinToString(" ") }
                 log += "step $steps timing: " + timings.entries.joinToString { "${it.key}=${it.value}ms" }
                 trace(traceDir, steps, parsed.thought, reply, lastResult ?: "", lastScreen, timings)
@@ -489,12 +567,18 @@ class HandsOperator(private val context: Context) {
                 HandsCapsule.ReturnAttempt(false, false, false, false, 0L, reason)
             }
             terminalResult?.returnAttempt = returnAttempt
+            timeline.mark("task_finished")
+            pageObserver?.close()
+            observationObserver?.close()
             capsule.hide()
             runCatching {
                 traceDir?.let { dir ->
                     File(dir, "run-summary.json").writeText(
                         JSONObject().put("outcome", outcome?.code ?: "unknown").put("steps", steps)
                             .put("elapsed_ms", SystemClock.elapsedRealtime() - startedElapsed)
+                            .put("milestones_ms", JSONObject(timeline.snapshot()))
+                            .put("accessibility_health", HandsAccessibilityHealth.snapshot(context))
+                            .put("android_action_attempts", actionCount)
                             .put("return_requested", shouldReturn)
                             .put("launch_attempted", returnAttempt.launchAttempted)
                             .put("launch_accepted", returnAttempt.launchAccepted)
@@ -503,6 +587,7 @@ class HandsOperator(private val context: Context) {
                             .put("return_failure_reason", returnAttempt.failureReason ?: JSONObject.NULL)
                             .put("finished_at", System.currentTimeMillis()).toString(),
                     )
+                    timeline.registerSummary(File(dir, "run-summary.json"))
                 }
             }
             Hands.current = null
@@ -566,21 +651,16 @@ class HandsOperator(private val context: Context) {
         return !stop.get()
     }
 
-    /** Keep the established minimum settle delay; extend only while accessibility events are active. */
+    private fun recordAction() {
+        timeline.mark(if (actionCount == 0) "first_android_action" else "next_android_action")
+        actionCount++
+        timeline.mark("android_action_$actionCount")
+    }
+
+    /** Events can prove a stable candidate early; absent events retain the previous fallback. */
     private fun settleAfterAction(svc: MinisAccessibilityService, timings: MutableMap<String, Long>, minimumMs: Long) {
-        val started = SystemClock.elapsedRealtime()
-        val wallStarted = System.currentTimeMillis()
-        if (sleepInterruptibly(minimumMs)) {
-            val maxExtraMs = 1_000L
-            val quietWindowMs = 250L
-            while (!stop.get() && SystemClock.elapsedRealtime() - started < minimumMs + maxExtraMs) {
-                val lastUiEvent = svc.snapshotEvents().lastOrNull { it.timestamp >= wallStarted }?.timestamp
-                val quietForMs = if (lastUiEvent == null) Long.MAX_VALUE else System.currentTimeMillis() - lastUiEvent
-                if (quietForMs >= quietWindowMs) break
-                Thread.sleep(50L)
-            }
-        }
-        timings["settle_wait_ms"] = (timings["settle_wait_ms"] ?: 0L) + (SystemClock.elapsedRealtime() - started)
+        pageObserver?.await(minimumMs, { stop.get() }, timings)
+            ?: sleepInterruptibly(minimumMs)
     }
 
     /** Null [denied] when the tap may go ahead; [notice] is what the chat model should pass on. */
@@ -663,6 +743,7 @@ class HandsOperator(private val context: Context) {
         capsule.dodge(x1, y1)
         capsule.stage.sweep(x1, y1, x2, y2, AIM_MS, durationMs, label)
         Thread.sleep(AIM_MS)
+        if (stop.get() || observationObserver?.changed() == true) return false
         return capsule.passThrough { swipe(svc, x1, y1, x2, y2, durationMs) }
     }
 

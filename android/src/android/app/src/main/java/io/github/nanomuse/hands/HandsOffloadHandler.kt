@@ -44,6 +44,7 @@ class HandsOffloadHandler(private val context: Context) : NativeOffloadHandler {
             .put("ready", r.ready)
             .put("android_11_or_newer", r.androidOk)
             .put("accessibility_service", r.serviceOn)
+            .put("accessibility_health", HandsAccessibilityHealth.snapshot(context))
             .put("draw_over_apps", r.overlayOk)
             .put("screen_model", r.model?.let { JSONObject().put("model", it.modelId).put("provider", it.instance.label) } ?: JSONObject.NULL)
             .put("running", Hands.active.value)
@@ -58,6 +59,8 @@ class HandsOffloadHandler(private val context: Context) : NativeOffloadHandler {
     }
 
     private fun run(args: MediaOffloadHandler.Args, sessionId: String?): NativeOffloadResult {
+        val timeline = HandsTimeline.take(sessionId) ?: HandsTimeline()
+        timeline.mark("hands_native_received")
         val task = args.get("task")?.trim().orEmpty()
         if (task.isEmpty()) return NativeOffloadResult(2, "nanomuse-hands run: --task is required\n")
         if (!Hands.enabled(context)) return refused("off", "Operating the screen is switched off in Settings → Hands.")
@@ -76,6 +79,7 @@ class HandsOffloadHandler(private val context: Context) : NativeOffloadHandler {
         val maxSteps = args.get("max-steps")?.toIntOrNull()?.coerceAtLeast(0) ?: HandsOperator.DEFAULT_MAX_STEPS
         val opts = HandsOperator.Options(
             task = task,
+            timeline = timeline,
             appHint = args.get("app")?.trim()?.takeIf { it.isNotEmpty() },
             maxSteps = maxSteps,
             sessionId = sessionId,
@@ -126,6 +130,7 @@ class HandsOffloadHandler(private val context: Context) : NativeOffloadHandler {
     private fun refused(error: String, message: String): NativeOffloadResult = NativeOffloadResult(
         3,
         JSONObject().put("ok", false).put("error", error).put("message", message)
+            .put("accessibility_health", HandsAccessibilityHealth.snapshot(context))
             .put("tell_user", "Tell the user in one line, in their language, and give the link ${Hands.DEEP_LINK} so they can switch it on or fix the setting. Do not use android-a11y-cli instead.")
             .toString(2) + "\n",
     )

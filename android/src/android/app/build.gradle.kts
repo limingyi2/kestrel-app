@@ -22,7 +22,8 @@ val appCustomization = Properties().apply {
 fun customizationValue(key: String): String =
     (appCustomization.getProperty(key) ?: "").replace("\"", "\\\"")
 
-// nanoMuse: CI may provide a repository Actions secret for a stable test-only debug certificate.
+// nanoMuse: trusted CI dispatch/push supplies a stable test-only certificate; untrusted PRs
+// and local debug builds use the standard Android debug key and are not upgrade artifacts.
 val ciVersionCode = providers.gradleProperty("kestrel.ciVersionCode").orNull?.toIntOrNull()
 val ciVersionName = providers.gradleProperty("kestrel.ciVersionName").orNull
 val ciKeystorePath = System.getenv("KESTREL_DEBUG_KEYSTORE_PATH")

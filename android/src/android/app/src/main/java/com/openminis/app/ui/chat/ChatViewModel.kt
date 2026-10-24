@@ -3644,6 +3644,8 @@ class ChatViewModel(
         // arrives during a turn is shown the moment the turn ends (C8: no reload by hand).
         viewModelScope.launch {
             var nmPulledWhileStreaming = false
+            // nanoMuse: retain the identity of the streaming turn, not a later user send.
+            var nmStreamingHandsTimeline: io.github.nanomuse.hands.HandsTimeline? = null
             launch {
                 io.github.nanomuse.sync.ConversationSync.pulled.collect { ids ->
                     if (realSessionId.ifEmpty { sessionId } !in ids) return@collect
@@ -3651,6 +3653,13 @@ class ChatViewModel(
                 }
             }
             _isStreaming.collect { streaming ->
+                // nanoMuse: distinguish Hands completion from the final main-agent response.
+                if (streaming) nmStreamingHandsTimeline = nmHandsTimeline else {
+                    val completed = nmStreamingHandsTimeline
+                    nmStreamingHandsTimeline = null
+                    val endedAt = android.os.SystemClock.elapsedRealtime()
+                    if (completed != null) launch(Dispatchers.IO) { completed.agentFinishedAt(endedAt) }
+                }
                 // the turn is over: the reply goes up and the other devices hear "done" (C9)
                 if (!streaming) io.github.nanomuse.sync.ConversationSync.turnEnded(realSessionId.ifEmpty { sessionId })
                 if (!streaming && nmPulledWhileStreaming) {
@@ -6444,6 +6453,9 @@ class ChatViewModel(
         }
     }
 
+    // nanoMuse: per-turn Hands latency, attached to the native call at tool dispatch.
+    private var nmHandsTimeline: io.github.nanomuse.hands.HandsTimeline? = null
+
     fun sendMessage(text: String) {
         // nanoMuse: "change your avatar to …" (and a pick while the options are
         // up) is handled in the app, not by the model.
@@ -6849,6 +6861,8 @@ class ChatViewModel(
      *   re-entry with `skipCompactCheck`.
      */
     private fun sendMessage(text: String, skipContextCheck: Boolean) {
+        // nanoMuse: include synchronous pre-send/context preparation in Hands latency.
+        val nmReceivedAt = android.os.SystemClock.elapsedRealtime()
         // [T-android-paste-mediaref] `[Pasted#N]` markers are NOT expanded here
         // any more.
         //
@@ -6870,6 +6884,10 @@ class ChatViewModel(
         if (_isStreaming.value) {
             enqueuePrompt(text)
             return
+        }
+        // nanoMuse: compaction resubmits the same instruction, preserving its original clock.
+        if (!skipContextCheck || nmHandsTimeline == null) {
+            nmHandsTimeline = io.github.nanomuse.hands.HandsTimeline(instructionReceived = true, origin = nmReceivedAt)
         }
         // T180: allow attachments-only sends (no caption). Mirrors iOS, where
         // an empty text + non-empty attachments still produces a valid user
@@ -8495,6 +8513,8 @@ class ChatViewModel(
                         }
                     }
                     is LLMStreamChunk.Text -> {
+                        // nanoMuse: first visible main-agent response, independent of provider TTFB.
+                        nmHandsTimeline?.mark("agent_first_response")
                         // [T-android-readaloud-stop-stale] First actual text of
                         // this reply — stop the previous reply's Read Aloud so
                         // old and new audio don't overlap. Deferred to here
@@ -8608,6 +8628,8 @@ class ChatViewModel(
                         }
                     }
                     is LLMStreamChunk.ToolUseStart -> {
+                        // nanoMuse: the visible tool card is a response before its arguments finish.
+                        nmHandsTimeline?.mark("agent_first_response")
                         // [T-dedupe-toolcallid] Rewrite duplicate id ASAP — the
                         // renamed value drives the AssistantBlock.id used by
                         // ToolCallComplete / ToolInputDelta lookups and ends
@@ -8751,6 +8773,9 @@ class ChatViewModel(
                         // same value (matches the rename applied at start).
                         val toolCompleteId = dedupeToolCompleteId(chunk.id)
                         android.util.Log.d("ToolChain[VM]", "[turn=$turn] ToolCallComplete id=$toolCompleteId name=${chunk.name} args=${chunk.args.toString().take(300)}")
+                        // nanoMuse: a tool-only reply is also a first agent response.
+                        nmHandsTimeline?.mark("agent_first_response")
+                        if (chunk.args.toString().contains("nanomuse-hands")) nmHandsTimeline?.mark("hands_tool_call")
                         toolCalls.add(Triple(toolCompleteId, chunk.name, chunk.args))
                         // [T-android-gemini3-thoughtsig / #179] Stash the Gemini
                         // 3.x thought signature keyed by the (deduped) tool call id.
@@ -9446,7 +9471,14 @@ class ChatViewModel(
                 }
 
                 android.util.Log.d("ToolChain[VM]", "[turn=$turn] executeTool START name=$name args=${argsStr.take(200)}")
+                // nanoMuse: correlate scheduling and native startup without logging command contents.
+                if (argsStr.contains("nanomuse-hands")) nmHandsTimeline?.let {
+                    it.mark("hands_tool_dispatch")
+                    io.github.nanomuse.hands.HandsTimeline.bind(activeSessionId, it)
+                }
                 val result = executeTool(name, argsStr, id, allToolBlocks, assistantId, accumulatedText)
+                // nanoMuse: a denied or failed shell must not leave a correlation for a later run.
+                nmHandsTimeline?.let { io.github.nanomuse.hands.HandsTimeline.forget(activeSessionId, it) }
                 android.util.Log.d("ToolChain[VM]", "[turn=$turn] executeTool END name=$name success=${result.success} title=${result.toolTitle} outputLen=${result.output.length} output=${result.output.take(200)}")
 
                 // Record post-execution. WARNING text is appended to the tool
