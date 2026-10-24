@@ -23,7 +23,7 @@ class HandsLoopWatchTest {
         assertEquals(6, w.streak)
     }
 
-    @Test fun `a screen that changed breaks the streak`() {
+\n    @Test fun `same named target at drifting coordinates is still a repeated action`() {\n        val w = HandsLoopWatch()\n        val s = screen(0)\n        assertEquals(Verdict.FINE, w.step(s, tap(100, 100, "Plus")))\n        assertEquals(Verdict.NOTE, w.step(s, tap(170, 100, "Plus")))\n        assertEquals(Verdict.NOTE, w.step(s, tap(240, 100, "Plus")))\n        assertEquals(Verdict.STOP, w.step(s, tap(310, 100, "Plus")))\n    }\n\n    @Test fun `a screen that changed breaks the streak`() {
         val w = HandsLoopWatch()
         w.step(screen(0), tap(500, 500))
         w.step(screen(0), tap(500, 500))
